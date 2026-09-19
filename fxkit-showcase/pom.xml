@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  fxkit-showcase: the DEMO APP (Storybook-style). One page per component.
+  It depends on fxkit-core exactly the way an outside developer would.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>dev.fxkit</groupId>
+    <artifactId>fxkit-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>fxkit-showcase</artifactId>
+  <name>FXKit Showcase</name>
+  <description>Demo application that documents and manually tests every FXKit component</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>dev.fxkit</groupId>
+      <artifactId>fxkit-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Lets you start the app with:  mvn javafx:run -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <configuration>
+          <!-- format for a modular app:  <module name>/<fully qualified main class> -->
+          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.ShowcaseApp</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

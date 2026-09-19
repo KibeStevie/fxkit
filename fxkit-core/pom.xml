@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  fxkit-core: the LIBRARY (Stories: "Create the modules", "Add JavaFX dependencies").
+  This is what other developers will add to their own projects.
+  It must never depend on the showcase.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>dev.fxkit</groupId>
+    <artifactId>fxkit-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>fxkit-core</artifactId>
+  <name>FXKit Core</name>
+  <description>Design tokens, utility CSS and UI components for JavaFX</description>
+
+  <dependencies>
+    <!-- Versions come from the parent's dependencyManagement -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+    </dependency>
+  </dependencies>
+</project>
