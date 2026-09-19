@@ -1,0 +1,370 @@
+/* =============================================================================
+ * FXKit utility classes
+ *
+ * GENERATED FILE. Do not edit by hand: your changes will be overwritten.
+ * Sources:    tokens.css (colors, shadows) and tools/scales.txt (spacing, radius, type)
+ * Regenerate: java tools/GenerateUtilities.java     (from the repository root)
+ * Reference:  docs/utility-classes.md
+ *
+ * Palette classes (.bg-blue-500) use raw scale tokens and look the same in both themes.
+ * Semantic classes (.bg-surface) use semantic tokens and follow the light/dark theme.
+ * ========================================================================== */
+
+/* ---- Background color ---- */
+.bg-transparent { -fx-background-color: transparent; }
+.bg-white { -fx-background-color: -fxk-white; }
+.bg-black { -fx-background-color: -fxk-black; }
+.bg-gray-50 { -fx-background-color: -fxk-gray-50; }
+.bg-gray-100 { -fx-background-color: -fxk-gray-100; }
+.bg-gray-200 { -fx-background-color: -fxk-gray-200; }
+.bg-gray-300 { -fx-background-color: -fxk-gray-300; }
+.bg-gray-400 { -fx-background-color: -fxk-gray-400; }
+.bg-gray-500 { -fx-background-color: -fxk-gray-500; }
+.bg-gray-600 { -fx-background-color: -fxk-gray-600; }
+.bg-gray-700 { -fx-background-color: -fxk-gray-700; }
+.bg-gray-800 { -fx-background-color: -fxk-gray-800; }
+.bg-gray-900 { -fx-background-color: -fxk-gray-900; }
+.bg-blue-50 { -fx-background-color: -fxk-blue-50; }
+.bg-blue-100 { -fx-background-color: -fxk-blue-100; }
+.bg-blue-200 { -fx-background-color: -fxk-blue-200; }
+.bg-blue-300 { -fx-background-color: -fxk-blue-300; }
+.bg-blue-400 { -fx-background-color: -fxk-blue-400; }
+.bg-blue-500 { -fx-background-color: -fxk-blue-500; }
+.bg-blue-600 { -fx-background-color: -fxk-blue-600; }
+.bg-blue-700 { -fx-background-color: -fxk-blue-700; }
+.bg-blue-800 { -fx-background-color: -fxk-blue-800; }
+.bg-blue-900 { -fx-background-color: -fxk-blue-900; }
+.bg-red-50 { -fx-background-color: -fxk-red-50; }
+.bg-red-100 { -fx-background-color: -fxk-red-100; }
+.bg-red-200 { -fx-background-color: -fxk-red-200; }
+.bg-red-300 { -fx-background-color: -fxk-red-300; }
+.bg-red-400 { -fx-background-color: -fxk-red-400; }
+.bg-red-500 { -fx-background-color: -fxk-red-500; }
+.bg-red-600 { -fx-background-color: -fxk-red-600; }
+.bg-red-700 { -fx-background-color: -fxk-red-700; }
+.bg-red-800 { -fx-background-color: -fxk-red-800; }
+.bg-red-900 { -fx-background-color: -fxk-red-900; }
+.bg-green-50 { -fx-background-color: -fxk-green-50; }
+.bg-green-100 { -fx-background-color: -fxk-green-100; }
+.bg-green-200 { -fx-background-color: -fxk-green-200; }
+.bg-green-300 { -fx-background-color: -fxk-green-300; }
+.bg-green-400 { -fx-background-color: -fxk-green-400; }
+.bg-green-500 { -fx-background-color: -fxk-green-500; }
+.bg-green-600 { -fx-background-color: -fxk-green-600; }
+.bg-green-700 { -fx-background-color: -fxk-green-700; }
+.bg-green-800 { -fx-background-color: -fxk-green-800; }
+.bg-green-900 { -fx-background-color: -fxk-green-900; }
+.bg-yellow-50 { -fx-background-color: -fxk-yellow-50; }
+.bg-yellow-100 { -fx-background-color: -fxk-yellow-100; }
+.bg-yellow-200 { -fx-background-color: -fxk-yellow-200; }
+.bg-yellow-300 { -fx-background-color: -fxk-yellow-300; }
+.bg-yellow-400 { -fx-background-color: -fxk-yellow-400; }
+.bg-yellow-500 { -fx-background-color: -fxk-yellow-500; }
+.bg-yellow-600 { -fx-background-color: -fxk-yellow-600; }
+.bg-yellow-700 { -fx-background-color: -fxk-yellow-700; }
+.bg-yellow-800 { -fx-background-color: -fxk-yellow-800; }
+.bg-yellow-900 { -fx-background-color: -fxk-yellow-900; }
+
+/* ---- Background color (semantic, follows the theme) ---- */
+.bg-background { -fx-background-color: -fxk-background; }
+.bg-surface { -fx-background-color: -fxk-surface; }
+.bg-surface-alt { -fx-background-color: -fxk-surface-alt; }
+.bg-text { -fx-background-color: -fxk-text; }
+.bg-text-muted { -fx-background-color: -fxk-text-muted; }
+.bg-border { -fx-background-color: -fxk-border; }
+.bg-border-strong { -fx-background-color: -fxk-border-strong; }
+.bg-focus-ring { -fx-background-color: -fxk-focus-ring; }
+.bg-primary { -fx-background-color: -fxk-primary; }
+.bg-primary-hover { -fx-background-color: -fxk-primary-hover; }
+.bg-primary-pressed { -fx-background-color: -fxk-primary-pressed; }
+.bg-on-primary { -fx-background-color: -fxk-on-primary; }
+.bg-danger { -fx-background-color: -fxk-danger; }
+.bg-danger-hover { -fx-background-color: -fxk-danger-hover; }
+.bg-on-danger { -fx-background-color: -fxk-on-danger; }
+.bg-success { -fx-background-color: -fxk-success; }
+.bg-success-hover { -fx-background-color: -fxk-success-hover; }
+.bg-on-success { -fx-background-color: -fxk-on-success; }
+.bg-warning { -fx-background-color: -fxk-warning; }
+.bg-warning-hover { -fx-background-color: -fxk-warning-hover; }
+.bg-on-warning { -fx-background-color: -fxk-on-warning; }
+
+/* ---- Text color ---- */
+.text-white { -fx-text-fill: -fxk-white; -fx-fill: -fxk-white; }
+.text-black { -fx-text-fill: -fxk-black; -fx-fill: -fxk-black; }
+.text-gray-50 { -fx-text-fill: -fxk-gray-50; -fx-fill: -fxk-gray-50; }
+.text-gray-100 { -fx-text-fill: -fxk-gray-100; -fx-fill: -fxk-gray-100; }
+.text-gray-200 { -fx-text-fill: -fxk-gray-200; -fx-fill: -fxk-gray-200; }
+.text-gray-300 { -fx-text-fill: -fxk-gray-300; -fx-fill: -fxk-gray-300; }
+.text-gray-400 { -fx-text-fill: -fxk-gray-400; -fx-fill: -fxk-gray-400; }
+.text-gray-500 { -fx-text-fill: -fxk-gray-500; -fx-fill: -fxk-gray-500; }
+.text-gray-600 { -fx-text-fill: -fxk-gray-600; -fx-fill: -fxk-gray-600; }
+.text-gray-700 { -fx-text-fill: -fxk-gray-700; -fx-fill: -fxk-gray-700; }
+.text-gray-800 { -fx-text-fill: -fxk-gray-800; -fx-fill: -fxk-gray-800; }
+.text-gray-900 { -fx-text-fill: -fxk-gray-900; -fx-fill: -fxk-gray-900; }
+.text-blue-50 { -fx-text-fill: -fxk-blue-50; -fx-fill: -fxk-blue-50; }
+.text-blue-100 { -fx-text-fill: -fxk-blue-100; -fx-fill: -fxk-blue-100; }
+.text-blue-200 { -fx-text-fill: -fxk-blue-200; -fx-fill: -fxk-blue-200; }
+.text-blue-300 { -fx-text-fill: -fxk-blue-300; -fx-fill: -fxk-blue-300; }
+.text-blue-400 { -fx-text-fill: -fxk-blue-400; -fx-fill: -fxk-blue-400; }
+.text-blue-500 { -fx-text-fill: -fxk-blue-500; -fx-fill: -fxk-blue-500; }
+.text-blue-600 { -fx-text-fill: -fxk-blue-600; -fx-fill: -fxk-blue-600; }
+.text-blue-700 { -fx-text-fill: -fxk-blue-700; -fx-fill: -fxk-blue-700; }
+.text-blue-800 { -fx-text-fill: -fxk-blue-800; -fx-fill: -fxk-blue-800; }
+.text-blue-900 { -fx-text-fill: -fxk-blue-900; -fx-fill: -fxk-blue-900; }
+.text-red-50 { -fx-text-fill: -fxk-red-50; -fx-fill: -fxk-red-50; }
+.text-red-100 { -fx-text-fill: -fxk-red-100; -fx-fill: -fxk-red-100; }
+.text-red-200 { -fx-text-fill: -fxk-red-200; -fx-fill: -fxk-red-200; }
+.text-red-300 { -fx-text-fill: -fxk-red-300; -fx-fill: -fxk-red-300; }
+.text-red-400 { -fx-text-fill: -fxk-red-400; -fx-fill: -fxk-red-400; }
+.text-red-500 { -fx-text-fill: -fxk-red-500; -fx-fill: -fxk-red-500; }
+.text-red-600 { -fx-text-fill: -fxk-red-600; -fx-fill: -fxk-red-600; }
+.text-red-700 { -fx-text-fill: -fxk-red-700; -fx-fill: -fxk-red-700; }
+.text-red-800 { -fx-text-fill: -fxk-red-800; -fx-fill: -fxk-red-800; }
+.text-red-900 { -fx-text-fill: -fxk-red-900; -fx-fill: -fxk-red-900; }
+.text-green-50 { -fx-text-fill: -fxk-green-50; -fx-fill: -fxk-green-50; }
+.text-green-100 { -fx-text-fill: -fxk-green-100; -fx-fill: -fxk-green-100; }
+.text-green-200 { -fx-text-fill: -fxk-green-200; -fx-fill: -fxk-green-200; }
+.text-green-300 { -fx-text-fill: -fxk-green-300; -fx-fill: -fxk-green-300; }
+.text-green-400 { -fx-text-fill: -fxk-green-400; -fx-fill: -fxk-green-400; }
+.text-green-500 { -fx-text-fill: -fxk-green-500; -fx-fill: -fxk-green-500; }
+.text-green-600 { -fx-text-fill: -fxk-green-600; -fx-fill: -fxk-green-600; }
+.text-green-700 { -fx-text-fill: -fxk-green-700; -fx-fill: -fxk-green-700; }
+.text-green-800 { -fx-text-fill: -fxk-green-800; -fx-fill: -fxk-green-800; }
+.text-green-900 { -fx-text-fill: -fxk-green-900; -fx-fill: -fxk-green-900; }
+.text-yellow-50 { -fx-text-fill: -fxk-yellow-50; -fx-fill: -fxk-yellow-50; }
+.text-yellow-100 { -fx-text-fill: -fxk-yellow-100; -fx-fill: -fxk-yellow-100; }
+.text-yellow-200 { -fx-text-fill: -fxk-yellow-200; -fx-fill: -fxk-yellow-200; }
+.text-yellow-300 { -fx-text-fill: -fxk-yellow-300; -fx-fill: -fxk-yellow-300; }
+.text-yellow-400 { -fx-text-fill: -fxk-yellow-400; -fx-fill: -fxk-yellow-400; }
+.text-yellow-500 { -fx-text-fill: -fxk-yellow-500; -fx-fill: -fxk-yellow-500; }
+.text-yellow-600 { -fx-text-fill: -fxk-yellow-600; -fx-fill: -fxk-yellow-600; }
+.text-yellow-700 { -fx-text-fill: -fxk-yellow-700; -fx-fill: -fxk-yellow-700; }
+.text-yellow-800 { -fx-text-fill: -fxk-yellow-800; -fx-fill: -fxk-yellow-800; }
+.text-yellow-900 { -fx-text-fill: -fxk-yellow-900; -fx-fill: -fxk-yellow-900; }
+
+/* ---- Text color (semantic, follows the theme) ---- */
+.text-body { -fx-text-fill: -fxk-text; -fx-fill: -fxk-text; }
+.text-muted { -fx-text-fill: -fxk-text-muted; -fx-fill: -fxk-text-muted; }
+.text-primary { -fx-text-fill: -fxk-primary; -fx-fill: -fxk-primary; }
+.text-danger { -fx-text-fill: -fxk-danger; -fx-fill: -fxk-danger; }
+.text-success { -fx-text-fill: -fxk-success; -fx-fill: -fxk-success; }
+.text-warning { -fx-text-fill: -fxk-warning; -fx-fill: -fxk-warning; }
+.text-on-primary { -fx-text-fill: -fxk-on-primary; -fx-fill: -fxk-on-primary; }
+.text-on-danger { -fx-text-fill: -fxk-on-danger; -fx-fill: -fxk-on-danger; }
+.text-on-success { -fx-text-fill: -fxk-on-success; -fx-fill: -fxk-on-success; }
+.text-on-warning { -fx-text-fill: -fxk-on-warning; -fx-fill: -fxk-on-warning; }
+
+/* ---- Border width (also sets the default border color) ---- */
+.border-0 { -fx-border-width: 0px; }
+.border { -fx-border-width: 1px; -fx-border-color: -fxk-border; }
+.border-2 { -fx-border-width: 2px; -fx-border-color: -fxk-border; }
+.border-4 { -fx-border-width: 4px; -fx-border-color: -fxk-border; }
+
+/* ---- Border color ---- */
+.border-transparent { -fx-border-color: transparent; }
+.border-white { -fx-border-color: -fxk-white; }
+.border-black { -fx-border-color: -fxk-black; }
+.border-gray-50 { -fx-border-color: -fxk-gray-50; }
+.border-gray-100 { -fx-border-color: -fxk-gray-100; }
+.border-gray-200 { -fx-border-color: -fxk-gray-200; }
+.border-gray-300 { -fx-border-color: -fxk-gray-300; }
+.border-gray-400 { -fx-border-color: -fxk-gray-400; }
+.border-gray-500 { -fx-border-color: -fxk-gray-500; }
+.border-gray-600 { -fx-border-color: -fxk-gray-600; }
+.border-gray-700 { -fx-border-color: -fxk-gray-700; }
+.border-gray-800 { -fx-border-color: -fxk-gray-800; }
+.border-gray-900 { -fx-border-color: -fxk-gray-900; }
+.border-blue-50 { -fx-border-color: -fxk-blue-50; }
+.border-blue-100 { -fx-border-color: -fxk-blue-100; }
+.border-blue-200 { -fx-border-color: -fxk-blue-200; }
+.border-blue-300 { -fx-border-color: -fxk-blue-300; }
+.border-blue-400 { -fx-border-color: -fxk-blue-400; }
+.border-blue-500 { -fx-border-color: -fxk-blue-500; }
+.border-blue-600 { -fx-border-color: -fxk-blue-600; }
+.border-blue-700 { -fx-border-color: -fxk-blue-700; }
+.border-blue-800 { -fx-border-color: -fxk-blue-800; }
+.border-blue-900 { -fx-border-color: -fxk-blue-900; }
+.border-red-50 { -fx-border-color: -fxk-red-50; }
+.border-red-100 { -fx-border-color: -fxk-red-100; }
+.border-red-200 { -fx-border-color: -fxk-red-200; }
+.border-red-300 { -fx-border-color: -fxk-red-300; }
+.border-red-400 { -fx-border-color: -fxk-red-400; }
+.border-red-500 { -fx-border-color: -fxk-red-500; }
+.border-red-600 { -fx-border-color: -fxk-red-600; }
+.border-red-700 { -fx-border-color: -fxk-red-700; }
+.border-red-800 { -fx-border-color: -fxk-red-800; }
+.border-red-900 { -fx-border-color: -fxk-red-900; }
+.border-green-50 { -fx-border-color: -fxk-green-50; }
+.border-green-100 { -fx-border-color: -fxk-green-100; }
+.border-green-200 { -fx-border-color: -fxk-green-200; }
+.border-green-300 { -fx-border-color: -fxk-green-300; }
+.border-green-400 { -fx-border-color: -fxk-green-400; }
+.border-green-500 { -fx-border-color: -fxk-green-500; }
+.border-green-600 { -fx-border-color: -fxk-green-600; }
+.border-green-700 { -fx-border-color: -fxk-green-700; }
+.border-green-800 { -fx-border-color: -fxk-green-800; }
+.border-green-900 { -fx-border-color: -fxk-green-900; }
+.border-yellow-50 { -fx-border-color: -fxk-yellow-50; }
+.border-yellow-100 { -fx-border-color: -fxk-yellow-100; }
+.border-yellow-200 { -fx-border-color: -fxk-yellow-200; }
+.border-yellow-300 { -fx-border-color: -fxk-yellow-300; }
+.border-yellow-400 { -fx-border-color: -fxk-yellow-400; }
+.border-yellow-500 { -fx-border-color: -fxk-yellow-500; }
+.border-yellow-600 { -fx-border-color: -fxk-yellow-600; }
+.border-yellow-700 { -fx-border-color: -fxk-yellow-700; }
+.border-yellow-800 { -fx-border-color: -fxk-yellow-800; }
+.border-yellow-900 { -fx-border-color: -fxk-yellow-900; }
+
+/* ---- Border color (semantic, follows the theme) ---- */
+.border-default { -fx-border-color: -fxk-border; }
+.border-strong { -fx-border-color: -fxk-border-strong; }
+.border-focus { -fx-border-color: -fxk-focus-ring; }
+.border-primary { -fx-border-color: -fxk-primary; }
+.border-danger { -fx-border-color: -fxk-danger; }
+.border-success { -fx-border-color: -fxk-success; }
+.border-warning { -fx-border-color: -fxk-warning; }
+
+/* ---- Border radius ---- */
+.rounded-none { -fx-background-radius: 0px; -fx-border-radius: 0px; }
+.rounded-sm { -fx-background-radius: 2px; -fx-border-radius: 2px; }
+.rounded { -fx-background-radius: 4px; -fx-border-radius: 4px; }
+.rounded-md { -fx-background-radius: 6px; -fx-border-radius: 6px; }
+.rounded-lg { -fx-background-radius: 8px; -fx-border-radius: 8px; }
+.rounded-xl { -fx-background-radius: 12px; -fx-border-radius: 12px; }
+.rounded-2xl { -fx-background-radius: 16px; -fx-border-radius: 16px; }
+.rounded-full { -fx-background-radius: 9999px; -fx-border-radius: 9999px; }
+
+/* ---- Padding (one padding class per node: they all set the same -fx-padding property) ---- */
+.p-0 { -fx-padding: 0px 0px 0px 0px; }
+.px-0 { -fx-padding: 0 0px 0 0px; }
+.py-0 { -fx-padding: 0px 0 0px 0; }
+.pt-0 { -fx-padding: 0px 0 0 0; }
+.pr-0 { -fx-padding: 0 0px 0 0; }
+.pb-0 { -fx-padding: 0 0 0px 0; }
+.pl-0 { -fx-padding: 0 0 0 0px; }
+.p-1 { -fx-padding: 4px 4px 4px 4px; }
+.px-1 { -fx-padding: 0 4px 0 4px; }
+.py-1 { -fx-padding: 4px 0 4px 0; }
+.pt-1 { -fx-padding: 4px 0 0 0; }
+.pr-1 { -fx-padding: 0 4px 0 0; }
+.pb-1 { -fx-padding: 0 0 4px 0; }
+.pl-1 { -fx-padding: 0 0 0 4px; }
+.p-2 { -fx-padding: 8px 8px 8px 8px; }
+.px-2 { -fx-padding: 0 8px 0 8px; }
+.py-2 { -fx-padding: 8px 0 8px 0; }
+.pt-2 { -fx-padding: 8px 0 0 0; }
+.pr-2 { -fx-padding: 0 8px 0 0; }
+.pb-2 { -fx-padding: 0 0 8px 0; }
+.pl-2 { -fx-padding: 0 0 0 8px; }
+.p-3 { -fx-padding: 12px 12px 12px 12px; }
+.px-3 { -fx-padding: 0 12px 0 12px; }
+.py-3 { -fx-padding: 12px 0 12px 0; }
+.pt-3 { -fx-padding: 12px 0 0 0; }
+.pr-3 { -fx-padding: 0 12px 0 0; }
+.pb-3 { -fx-padding: 0 0 12px 0; }
+.pl-3 { -fx-padding: 0 0 0 12px; }
+.p-4 { -fx-padding: 16px 16px 16px 16px; }
+.px-4 { -fx-padding: 0 16px 0 16px; }
+.py-4 { -fx-padding: 16px 0 16px 0; }
+.pt-4 { -fx-padding: 16px 0 0 0; }
+.pr-4 { -fx-padding: 0 16px 0 0; }
+.pb-4 { -fx-padding: 0 0 16px 0; }
+.pl-4 { -fx-padding: 0 0 0 16px; }
+.p-5 { -fx-padding: 20px 20px 20px 20px; }
+.px-5 { -fx-padding: 0 20px 0 20px; }
+.py-5 { -fx-padding: 20px 0 20px 0; }
+.pt-5 { -fx-padding: 20px 0 0 0; }
+.pr-5 { -fx-padding: 0 20px 0 0; }
+.pb-5 { -fx-padding: 0 0 20px 0; }
+.pl-5 { -fx-padding: 0 0 0 20px; }
+.p-6 { -fx-padding: 24px 24px 24px 24px; }
+.px-6 { -fx-padding: 0 24px 0 24px; }
+.py-6 { -fx-padding: 24px 0 24px 0; }
+.pt-6 { -fx-padding: 24px 0 0 0; }
+.pr-6 { -fx-padding: 0 24px 0 0; }
+.pb-6 { -fx-padding: 0 0 24px 0; }
+.pl-6 { -fx-padding: 0 0 0 24px; }
+.p-8 { -fx-padding: 32px 32px 32px 32px; }
+.px-8 { -fx-padding: 0 32px 0 32px; }
+.py-8 { -fx-padding: 32px 0 32px 0; }
+.pt-8 { -fx-padding: 32px 0 0 0; }
+.pr-8 { -fx-padding: 0 32px 0 0; }
+.pb-8 { -fx-padding: 0 0 32px 0; }
+.pl-8 { -fx-padding: 0 0 0 32px; }
+.p-10 { -fx-padding: 40px 40px 40px 40px; }
+.px-10 { -fx-padding: 0 40px 0 40px; }
+.py-10 { -fx-padding: 40px 0 40px 0; }
+.pt-10 { -fx-padding: 40px 0 0 0; }
+.pr-10 { -fx-padding: 0 40px 0 0; }
+.pb-10 { -fx-padding: 0 0 40px 0; }
+.pl-10 { -fx-padding: 0 0 0 40px; }
+.p-12 { -fx-padding: 48px 48px 48px 48px; }
+.px-12 { -fx-padding: 0 48px 0 48px; }
+.py-12 { -fx-padding: 48px 0 48px 0; }
+.pt-12 { -fx-padding: 48px 0 0 0; }
+.pr-12 { -fx-padding: 0 48px 0 0; }
+.pb-12 { -fx-padding: 0 0 48px 0; }
+.pl-12 { -fx-padding: 0 0 0 48px; }
+.p-16 { -fx-padding: 64px 64px 64px 64px; }
+.px-16 { -fx-padding: 0 64px 0 64px; }
+.py-16 { -fx-padding: 64px 0 64px 0; }
+.pt-16 { -fx-padding: 64px 0 0 0; }
+.pr-16 { -fx-padding: 0 64px 0 0; }
+.pb-16 { -fx-padding: 0 0 64px 0; }
+.pl-16 { -fx-padding: 0 0 0 64px; }
+
+/* ---- Gap (ADR-001): spacing for HBox/VBox, hgap/vgap for FlowPane/GridPane/TilePane ---- */
+.gap-0 { -fx-spacing: 0px; -fx-hgap: 0px; -fx-vgap: 0px; }
+.gap-1 { -fx-spacing: 4px; -fx-hgap: 4px; -fx-vgap: 4px; }
+.gap-2 { -fx-spacing: 8px; -fx-hgap: 8px; -fx-vgap: 8px; }
+.gap-3 { -fx-spacing: 12px; -fx-hgap: 12px; -fx-vgap: 12px; }
+.gap-4 { -fx-spacing: 16px; -fx-hgap: 16px; -fx-vgap: 16px; }
+.gap-5 { -fx-spacing: 20px; -fx-hgap: 20px; -fx-vgap: 20px; }
+.gap-6 { -fx-spacing: 24px; -fx-hgap: 24px; -fx-vgap: 24px; }
+.gap-8 { -fx-spacing: 32px; -fx-hgap: 32px; -fx-vgap: 32px; }
+.gap-10 { -fx-spacing: 40px; -fx-hgap: 40px; -fx-vgap: 40px; }
+.gap-12 { -fx-spacing: 48px; -fx-hgap: 48px; -fx-vgap: 48px; }
+.gap-16 { -fx-spacing: 64px; -fx-hgap: 64px; -fx-vgap: 64px; }
+.gap-x-0 { -fx-hgap: 0px; }
+.gap-x-1 { -fx-hgap: 4px; }
+.gap-x-2 { -fx-hgap: 8px; }
+.gap-x-3 { -fx-hgap: 12px; }
+.gap-x-4 { -fx-hgap: 16px; }
+.gap-x-5 { -fx-hgap: 20px; }
+.gap-x-6 { -fx-hgap: 24px; }
+.gap-x-8 { -fx-hgap: 32px; }
+.gap-x-10 { -fx-hgap: 40px; }
+.gap-x-12 { -fx-hgap: 48px; }
+.gap-x-16 { -fx-hgap: 64px; }
+.gap-y-0 { -fx-vgap: 0px; }
+.gap-y-1 { -fx-vgap: 4px; }
+.gap-y-2 { -fx-vgap: 8px; }
+.gap-y-3 { -fx-vgap: 12px; }
+.gap-y-4 { -fx-vgap: 16px; }
+.gap-y-5 { -fx-vgap: 20px; }
+.gap-y-6 { -fx-vgap: 24px; }
+.gap-y-8 { -fx-vgap: 32px; }
+.gap-y-10 { -fx-vgap: 40px; }
+.gap-y-12 { -fx-vgap: 48px; }
+.gap-y-16 { -fx-vgap: 64px; }
+
+/* ---- Font size ---- */
+.text-xs { -fx-font-size: 11px; }
+.text-sm { -fx-font-size: 12px; }
+.text-base { -fx-font-size: 14px; }
+.text-lg { -fx-font-size: 16px; }
+.text-xl { -fx-font-size: 18px; }
+.text-2xl { -fx-font-size: 24px; }
+.text-3xl { -fx-font-size: 30px; }
+
+/* ---- Font weight ---- */
+.font-normal { -fx-font-weight: normal; }
+.font-medium { -fx-font-weight: 500; }
+.font-semibold { -fx-font-weight: 600; }
+.font-bold { -fx-font-weight: bold; }
+
+/* ---- Shadow (elevation tokens) ---- */
+.shadow-none { -fx-effect: null; }
+.shadow-sm { -fx-effect: -fxk-shadow-sm; }
+.shadow-md { -fx-effect: -fxk-shadow-md; }
+.shadow-lg { -fx-effect: -fxk-shadow-lg; }

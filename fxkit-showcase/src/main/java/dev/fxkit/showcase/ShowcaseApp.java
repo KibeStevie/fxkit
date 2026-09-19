@@ -1,15 +1,19 @@
 package dev.fxkit.showcase;
 
 import dev.fxkit.core.FxKit;
+import dev.fxkit.core.theme.Theme;
+import dev.fxkit.core.theme.ThemeManager;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -20,66 +24,57 @@ import javafx.stage.Stage;
  * primary {@link Stage} (the window). A Stage shows one {@link Scene}, and the
  * Scene holds a tree of nodes.
  *
- * <p>Styling now comes from FXKit's design tokens: the token stylesheet from
- * {@code fxkit-core} plus this module's {@code showcase.css}.
+ * <p>Styling comes from FXKit itself: {@link ThemeManager#apply} installs the token and
+ * utility stylesheets and picks the theme, and the nodes below carry utility classes.
+ * {@code showcase.css} only holds the few rules utilities cannot express.
+ *
+ * <p>For now the window shows one page, the color palette. The navigation shell that
+ * hosts one page per component arrives in Phase 3.
  */
 public class ShowcaseApp extends Application {
 
-    private static final int[] STEPS = {50, 100, 200, 300, 400, 500, 600, 700, 800, 900};
-
     @Override
     public void start(Stage stage) {
-        Label title = new Label("Hello, FXKit!");
-        title.getStyleClass().add("showcase-title");
+        Label title = new Label("FXKit Showcase");
+        title.getStyleClass().addAll("text-2xl", "font-bold", "text-body");
 
         // Uses a class from fxkit-core, proving the module dependency works.
-        Label subtitle = new Label("Core library version " + FxKit.version());
-        subtitle.getStyleClass().add("showcase-subtitle");
+        Label version = new Label("core " + FxKit.version());
+        version.getStyleClass().addAll("text-sm", "text-muted");
 
-        // TEMPORARY: token spot-check rows. They are replaced by the real
-        // color palette page in Sprint 2. Hover a swatch to see its token name.
-        VBox scaleRows = new VBox(6);
-        scaleRows.setAlignment(Pos.CENTER);
-        for (String scale : new String[] {"gray", "blue", "red", "green", "yellow"}) {
-            HBox row = new HBox(4);
-            row.setAlignment(Pos.CENTER);
-            for (int step : STEPS) {
-                row.getChildren().add(swatch("-fxk-" + scale + "-" + step));
-            }
-            scaleRows.getChildren().add(row);
-        }
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label semanticCaption = new Label("primary | danger | success | warning");
-        semanticCaption.getStyleClass().add("showcase-caption");
-        HBox semanticRow = new HBox(4,
-                swatch("-fxk-primary"), swatch("-fxk-danger"),
-                swatch("-fxk-success"), swatch("-fxk-warning"));
-        semanticRow.setAlignment(Pos.CENTER);
+        Button themeToggle = new Button();
+        themeToggle.getStyleClass().addAll("bg-primary", "text-on-primary", "rounded-md", "p-2", "font-semibold");
 
-        VBox root = new VBox(12, title, subtitle, scaleRows, semanticCaption, semanticRow);
-        root.setAlignment(Pos.CENTER);
-        root.getStyleClass().add("showcase-root");
+        HBox header = new HBox(12, title, version, spacer, themeToggle);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.getStyleClass().addAll("bg-surface", "p-4");
 
-        Scene scene = new Scene(root, 640, 400);
-        scene.getStylesheets().addAll(
-                FxKit.tokensStylesheet(),
-                stylesheet("showcase.css"));
+        ScrollPane scroll = new ScrollPane(PalettePage.create());
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("showcase-scroll");
+
+        BorderPane root = new BorderPane(scroll);
+        root.setTop(header);
+        root.getStyleClass().add("bg-background");
+
+        Scene scene = new Scene(root, 960, 720);
+        ThemeManager.apply(scene, Theme.LIGHT);          // installs tokens.css + utilities.css
+        scene.getStylesheets().add(stylesheet("showcase.css"));
+
+        themeToggle.setText(toggleCaption(ThemeManager.current(scene)));
+        themeToggle.setOnAction(e -> themeToggle.setText(toggleCaption(ThemeManager.toggle(scene))));
 
         stage.setTitle("FXKit Showcase");
         stage.setScene(scene);
         stage.show();
     }
 
-    /** A small colored square whose color is a token, with the token name as tooltip. */
-    private static Region swatch(String token) {
-        Region box = new Region();
-        box.setPrefSize(40, 24);
-        box.setMinSize(40, 24);
-        box.setStyle("-fx-background-color: " + token + ";"
-                + " -fx-background-radius: 4;"
-                + " -fx-border-color: -fxk-border; -fx-border-radius: 4;");
-        Tooltip.install(box, new Tooltip(token));
-        return box;
+    /** The button offers the theme you would switch TO. */
+    private static String toggleCaption(Theme current) {
+        return current == Theme.LIGHT ? "Switch to dark theme" : "Switch to light theme";
     }
 
     /** Resolves a stylesheet that lives in this module, next to this class. */

@@ -1,14 +1,24 @@
 /* =============================================================================
  * FXKit design tokens
  *
- * JavaFX CSS has no var(). Tokens are "looked-up colors": a name starting with
+ * JavaFX CSS has no var(). Tokens are "looked-up" names: a name starting with
  * "-" is defined once on .root and then referenced by name in any rule below it.
  *
  *   1. Color scales     -fxk-<scale>-<step>   raw palette, e.g. -fxk-blue-500
  *   2. Semantic tokens  -fxk-primary, ...     meaning, defined in terms of scales
+ *   3. Elevation        -fxk-shadow-<size>    whole dropshadow(...) effects
+ *   4. Dark theme       .root.dark            redefines 2 and 3, never 1
  *
- * RULE: components and utilities use SEMANTIC tokens only, never the raw
- * scales. The dark theme (Sprint 2) will redefine only the semantic tokens.
+ * RULES
+ *   - Components use SEMANTIC and ELEVATION tokens only, never the raw scales,
+ *     so the dark theme can restyle everything by redefining those tokens.
+ *   - Utility classes come in two kinds (see docs/utility-classes.md):
+ *       palette utilities   .bg-blue-500  raw scale, identical in both themes
+ *       semantic utilities  .bg-surface   semantic token, follows the theme
+ *   - Spacing, radius and font size are NOT tokens: JavaFX CSS cannot use a
+ *     looked-up value in -fx-padding, -fx-background-radius or -fx-font-size
+ *     (see docs/css-notes.md, section 8). Those scales live in tools/scales.txt
+ *     and are written into utilities.css by tools/GenerateUtilities.java.
  *
  * Palette values are taken from Tailwind CSS v3 (MIT License,
  * Copyright (c) Tailwind Labs, Inc.). https://tailwindcss.com
@@ -112,4 +122,61 @@
     -fxk-warning:         -fxk-yellow-500;
     -fxk-warning-hover:   -fxk-yellow-600;
     -fxk-on-warning:      -fxk-gray-900;
+
+    /* ---- 3. Elevation (light theme) ------------------------------------
+     * A whole dropshadow(...) effect works as a looked-up value in JavaFX.
+     * Usage: -fx-effect: -fxk-shadow-md;  or the class .shadow-md          */
+    -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.10), 3,  0, 0, 1);
+    -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8,  0, 0, 3);
+    -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 16, 0, 0, 6);
+}
+
+/* =============================================================================
+ * 4. Dark theme
+ *
+ * ThemeManager adds the style class "dark" to the scene root, which makes this
+ * rule (two classes, so more specific than plain .root) win.
+ * Only semantic and elevation tokens are redefined here, never the raw scales.
+ *
+ * Design note: in the dark theme, fills use the BRIGHT 400 shades with DARK
+ * "on-*" text (6.4 to 11.6 : 1). Bright fills also read well as text/borders
+ * on dark surfaces. White text on 500-level fills would only reach about 3.7 : 1.
+ * ========================================================================== */
+
+.root.dark {
+    /* Surfaces */
+    -fxk-background:      -fxk-gray-900;
+    -fxk-surface:         -fxk-gray-800;
+    -fxk-surface-alt:     -fxk-gray-700;
+
+    /* Text */
+    -fxk-text:            -fxk-gray-100;
+    -fxk-text-muted:      -fxk-gray-400;
+
+    /* Borders and focus */
+    -fxk-border:          -fxk-gray-700;
+    -fxk-border-strong:   -fxk-gray-600;
+    -fxk-focus-ring:      -fxk-blue-400;
+
+    /* Primary: lighter on hover, darker when pressed */
+    -fxk-primary:         -fxk-blue-400;
+    -fxk-primary-hover:   -fxk-blue-300;
+    -fxk-primary-pressed: -fxk-blue-500;
+    -fxk-on-primary:      -fxk-gray-900;
+
+    /* Status */
+    -fxk-danger:          -fxk-red-400;
+    -fxk-danger-hover:    -fxk-red-300;
+    -fxk-on-danger:       -fxk-gray-900;
+    -fxk-success:         -fxk-green-400;
+    -fxk-success-hover:   -fxk-green-300;
+    -fxk-on-success:      -fxk-gray-900;
+    -fxk-warning:         -fxk-yellow-400;
+    -fxk-warning-hover:   -fxk-yellow-300;
+    -fxk-on-warning:      -fxk-gray-900;
+
+    /* Elevation: shadows need more opacity to show on dark surfaces */
+    -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.40), 3,  0, 0, 1);
+    -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8,  0, 0, 3);
+    -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.50), 16, 0, 0, 6);
 }
