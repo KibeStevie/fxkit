@@ -40,6 +40,10 @@
     <!-- Plugin versions -->
     <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
     <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
+    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+
+    <!-- JUnit 5 (Story #26: "Add JUnit 5 and maven-surefire-plugin to the parent POM") -->
+    <junit-jupiter.version>5.11.4</junit-jupiter.version>
   </properties>
 
   <!-- dependencyManagement = "if a module uses this, use THIS version".
@@ -63,6 +67,15 @@
         <artifactId>fxkit-core</artifactId>
         <version>${project.version}</version>
       </dependency>
+
+      <!-- JUnit 5: import the BOM so every jupiter artifact a module declares stays on one version -->
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -81,6 +94,11 @@
           <artifactId>javafx-maven-plugin</artifactId>
           <version>${javafx-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -89,6 +107,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

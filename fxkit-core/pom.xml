@@ -29,5 +29,12 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
+
+    <!-- Test only (Story #26) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

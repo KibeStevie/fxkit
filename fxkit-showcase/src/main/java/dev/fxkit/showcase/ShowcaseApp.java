@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -28,8 +29,9 @@ import javafx.stage.Stage;
  * utility stylesheets and picks the theme, and the nodes below carry utility classes.
  * {@code showcase.css} only holds the few rules utilities cannot express.
  *
- * <p>For now the window shows one page, the color palette. The navigation shell that
- * hosts one page per component arrives in Phase 3.
+ * <p>For now the window shows every page stacked in one scroll: the color palette, then a page per
+ * component ({@code FxButton}'s is {@link ButtonPage}). The navigation shell that hosts one page at a
+ * time arrives in Phase 3.
  */
 public class ShowcaseApp extends Application {
 
@@ -52,7 +54,9 @@ public class ShowcaseApp extends Application {
         header.setAlignment(Pos.CENTER_LEFT);
         header.getStyleClass().addAll("bg-surface", "p-4");
 
-        ScrollPane scroll = new ScrollPane(PalettePage.create());
+        VBox pages = new VBox(PalettePage.create(), ButtonPage.create());
+
+        ScrollPane scroll = new ScrollPane(pages);
         scroll.setFitToWidth(true);
         scroll.getStyleClass().add("showcase-scroll");
 

@@ -14,8 +14,11 @@ module dev.fxkit.core {
     // Packages other modules are allowed to use.
     exports dev.fxkit.core;
     exports dev.fxkit.core.theme;
+    exports dev.fxkit.core.components;
 
-    // Phase 2: when the components package exists, open it to FXML so that
-    // FXMLLoader can create our controls by reflection:
-    // opens dev.fxkit.core.components to javafx.fxml;
+    // Lets FXMLLoader create FxButton (and later components) by reflection from FXML.
+    opens dev.fxkit.core.components to javafx.fxml;
+
+    // dev.fxkit.core.internal (EnumStyleClassSync, ...) is intentionally not exported or
+    // opened: it is shared only between packages inside this module, never public API.
 }

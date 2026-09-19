@@ -1,0 +1,115 @@
+/* =============================================================================
+ * FXKit components
+ *
+ * Styling for FXKit's Java components (dev.fxkit.core.components). Unlike
+ * utilities.css, these rules are not meant to be composed from Java by callers;
+ * components apply their own style classes (see EnumStyleClassSync).
+ *
+ * RULE: components use SEMANTIC and ELEVATION tokens only, never the raw
+ * -fxk-<scale>-<step> scales, so every component follows the light/dark theme
+ * automatically (see docs/design-tokens.md). Literal values are only used for
+ * spacing, radius, font size and weight, matching the scales in
+ * tools/scales.txt (JavaFX CSS cannot use a looked-up value there — see
+ * docs/css-notes.md, section 8).
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * FxButton (dev.fxkit.core.components.FxButton)
+ *
+ * Base rules apply to every variant; each ".fxk-btn-<variant>" rule below only
+ * sets color. ":pressed" (mouse) and ":armed" (keyboard Space/Enter, or mouse
+ * press-and-hold) are both listed so the pressed look is consistent either way.
+ * -------------------------------------------------------------------------- */
+
+.fxk-btn {
+    -fx-background-radius: 6px;   /* rounded-md */
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-background-insets: 0;
+    -fx-padding: 8px 16px 8px 16px;
+    -fx-font-size: 14px;          /* text-base */
+    -fx-font-weight: 600;         /* font-semibold */
+    -fx-cursor: hand;
+}
+
+.fxk-btn:focused {
+    -fx-border-color: -fxk-focus-ring;
+    -fx-border-width: 2px;
+}
+
+.fxk-btn:disabled {
+    -fx-opacity: 0.55;
+    -fx-cursor: default;
+}
+
+/* PRIMARY: solid brand fill */
+.fxk-btn-primary {
+    -fx-background-color: -fxk-primary;
+    -fx-text-fill: -fxk-on-primary;
+    -fx-border-color: transparent;
+}
+.fxk-btn-primary:hover {
+    -fx-background-color: -fxk-primary-hover;
+}
+.fxk-btn-primary:pressed, .fxk-btn-primary:armed {
+    -fx-background-color: -fxk-primary-pressed;
+}
+
+/* SECONDARY: neutral fill, visible border */
+.fxk-btn-secondary {
+    -fx-background-color: -fxk-surface-alt;
+    -fx-text-fill: -fxk-text;
+    -fx-border-color: -fxk-border;
+}
+.fxk-btn-secondary:hover {
+    -fx-background-color: -fxk-border;
+}
+.fxk-btn-secondary:pressed, .fxk-btn-secondary:armed {
+    -fx-background-color: -fxk-border-strong;
+}
+
+/* DANGER: solid destructive fill */
+.fxk-btn-danger {
+    -fx-background-color: -fxk-danger;
+    -fx-text-fill: -fxk-on-danger;
+    -fx-border-color: transparent;
+}
+.fxk-btn-danger:hover, .fxk-btn-danger:pressed, .fxk-btn-danger:armed {
+    -fx-background-color: -fxk-danger-hover;
+}
+
+/* SUCCESS: solid confirming fill */
+.fxk-btn-success {
+    -fx-background-color: -fxk-success;
+    -fx-text-fill: -fxk-on-success;
+    -fx-border-color: transparent;
+}
+.fxk-btn-success:hover, .fxk-btn-success:pressed, .fxk-btn-success:armed {
+    -fx-background-color: -fxk-success-hover;
+}
+
+/* GHOST: no fill or border until interacted with */
+.fxk-btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fxk-primary;
+    -fx-border-color: transparent;
+}
+.fxk-btn-ghost:hover {
+    -fx-background-color: -fxk-surface-alt;
+}
+.fxk-btn-ghost:pressed, .fxk-btn-ghost:armed {
+    -fx-background-color: -fxk-border;
+}
+
+/* OUTLINE: no fill, but a visible border */
+.fxk-btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fxk-primary;
+    -fx-border-color: -fxk-primary;
+}
+.fxk-btn-outline:hover {
+    -fx-background-color: -fxk-surface-alt;
+}
+.fxk-btn-outline:pressed, .fxk-btn-outline:armed {
+    -fx-background-color: -fxk-border;
+}

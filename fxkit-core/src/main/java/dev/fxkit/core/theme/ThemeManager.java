@@ -17,9 +17,9 @@ import javafx.scene.Scene;
  *
  * <p>What {@code apply} does:
  * <ol>
- *   <li>makes sure FXKit's stylesheets ({@code tokens.css}, then {@code utilities.css})
- *       are in the scene, exactly once, and placed <em>before</em> your own stylesheets
- *       so your CSS can override them;</li>
+ *   <li>makes sure FXKit's stylesheets ({@code tokens.css}, {@code utilities.css}, then
+ *       {@code components.css}) are in the scene, exactly once, and placed <em>before</em>
+ *       your own stylesheets so your CSS can override them;</li>
  *   <li>adds or removes the {@value #DARK_CLASS} style class on the scene's root node,
  *       which switches the semantic tokens ({@code .root.dark} in {@code tokens.css}).</li>
  * </ol>
@@ -83,9 +83,9 @@ public final class ThemeManager {
         return next;
     }
 
-    /** Puts tokens.css, then utilities.css at the front of the list, each only if absent. */
+    /** Puts tokens.css, utilities.css, then components.css at the front of the list, each only if absent. */
     private static void installStylesheets(List<String> sheets) {
-        String[] fxkit = {FxKit.tokensStylesheet(), FxKit.utilitiesStylesheet()};
+        String[] fxkit = {FxKit.tokensStylesheet(), FxKit.utilitiesStylesheet(), FxKit.componentsStylesheet()};
         for (int position = 0; position < fxkit.length; position++) {
             if (!sheets.contains(fxkit[position])) {
                 sheets.add(position, fxkit[position]);
