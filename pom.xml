@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FXKit parent POM (Story: "Create the parent POM")
+
+  Role: this file owns the settings shared by every module:
+    - which modules exist            (<modules>)
+    - which Java / JavaFX versions   (<properties>)
+    - dependency & plugin versions   (<dependencyManagement>, <pluginManagement>)
+  Child modules declare WHAT they use; this file decides WHICH VERSION.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- NOTE: groupId is a placeholder. Before publishing to Maven Central (Phase 7)
+       change it to a namespace you can verify, e.g. io.github.<your-github-username> -->
+  <groupId>dev.fxkit</groupId>
+  <artifactId>fxkit-parent</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>   <!-- a parent/aggregator produces no jar, only a pom -->
+
+  <name>FXKit</name>
+  <description>Tailwind-inspired UI component library for JavaFX desktop apps</description>
+
+  <modules>
+    <module>fxkit-core</module>
+    <module>fxkit-showcase</module>
+  </modules>
+
+  <properties>
+    <!-- Java 25 -->
+    <maven.compiler.release>25</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- JavaFX 25 (25.0.1 is a patch release of 25; bump the patch number when a newer one is out) -->
+    <javafx.version>25.0.1</javafx.version>
+
+    <!-- Plugin versions -->
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
+  </properties>
+
+  <!-- dependencyManagement = "if a module uses this, use THIS version".
+       It does not add dependencies by itself. -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>${javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>${javafx.version}</version>
+      </dependency>
+
+      <!-- Our own library, so the showcase doesn't have to repeat the version -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>fxkit-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <!-- pluginManagement = same idea, but for plugins -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <!-- the Java level comes from the maven.compiler.release property above -->
+        </plugin>
+        <plugin>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-maven-plugin</artifactId>
+          <version>${javafx-maven-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <!-- plugins listed here (outside pluginManagement) are actually applied to all modules -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
