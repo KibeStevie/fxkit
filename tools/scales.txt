@@ -1,0 +1,46 @@
+# FXKit scales that JavaFX CSS cannot hold as tokens (see docs/css-notes.md, section 8).
+# tools/GenerateUtilities.java turns them into utility classes in utilities.css.
+#
+# Format:  <family> <name> <value>
+#   space   name  px      -> .p-<name>, .px-<name>, .py-<name>, .pt/.pr/.pb/.pl-<name>, .gap-<name>
+#   radius  name  px      -> .rounded-<name>      (name "base" gives plain .rounded)
+#   font    name  px      -> .text-<name>
+#   weight  name  value   -> .font-<name>         (CSS keyword or 100-900)
+#
+# To change a value, edit it here and run:  java tools/GenerateUtilities.java
+
+space 0 0
+space 1 4
+space 2 8
+space 3 12
+space 4 16
+space 5 20
+space 6 24
+space 8 32
+space 10 40
+space 12 48
+space 16 64
+
+radius none 0
+radius sm 2
+radius base 4
+radius md 6
+radius lg 8
+radius xl 12
+radius 2xl 16
+radius full 9999
+
+# Desktop-tuned (Tailwind's base is 16px for the web; desktop apps usually use 13-14px).
+font xs 11
+font sm 12
+font base 14
+font lg 16
+font xl 18
+font 2xl 24
+font 3xl 30
+
+# medium and semibold only look different if the installed font has those weights.
+weight normal normal
+weight medium 500
+weight semibold 600
+weight bold bold

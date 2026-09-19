@@ -13,6 +13,7 @@ module dev.fxkit.core {
 
     // Packages other modules are allowed to use.
     exports dev.fxkit.core;
+    exports dev.fxkit.core.theme;
 
     // Phase 2: when the components package exists, open it to FXML so that
     // FXMLLoader can create our controls by reflection:
