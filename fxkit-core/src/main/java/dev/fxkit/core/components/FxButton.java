@@ -23,24 +23,31 @@ import javafx.scene.control.Button;
  * <pre>{@code
  * FxButton save = new FxButton("Save");
  * save.setVariant(FxButton.Variant.PRIMARY);
+ * save.setSize(FxButton.Size.LG);
  * save.setOnAction(e -> saveForm());
  * }</pre>
  *
  * <h2>FXML</h2>
  * <pre>{@code
- * <FxButton text="Save" variant="PRIMARY" onAction="#handleSave"/>
+ * <FxButton text="Save" variant="PRIMARY" size="LG" onAction="#handleSave"/>
  * }</pre>
  */
 public class FxButton extends Button {
 
-    /** Base style class every {@code FxButton} carries, regardless of variant. */
+    /** Base style class every {@code FxButton} carries, regardless of variant or size. */
     public static final String STYLE_CLASS = "fxk-btn";
 
     /** Prefix used for the variant style class, e.g. {@code fxk-btn-danger} for {@link Variant#DANGER}. */
     private static final String VARIANT_STYLE_CLASS_PREFIX = "fxk-btn-";
 
+    /** Prefix used for the size style class, e.g. {@code fxk-btn-size-lg} for {@link Size#LG}. */
+    private static final String SIZE_STYLE_CLASS_PREFIX = "fxk-btn-size-";
+
     /** The default variant a new {@code FxButton} is created with. */
     public static final Variant DEFAULT_VARIANT = Variant.PRIMARY;
+
+    /** The default size a new {@code FxButton} is created with. */
+    public static final Size DEFAULT_SIZE = Size.MD;
 
     /**
      * The look of an {@code FxButton}. Each variant is styled from semantic tokens only
@@ -67,18 +74,40 @@ public class FxButton extends Button {
         OUTLINE
     }
 
+    /**
+     * The size of an {@code FxButton}. Each size sets padding and font size from the same spacing and
+     * font-size scales as the rest of FXKit ({@code tools/scales.txt}), independently of {@link Variant}:
+     * any variant can be combined with any size.
+     */
+    public enum Size {
+
+        /** Compact padding ({@code space-1}/{@code space-3}) and {@code text-sm} (12px). Dense layouts, toolbars. */
+        SM,
+
+        /** The default: {@code space-2}/{@code space-4} padding and {@code text-base} (14px). */
+        MD,
+
+        /** Roomier padding ({@code space-3}/{@code space-6}) and {@code text-lg} (16px). Primary calls to action. */
+        LG
+    }
+
     private final ObjectProperty<Variant> variant =
             new SimpleObjectProperty<>(this, "variant", DEFAULT_VARIANT);
 
+    private final ObjectProperty<Size> size =
+            new SimpleObjectProperty<>(this, "size", DEFAULT_SIZE);
+
     /**
-     * Creates an {@code FxButton} with no text and the {@linkplain #DEFAULT_VARIANT default variant}.
+     * Creates an {@code FxButton} with no text and the {@linkplain #DEFAULT_VARIANT default variant}
+     * and {@linkplain #DEFAULT_SIZE default size}.
      */
     public FxButton() {
         initialize();
     }
 
     /**
-     * Creates an {@code FxButton} with the given text and the {@linkplain #DEFAULT_VARIANT default variant}.
+     * Creates an {@code FxButton} with the given text, and the {@linkplain #DEFAULT_VARIANT default
+     * variant} and {@linkplain #DEFAULT_SIZE default size}.
      *
      * @param text the button's text
      */
@@ -90,6 +119,7 @@ public class FxButton extends Button {
     private void initialize() {
         getStyleClass().add(STYLE_CLASS);
         EnumStyleClassSync.sync(this, VARIANT_STYLE_CLASS_PREFIX, variant);
+        EnumStyleClassSync.sync(this, SIZE_STYLE_CLASS_PREFIX, size);
     }
 
     /**
@@ -114,5 +144,29 @@ public class FxButton extends Button {
      */
     public ObjectProperty<Variant> variantProperty() {
         return variant;
+    }
+
+    /**
+     * @return the button's current size
+     */
+    public Size getSize() {
+        return size.get();
+    }
+
+    /**
+     * Sets the button's size. Applies the new size's style immediately and removes the previous size's
+     * style. Independent of {@link #setVariant(Variant)}: any size can be combined with any variant.
+     *
+     * @param size the size to apply; must not be {@code null}
+     */
+    public void setSize(Size size) {
+        this.size.set(size);
+    }
+
+    /**
+     * @return the size property, for binding or listening
+     */
+    public ObjectProperty<Size> sizeProperty() {
+        return size;
     }
 }
