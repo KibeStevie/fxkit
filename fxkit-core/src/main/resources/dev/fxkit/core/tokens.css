@@ -1,0 +1,115 @@
+/* =============================================================================
+ * FXKit design tokens
+ *
+ * JavaFX CSS has no var(). Tokens are "looked-up colors": a name starting with
+ * "-" is defined once on .root and then referenced by name in any rule below it.
+ *
+ *   1. Color scales     -fxk-<scale>-<step>   raw palette, e.g. -fxk-blue-500
+ *   2. Semantic tokens  -fxk-primary, ...     meaning, defined in terms of scales
+ *
+ * RULE: components and utilities use SEMANTIC tokens only, never the raw
+ * scales. The dark theme (Sprint 2) will redefine only the semantic tokens.
+ *
+ * Palette values are taken from Tailwind CSS v3 (MIT License,
+ * Copyright (c) Tailwind Labs, Inc.). https://tailwindcss.com
+ * ========================================================================== */
+
+.root {
+    /* ---- 1. Color scales ------------------------------------------------ */
+
+    -fxk-white: #ffffff;
+    -fxk-black: #000000;
+
+    /* gray */
+    -fxk-gray-50: #f9fafb;
+    -fxk-gray-100: #f3f4f6;
+    -fxk-gray-200: #e5e7eb;
+    -fxk-gray-300: #d1d5db;
+    -fxk-gray-400: #9ca3af;
+    -fxk-gray-500: #6b7280;
+    -fxk-gray-600: #4b5563;
+    -fxk-gray-700: #374151;
+    -fxk-gray-800: #1f2937;
+    -fxk-gray-900: #111827;
+
+    /* blue */
+    -fxk-blue-50: #eff6ff;
+    -fxk-blue-100: #dbeafe;
+    -fxk-blue-200: #bfdbfe;
+    -fxk-blue-300: #93c5fd;
+    -fxk-blue-400: #60a5fa;
+    -fxk-blue-500: #3b82f6;
+    -fxk-blue-600: #2563eb;
+    -fxk-blue-700: #1d4ed8;
+    -fxk-blue-800: #1e40af;
+    -fxk-blue-900: #1e3a8a;
+
+    /* red */
+    -fxk-red-50: #fef2f2;
+    -fxk-red-100: #fee2e2;
+    -fxk-red-200: #fecaca;
+    -fxk-red-300: #fca5a5;
+    -fxk-red-400: #f87171;
+    -fxk-red-500: #ef4444;
+    -fxk-red-600: #dc2626;
+    -fxk-red-700: #b91c1c;
+    -fxk-red-800: #991b1b;
+    -fxk-red-900: #7f1d1d;
+
+    /* green */
+    -fxk-green-50: #f0fdf4;
+    -fxk-green-100: #dcfce7;
+    -fxk-green-200: #bbf7d0;
+    -fxk-green-300: #86efac;
+    -fxk-green-400: #4ade80;
+    -fxk-green-500: #22c55e;
+    -fxk-green-600: #16a34a;
+    -fxk-green-700: #15803d;
+    -fxk-green-800: #166534;
+    -fxk-green-900: #14532d;
+
+    /* yellow */
+    -fxk-yellow-50: #fefce8;
+    -fxk-yellow-100: #fef9c3;
+    -fxk-yellow-200: #fef08a;
+    -fxk-yellow-300: #fde047;
+    -fxk-yellow-400: #facc15;
+    -fxk-yellow-500: #eab308;
+    -fxk-yellow-600: #ca8a04;
+    -fxk-yellow-700: #a16207;
+    -fxk-yellow-800: #854d0e;
+    -fxk-yellow-900: #713f12;
+
+    /* ---- 2. Semantic tokens (light theme) ------------------------------- */
+
+    /* Surfaces */
+    -fxk-background:      -fxk-gray-50;
+    -fxk-surface:         -fxk-white;
+    -fxk-surface-alt:     -fxk-gray-100;
+
+    /* Text */
+    -fxk-text:            -fxk-gray-900;
+    -fxk-text-muted:      -fxk-gray-500;
+
+    /* Borders and focus */
+    -fxk-border:          -fxk-gray-200;
+    -fxk-border-strong:   -fxk-gray-300;
+    -fxk-focus-ring:      -fxk-blue-500;
+
+    /* Primary (brand / main action) */
+    -fxk-primary:         -fxk-blue-600;
+    -fxk-primary-hover:   -fxk-blue-700;
+    -fxk-primary-pressed: -fxk-blue-800;
+    -fxk-on-primary:      -fxk-white;
+
+    /* Status */
+    -fxk-danger:          -fxk-red-600;
+    -fxk-danger-hover:    -fxk-red-700;
+    -fxk-on-danger:       -fxk-white;
+    -fxk-success:         -fxk-green-700;
+    -fxk-success-hover:   -fxk-green-800;
+    -fxk-on-success:      -fxk-white;
+    -fxk-warning:         -fxk-yellow-500;
+    -fxk-warning-hover:   -fxk-yellow-600;
+    -fxk-on-warning:      -fxk-gray-900;
+}

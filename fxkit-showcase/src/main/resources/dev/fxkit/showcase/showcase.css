@@ -1,0 +1,21 @@
+/* Showcase-only styles. Everything here reads FXKit tokens (defined in
+ * fxkit-core's tokens.css); there are no hard-coded colors. */
+
+.showcase-root {
+    -fx-background-color: -fxk-background;
+}
+
+.showcase-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fxk-primary;
+}
+
+.showcase-subtitle {
+    -fx-text-fill: -fxk-text-muted;
+}
+
+.showcase-caption {
+    -fx-text-fill: -fxk-text;
+    -fx-font-size: 12px;
+}
