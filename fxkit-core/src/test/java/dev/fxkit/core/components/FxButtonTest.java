@@ -2,13 +2,20 @@ package dev.fxkit.core.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.fxkit.core.components.FxButton.Size;
 import dev.fxkit.core.components.FxButton.Variant;
 import dev.fxkit.core.testsupport.JavaFxToolkit;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Region;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Tests for {@link FxButton}'s property-to-style-class logic (issue #30).
@@ -146,5 +153,94 @@ class FxButtonTest {
 
         assertEquals(Size.SM, button.getSize());
         assertTrue(button.getStyleClass().contains("fxk-btn-size-sm"));
+    }
+
+    // ---- Icon (#36, stretch) --------------------------------------------------------------------
+
+    @Test
+    void iconIsNullByDefault() {
+        FxButton button = new FxButton();
+
+        assertNull(button.getIcon());
+        assertNull(button.getGraphic());
+    }
+
+    @Test
+    void settingIconPutsAFontIconOnTheGraphic() {
+        FxButton button = new FxButton();
+
+        button.setIcon(testIcon());
+
+        assertEquals(testIcon(), button.getIcon());
+        assertTrue(button.getGraphic() instanceof FontIcon, "graphic should be a FontIcon once an icon is set");
+    }
+
+    @Test
+    void changingIconReusesTheExistingFontIconNode() {
+        FxButton button = new FxButton();
+        button.setIcon(testIcon());
+        Object firstGraphic = button.getGraphic();
+
+        button.setIcon(testIcon());
+
+        assertSame(firstGraphic, button.getGraphic(), "changing icon should update the existing FontIcon, not replace it");
+    }
+
+    @Test
+    void clearingIconRemovesTheGraphic() {
+        FxButton button = new FxButton();
+        button.setIcon(testIcon());
+
+        button.setIcon(null);
+
+        assertNull(button.getIcon());
+        assertNull(button.getGraphic());
+    }
+
+    @Test
+    void clearingIconLeavesAManuallySetGraphicAlone() {
+        FxButton button = new FxButton();
+        Region customGraphic = new Region();
+        button.setGraphic(customGraphic);
+
+        button.setIcon(null); // no icon was ever set via setIcon, so this must not touch the graphic
+
+        assertSame(customGraphic, button.getGraphic());
+    }
+
+    /** #36 acceptance criterion: icon-only buttons stay accessible via a tooltip or accessible text. */
+    @Test
+    void iconWithAccessibleTextSetsAccessibleTextAndATooltip() {
+        FxButton button = new FxButton();
+
+        button.setIcon(testIcon(), "Save");
+
+        assertEquals("Save", button.getAccessibleText());
+        assertNotNull(button.getTooltip(), "an icon-only button should get a tooltip when none was set");
+        assertEquals("Save", button.getTooltip().getText());
+    }
+
+    @Test
+    void iconWithAccessibleTextDoesNotReplaceAnExistingTooltip() {
+        FxButton button = new FxButton();
+        Tooltip existing = new Tooltip("Custom tooltip");
+        button.setTooltip(existing);
+
+        button.setIcon(testIcon(), "Save");
+
+        assertSame(existing, button.getTooltip());
+    }
+
+    /**
+     * Resolves the DevIcons "di-java" icon (fxkit-core depends on {@code ikonli-devicons-pack} in test
+     * scope only, purely so these tests have one real, resolvable {@link Ikon} to exercise
+     * {@code setIcon} with - see fxkit-core/pom.xml). Doesn't need to know the pack's Java enum
+     * constant name: {@link FontIcon#setIconLiteral(String)} resolves the raw string, and
+     * {@link FontIcon#getIconCode()} reads back the {@link Ikon} that resolved to.
+     */
+    private static Ikon testIcon() {
+        FontIcon probe = new FontIcon();
+        probe.setIconLiteral("di-java");
+        return probe.getIconCode();
     }
 }

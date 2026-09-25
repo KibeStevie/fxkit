@@ -30,6 +30,7 @@
     -fx-background-insets: 0;
     -fx-font-weight: 600;         /* font-semibold */
     -fx-cursor: hand;
+    -fx-graphic-text-gap: 8px;    /* space-2, between an icon (#36) and the button's text */
 }
 
 /* #29: a visible focus ring, the same for every variant, so keyboard users always
@@ -168,5 +169,73 @@
     -fx-background-color: transparent;
     -fx-text-fill: -fxk-primary;
     -fx-border-color: -fxk-primary;
+}
+
+/* ---- Icons (#36): FxButton.setIcon(Ikon) puts a FontIcon (Ikonli, org.kordamp.ikonli.javafx) in the
+ * button's graphic. FontIcon is styleable (style class "ikonli-font-icon") with its own -fx-icon-color
+ * and -fx-icon-size properties - it does NOT follow -fx-text-fill or -fx-font-size, so each variant/size
+ * combination FxButton already has needs to set these explicitly, mirroring that variant/size's own
+ * text-fill and font-size one-for-one. -------------------------------------------------------------- */
+
+.fxk-btn-primary .ikonli-font-icon   { -fx-icon-color: -fxk-on-primary; }
+.fxk-btn-secondary .ikonli-font-icon { -fx-icon-color: -fxk-text; }
+.fxk-btn-danger .ikonli-font-icon    { -fx-icon-color: -fxk-on-danger; }
+.fxk-btn-success .ikonli-font-icon   { -fx-icon-color: -fxk-on-success; }
+.fxk-btn-ghost .ikonli-font-icon     { -fx-icon-color: -fxk-primary; }
+.fxk-btn-outline .ikonli-font-icon   { -fx-icon-color: -fxk-primary; }
+
+.fxk-btn-size-sm .ikonli-font-icon { -fx-icon-size: 12px; }   /* text-sm, matches the size's font-size */
+.fxk-btn-size-md .ikonli-font-icon { -fx-icon-size: 14px; }   /* text-base */
+.fxk-btn-size-lg .ikonli-font-icon { -fx-icon-size: 16px; }   /* text-lg */
+
+/* -----------------------------------------------------------------------------
+ * FxCard (dev.fxkit.core.components.FxCard)
+ *
+ * ".fxk-card" is the surface itself: background, border and radius come from tokens (#32), and the
+ * elevation classes below each set the whole shadow effect from the shadow scale (docs/design-tokens.md)
+ * - a node has only one -fx-effect, so exactly one of these ever applies (kept that way by
+ * EnumStyleClassSync, same as FxButton's variant/size classes). ".fxk-card-header/-body/-footer" style
+ * the wrapper around whichever slot is filled (FxCard.java only puts a wrapper in the layout when its
+ * slot is non-empty, so an unused slot never reaches this CSS at all). ".fxk-card-divider" restyles the
+ * Separator FxCard inserts between two adjacent present slots: Separator's own skin builds a "line"
+ * region drawn with a border, not a fill, so the divider color is set as a border-color, matching
+ * Separator's default (Modena) stylesheet.
+ * -------------------------------------------------------------------------- */
+
+.fxk-card {
+    -fx-background-color: -fxk-surface;
+    -fx-background-radius: 8px;   /* rounded-lg */
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-border-color: -fxk-border;
+    -fx-background-insets: 0;
+}
+
+.fxk-card-header,
+.fxk-card-body,
+.fxk-card-footer {
+    -fx-padding: 16px;   /* space-4 */
+}
+
+.fxk-card-divider .line {
+    -fx-border-color: -fxk-border transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-border-insets: 0;
+}
+
+.fxk-card-elevation-none {
+    -fx-effect: null;
+}
+
+.fxk-card-elevation-sm {
+    -fx-effect: -fxk-shadow-sm;
+}
+
+.fxk-card-elevation-md {
+    -fx-effect: -fxk-shadow-md;
+}
+
+.fxk-card-elevation-lg {
+    -fx-effect: -fxk-shadow-lg;
 }
 

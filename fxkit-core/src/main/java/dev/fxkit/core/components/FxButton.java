@@ -4,6 +4,9 @@ import dev.fxkit.core.internal.EnumStyleClassSync;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * A {@link Button} styled by FXKit's design tokens, with a typed {@link Variant} property so it can be
@@ -13,11 +16,28 @@ import javafx.scene.control.Button;
  * {@code docs/adr/ADR-002-button-base-class.md} for why): every standard {@code Button}/{@code ButtonBase}
  * API — {@code setOnAction}, {@code setDefaultButton}, {@code setGraphic}, mnemonic parsing, keyboard
  * activation, and its accessibility role — keeps working exactly as it does today. The only thing
- * {@code FxButton} adds is {@link #variantProperty()}, which selects the look.
+ * {@code FxButton} adds is {@link #variantProperty()} (plus {@link #sizeProperty()} and
+ * {@link #iconProperty()}), which select the look.
  *
  * <p>Requires FXKit's stylesheets to be installed on the scene (see
  * {@code dev.fxkit.core.theme.ThemeManager#apply}); without them the button falls back to the plain
  * JavaFX look.
+ *
+ * <h2>Icons (#36, stretch)</h2>
+ * An icon can come from either of two places, and both work from Java or FXML:
+ * <ul>
+ *   <li>{@link #setIcon(Ikon)} for an <a href="https://kordamp.org/ikonli/">Ikonli</a> {@link Ikon} -
+ *       FxButton wraps it in an {@code org.kordamp.ikonli.javafx.FontIcon} and installs that as the
+ *       button's {@code graphic} for you, colored to match the current {@link Variant} (see
+ *       {@code components.css}). Ikonli's icon-pack modules are optional: add whichever pack you want
+ *       (e.g. {@code ikonli-materialdesign2-pack}) to your own project; FxKit only depends on
+ *       {@code ikonli-core}/{@code ikonli-javafx}, never a specific pack.</li>
+ *   <li>{@link #setGraphic(javafx.scene.Node)} (inherited from {@code Labeled}) for any other
+ *       {@code Node} - unchanged from plain {@code Button}, including a hand-built {@code FontIcon} of
+ *       your own (e.g. {@code <graphic><FontIcon iconLiteral="fas-save"/></graphic>} in FXML).</li>
+ * </ul>
+ * For an icon-only button, set accessible text or a tooltip so it remains usable with a screen reader -
+ * {@link #setIcon(Ikon, String)} does both in one call.
  *
  * <h2>Java</h2>
  * <pre>{@code
@@ -97,6 +117,8 @@ public class FxButton extends Button {
     private final ObjectProperty<Size> size =
             new SimpleObjectProperty<>(this, "size", DEFAULT_SIZE);
 
+    private final ObjectProperty<Ikon> icon = new SimpleObjectProperty<>(this, "icon");
+
     /**
      * Creates an {@code FxButton} with no text and the {@linkplain #DEFAULT_VARIANT default variant}
      * and {@linkplain #DEFAULT_SIZE default size}.
@@ -120,6 +142,28 @@ public class FxButton extends Button {
         getStyleClass().add(STYLE_CLASS);
         EnumStyleClassSync.sync(this, VARIANT_STYLE_CLASS_PREFIX, variant);
         EnumStyleClassSync.sync(this, SIZE_STYLE_CLASS_PREFIX, size);
+        icon.addListener((observable, oldValue, newValue) -> applyIcon(newValue));
+    }
+
+    /**
+     * Puts {@code icon}'s glyph on the button's {@code graphic}, reusing the existing
+     * {@code FontIcon} if the graphic already is one (so repeatedly changing the icon doesn't churn
+     * through node instances), or clears the graphic if {@code icon} is {@code null} and it was FxButton
+     * that put a {@code FontIcon} there in the first place. A graphic set directly via
+     * {@link #setGraphic(javafx.scene.Node)} that isn't a {@code FontIcon} is left alone.
+     */
+    private void applyIcon(Ikon icon) {
+        if (icon == null) {
+            if (getGraphic() instanceof FontIcon) {
+                setGraphic(null);
+            }
+            return;
+        }
+        if (getGraphic() instanceof FontIcon fontIcon) {
+            fontIcon.setIconCode(icon);
+        } else {
+            setGraphic(new FontIcon(icon));
+        }
     }
 
     /**
@@ -168,5 +212,51 @@ public class FxButton extends Button {
      */
     public ObjectProperty<Size> sizeProperty() {
         return size;
+    }
+
+    /**
+     * @return the button's current icon, or {@code null} if none is set
+     */
+    public Ikon getIcon() {
+        return icon.get();
+    }
+
+    /**
+     * Sets the button's icon from an Ikonli {@link Ikon}. Installs (or updates) a {@code FontIcon} as
+     * the button's {@code graphic}, colored to match the current {@link Variant}; pass {@code null} to
+     * remove it. For an icon-only button, pair this with {@link #setAccessibleText(String)} or
+     * {@link #setTooltip(javafx.scene.control.Tooltip)} - or use {@link #setIcon(Ikon, String)}, which
+     * does both - so the button stays usable with a screen reader.
+     *
+     * @param icon the icon to show, or {@code null} to clear it
+     */
+    public void setIcon(Ikon icon) {
+        this.icon.set(icon);
+    }
+
+    /**
+     * Sets the button's icon (see {@link #setIcon(Ikon)}) and also sets {@code accessibleText} as both
+     * this button's {@linkplain #setAccessibleText(String) accessible text} and, if no
+     * {@linkplain #setTooltip(javafx.scene.control.Tooltip) tooltip} is already set, a new tooltip with
+     * that same text. Intended for icon-only buttons (no {@link #setText(String)}), where the icon alone
+     * isn't accessible.
+     *
+     * @param icon           the icon to show, or {@code null} to clear it
+     * @param accessibleText the accessible text (and, if none is set yet, tooltip text) to give the
+     *                       button; must not be {@code null}
+     */
+    public void setIcon(Ikon icon, String accessibleText) {
+        setIcon(icon);
+        setAccessibleText(accessibleText);
+        if (getTooltip() == null) {
+            setTooltip(new Tooltip(accessibleText));
+        }
+    }
+
+    /**
+     * @return the icon property, for binding or listening
+     */
+    public ObjectProperty<Ikon> iconProperty() {
+        return icon;
     }
 }

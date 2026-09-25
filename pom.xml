@@ -44,6 +44,11 @@
 
     <!-- JUnit 5 (Story #26: "Add JUnit 5 and maven-surefire-plugin to the parent POM") -->
     <junit-jupiter.version>5.11.4</junit-jupiter.version>
+
+    <!-- Ikonli (Story #36, stretch: icon support on FxButton). fxkit-core only depends on
+         ikonli-core/ikonli-javafx (the Ikon type and FontIcon); an actual icon PACK is each
+         consumer's own choice, never a fxkit-core dependency - see fxkit-core/pom.xml. -->
+    <ikonli.version>12.4.0</ikonli.version>
   </properties>
 
   <!-- dependencyManagement = "if a module uses this, use THIS version".
@@ -73,6 +78,17 @@
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>${junit-jupiter.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Ikonli: import its BOM so ikonli-core/ikonli-javafx and any icon pack a module declares
+           (fxkit-core: core+javafx only; fxkit-showcase: also a pack, for the showcase demo; see #36)
+           stay on one version without every dependency repeating it. -->
+      <dependency>
+        <groupId>org.kordamp.ikonli</groupId>
+        <artifactId>ikonli-bom</artifactId>
+        <version>${ikonli.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

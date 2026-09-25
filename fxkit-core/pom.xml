@@ -30,10 +30,29 @@
       <artifactId>javafx-fxml</artifactId>
     </dependency>
 
+    <!-- Ikonli (#36, stretch): only the Ikon type and FontIcon - no icon pack. A pack (the actual
+         glyphs) is each consumer's own choice, added in their own project alongside fxkit-core. -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-javafx</artifactId>
+    </dependency>
+
     <!-- Test only (Story #26) -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Test only (#36): FxButtonTest needs one real, resolvable Ikon to exercise setIcon(Ikon) -
+         fxkit-core itself never depends on a pack outside tests (see above). -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-devicons-pack</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

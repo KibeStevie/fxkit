@@ -30,8 +30,9 @@ import javafx.stage.Stage;
  * {@code showcase.css} only holds the few rules utilities cannot express.
  *
  * <p>For now the window shows every page stacked in one scroll: the color palette, then a page per
- * component ({@code FxButton}'s is {@link ButtonPage}). The navigation shell that hosts one page at a
- * time arrives in Phase 3.
+ * component ({@code FxButton}'s is {@link ButtonPage}, {@code FxCard}'s is {@link CardPage}), then
+ * {@link FxmlDemoPage} proving both work from FXML. The navigation shell that hosts one page at a time
+ * arrives in Phase 3.
  */
 public class ShowcaseApp extends Application {
 
@@ -54,7 +55,7 @@ public class ShowcaseApp extends Application {
         header.setAlignment(Pos.CENTER_LEFT);
         header.getStyleClass().addAll("bg-surface", "p-4");
 
-        VBox pages = new VBox(PalettePage.create(), ButtonPage.create());
+        VBox pages = new VBox(PalettePage.create(), ButtonPage.create(), CardPage.create(), FxmlDemoPage.create());
 
         ScrollPane scroll = new ScrollPane(pages);
         scroll.setFitToWidth(true);

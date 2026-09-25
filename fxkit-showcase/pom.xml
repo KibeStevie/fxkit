@@ -31,6 +31,13 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
+
+    <!-- Only the showcase needs an actual icon pack (#36, stretch), to demonstrate FxButton's icon
+         support with a real, rendered glyph; fxkit-core itself stays pack-agnostic (see its pom.xml). -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-devicons-pack</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
