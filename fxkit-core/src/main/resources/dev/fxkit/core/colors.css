@@ -1,8 +1,14 @@
 /* -----------------------------------------------------------------------------
- * FxButton colors (flowbite-inspired). Only takes effect when the button also
- * carries Variant.DEFAULT (".fxk-btn-default") - PRIMARY/DANGER/etc. pin their
- * own colors from semantic tokens and never carry a color-* class's selector
- * match, so there's no specificity race between the two systems.
+ * FxButton colors (flowbite-inspired). Two variants read Color, each styled
+ * independently below:
+ *   - ".fxk-btn-default.fxk-btn-color-*"  solid fill (Variant.DEFAULT)
+ *   - ".fxk-btn-outline.fxk-btn-color-*"  border + text, solid on hover
+ *                                          (Variant.OUTLINE, Flowbite React's
+ *                                          <Button outline color="...">)
+ * Every other variant (PRIMARY/SECONDARY/DANGER/SUCCESS/GHOST) pins its own
+ * colors from semantic tokens in components.css and never carries a color-*
+ * class's selector match, so there's no specificity race between the two
+ * systems.
  * -------------------------------------------------------------------------- */
 
 .fxk-btn-default.fxk-btn-color-default {
@@ -283,4 +289,391 @@
 }
 .fxk-btn-default.fxk-btn-color-yellow .ikonli-font-icon {
   -fx-icon-color: -fxk-gray-900;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxButton OUTLINE colors (Flowbite React's <Button outline color="...">).
+ * ".fxk-btn-outline.fxk-btn-color-*" - same two-class shape, same specificity,
+ * as the DEFAULT rules above, just keyed off Variant.OUTLINE's own style class
+ * instead of Variant.DEFAULT's. Border + text carry the color; hover/pressed/
+ * armed fill solid with white text (Color.DEFAULT/ALTERNATIVE/LIGHT keep dark
+ * text throughout - inverting those to white on hover would fail contrast, and
+ * Flowbite's own outlineColor map has no "alternative"/"light" entries to draw
+ * that behavior from).
+ * -------------------------------------------------------------------------- */
+
+.fxk-btn-outline.fxk-btn-color-default {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: -fxk-primary;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-default:hover,
+.fxk-btn-outline.fxk-btn-color-default:pressed,
+.fxk-btn-outline.fxk-btn-color-default:armed {
+  -fx-background-color: -fxk-primary-hover;
+  -fx-border-color: -fxk-primary-hover;
+  -fx-text-fill: -fxk-on-primary;
+}
+.fxk-btn-outline.fxk-btn-color-default:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: -fxk-primary;
+}
+
+.fxk-btn-outline.fxk-btn-color-alternative {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-alternative:hover,
+.fxk-btn-outline.fxk-btn-color-alternative:pressed,
+.fxk-btn-outline.fxk-btn-color-alternative:armed {
+  -fx-background-color: -fxk-surface-alt;
+  -fx-border-color: -fxk-border-strong;
+  -fx-text-fill: -fxk-text;
+}
+.fxk-btn-outline.fxk-btn-color-alternative:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border-strong;
+}
+
+.fxk-btn-outline.fxk-btn-color-dark {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-800;
+  -fx-border-color: -fxk-gray-800;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-dark:hover,
+.fxk-btn-outline.fxk-btn-color-dark:pressed,
+.fxk-btn-outline.fxk-btn-color-dark:armed {
+  -fx-background-color: -fxk-gray-900;
+  -fx-border-color: -fxk-gray-900;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-dark:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-800;
+  -fx-border-color: -fxk-gray-800;
+}
+
+.fxk-btn-outline.fxk-btn-color-light {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-900;
+  -fx-border-color: -fxk-gray-300;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-light:hover,
+.fxk-btn-outline.fxk-btn-color-light:pressed,
+.fxk-btn-outline.fxk-btn-color-light:armed {
+  -fx-background-color: -fxk-gray-100;
+  -fx-border-color: -fxk-gray-300;
+  -fx-text-fill: -fxk-gray-900;
+}
+.fxk-btn-outline.fxk-btn-color-light:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-900;
+  -fx-border-color: -fxk-gray-300;
+}
+
+.fxk-btn-outline.fxk-btn-color-blue {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-blue-700;
+  -fx-border-color: -fxk-blue-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-blue:hover,
+.fxk-btn-outline.fxk-btn-color-blue:pressed,
+.fxk-btn-outline.fxk-btn-color-blue:armed {
+  -fx-background-color: -fxk-blue-800;
+  -fx-border-color: -fxk-blue-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-blue:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-blue-700;
+  -fx-border-color: -fxk-blue-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-cyan {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-cyan-700;
+  -fx-border-color: -fxk-cyan-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-cyan:hover,
+.fxk-btn-outline.fxk-btn-color-cyan:pressed,
+.fxk-btn-outline.fxk-btn-color-cyan:armed {
+  -fx-background-color: -fxk-cyan-800;
+  -fx-border-color: -fxk-cyan-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-cyan:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-cyan-700;
+  -fx-border-color: -fxk-cyan-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-gray {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-700;
+  -fx-border-color: -fxk-gray-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-gray:hover,
+.fxk-btn-outline.fxk-btn-color-gray:pressed,
+.fxk-btn-outline.fxk-btn-color-gray:armed {
+  -fx-background-color: -fxk-gray-800;
+  -fx-border-color: -fxk-gray-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-gray:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-gray-700;
+  -fx-border-color: -fxk-gray-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-green {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-green-700;
+  -fx-border-color: -fxk-green-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-green:hover,
+.fxk-btn-outline.fxk-btn-color-green:pressed,
+.fxk-btn-outline.fxk-btn-color-green:armed {
+  -fx-background-color: -fxk-green-800;
+  -fx-border-color: -fxk-green-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-green:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-green-700;
+  -fx-border-color: -fxk-green-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-indigo {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-indigo-700;
+  -fx-border-color: -fxk-indigo-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-indigo:hover,
+.fxk-btn-outline.fxk-btn-color-indigo:pressed,
+.fxk-btn-outline.fxk-btn-color-indigo:armed {
+  -fx-background-color: -fxk-indigo-800;
+  -fx-border-color: -fxk-indigo-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-indigo:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-indigo-700;
+  -fx-border-color: -fxk-indigo-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-lime {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-lime-700;
+  -fx-border-color: -fxk-lime-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-lime:hover,
+.fxk-btn-outline.fxk-btn-color-lime:pressed,
+.fxk-btn-outline.fxk-btn-color-lime:armed {
+  -fx-background-color: -fxk-lime-800;
+  -fx-border-color: -fxk-lime-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-lime:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-lime-700;
+  -fx-border-color: -fxk-lime-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-pink {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-pink-700;
+  -fx-border-color: -fxk-pink-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-pink:hover,
+.fxk-btn-outline.fxk-btn-color-pink:pressed,
+.fxk-btn-outline.fxk-btn-color-pink:armed {
+  -fx-background-color: -fxk-pink-800;
+  -fx-border-color: -fxk-pink-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-pink:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-pink-700;
+  -fx-border-color: -fxk-pink-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-purple {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-purple-700;
+  -fx-border-color: -fxk-purple-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-purple:hover,
+.fxk-btn-outline.fxk-btn-color-purple:pressed,
+.fxk-btn-outline.fxk-btn-color-purple:armed {
+  -fx-background-color: -fxk-purple-800;
+  -fx-border-color: -fxk-purple-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-purple:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-purple-700;
+  -fx-border-color: -fxk-purple-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-red {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-red-700;
+  -fx-border-color: -fxk-red-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-red:hover,
+.fxk-btn-outline.fxk-btn-color-red:pressed,
+.fxk-btn-outline.fxk-btn-color-red:armed {
+  -fx-background-color: -fxk-red-800;
+  -fx-border-color: -fxk-red-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-red:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-red-700;
+  -fx-border-color: -fxk-red-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-teal {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-teal-700;
+  -fx-border-color: -fxk-teal-700;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-teal:hover,
+.fxk-btn-outline.fxk-btn-color-teal:pressed,
+.fxk-btn-outline.fxk-btn-color-teal:armed {
+  -fx-background-color: -fxk-teal-800;
+  -fx-border-color: -fxk-teal-800;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-teal:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-teal-700;
+  -fx-border-color: -fxk-teal-700;
+}
+
+.fxk-btn-outline.fxk-btn-color-yellow {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-yellow-400;
+  -fx-border-color: -fxk-yellow-400;
+  -fx-border-width: 1px;
+}
+.fxk-btn-outline.fxk-btn-color-yellow:hover,
+.fxk-btn-outline.fxk-btn-color-yellow:pressed,
+.fxk-btn-outline.fxk-btn-color-yellow:armed {
+  -fx-background-color: -fxk-yellow-500;
+  -fx-border-color: -fxk-yellow-500;
+  -fx-text-fill: -fxk-white;
+}
+.fxk-btn-outline.fxk-btn-color-yellow:disabled {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-yellow-400;
+  -fx-border-color: -fxk-yellow-400;
+}
+
+/* rest-state icon color mirrors this color's rest text-fill, one-for-one */
+.fxk-btn-outline.fxk-btn-color-default .ikonli-font-icon {
+  -fx-icon-color: -fxk-primary;
+}
+.fxk-btn-outline.fxk-btn-color-alternative .ikonli-font-icon {
+  -fx-icon-color: -fxk-text;
+}
+.fxk-btn-outline.fxk-btn-color-dark .ikonli-font-icon {
+  -fx-icon-color: -fxk-gray-800;
+}
+.fxk-btn-outline.fxk-btn-color-light .ikonli-font-icon {
+  -fx-icon-color: -fxk-gray-900;
+}
+.fxk-btn-outline.fxk-btn-color-blue .ikonli-font-icon {
+  -fx-icon-color: -fxk-blue-700;
+}
+.fxk-btn-outline.fxk-btn-color-cyan .ikonli-font-icon {
+  -fx-icon-color: -fxk-cyan-700;
+}
+.fxk-btn-outline.fxk-btn-color-gray .ikonli-font-icon {
+  -fx-icon-color: -fxk-gray-700;
+}
+.fxk-btn-outline.fxk-btn-color-green .ikonli-font-icon {
+  -fx-icon-color: -fxk-green-700;
+}
+.fxk-btn-outline.fxk-btn-color-indigo .ikonli-font-icon {
+  -fx-icon-color: -fxk-indigo-700;
+}
+.fxk-btn-outline.fxk-btn-color-lime .ikonli-font-icon {
+  -fx-icon-color: -fxk-lime-700;
+}
+.fxk-btn-outline.fxk-btn-color-pink .ikonli-font-icon {
+  -fx-icon-color: -fxk-pink-700;
+}
+.fxk-btn-outline.fxk-btn-color-purple .ikonli-font-icon {
+  -fx-icon-color: -fxk-purple-700;
+}
+.fxk-btn-outline.fxk-btn-color-red .ikonli-font-icon {
+  -fx-icon-color: -fxk-red-700;
+}
+.fxk-btn-outline.fxk-btn-color-teal .ikonli-font-icon {
+  -fx-icon-color: -fxk-teal-700;
+}
+.fxk-btn-outline.fxk-btn-color-yellow .ikonli-font-icon {
+  -fx-icon-color: -fxk-yellow-400;
+}
+
+/* on hover/press/armed every color but default/alternative/light flips icon to
+ * white, matching that state's text-fill above */
+.fxk-btn-outline.fxk-btn-color-dark:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-dark:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-dark:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-blue:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-blue:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-blue:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-cyan:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-cyan:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-cyan:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-gray:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-gray:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-gray:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-green:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-green:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-green:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-indigo:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-indigo:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-indigo:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-lime:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-lime:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-lime:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-pink:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-pink:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-pink:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-purple:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-purple:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-purple:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-red:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-red:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-red:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-teal:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-teal:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-teal:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-yellow:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-yellow:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-yellow:armed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-default:hover .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-default:pressed .ikonli-font-icon,
+.fxk-btn-outline.fxk-btn-color-default:armed .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
 }

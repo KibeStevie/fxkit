@@ -254,8 +254,10 @@ public class ClassNameTestApp extends Application {
         flow.setAlignment(Pos.CENTER_LEFT);
         for (FxButton.Size s : FxButton.Size.values()) {
             FxButton button = new FxButton(s.name());
-            button.setVariant(FxButton.Variant.PRIMARY);
+            button.setVariant(FxButton.Variant.OUTLINE);
+            button.setColor(FxButton.Color.RED);
             button.setSize(s);
+            button.setPill(true);
             flow.getChildren().add(button);
         }
         return flow;

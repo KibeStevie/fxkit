@@ -183,25 +183,6 @@
   -fx-border-color: transparent;
 }
 
-/* OUTLINE: no fill, but a visible border */
-.fxk-btn-outline {
-  -fx-background-color: transparent;
-  -fx-text-fill: -fxk-primary;
-  -fx-border-color: -fxk-primary;
-}
-.fxk-btn-outline:hover {
-  -fx-background-color: -fxk-surface-alt;
-}
-.fxk-btn-outline:pressed,
-.fxk-btn-outline:armed {
-  -fx-background-color: -fxk-border;
-}
-.fxk-btn-outline:disabled {
-  -fx-background-color: transparent;
-  -fx-text-fill: -fxk-primary;
-  -fx-border-color: -fxk-primary;
-}
-
 /* ---- Icons (#36): FxButton.setIcon(Ikon) puts a FontIcon (Ikonli, org.kordamp.ikonli.javafx) in the
  * button's graphic. FontIcon is styleable (style class "ikonli-font-icon") with its own -fx-icon-color
  * and -fx-icon-size properties - it does NOT follow -fx-text-fill or -fx-font-size, so each variant/size
@@ -223,9 +204,6 @@
 .fxk-btn-ghost .ikonli-font-icon {
   -fx-icon-color: -fxk-primary;
 }
-.fxk-btn-outline .ikonli-font-icon {
-  -fx-icon-color: -fxk-primary;
-}
 
 .fxk-btn-size-xs .ikonli-font-icon {
   -fx-icon-size: 11px;
@@ -243,6 +221,10 @@
   -fx-icon-size: 14px;
 } /* text-base */
 
+.fxk-btn-pill {
+  -fx-background-radius: 9999px;
+  -fx-border-radius: 9999px;
+}
 /* -----------------------------------------------------------------------------
  * FxCard (dev.fxkit.core.components.FxCard)
  *
