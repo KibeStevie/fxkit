@@ -1,0 +1,286 @@
+/* -----------------------------------------------------------------------------
+ * FxButton colors (flowbite-inspired). Only takes effect when the button also
+ * carries Variant.DEFAULT (".fxk-btn-default") - PRIMARY/DANGER/etc. pin their
+ * own colors from semantic tokens and never carry a color-* class's selector
+ * match, so there's no specificity race between the two systems.
+ * -------------------------------------------------------------------------- */
+
+.fxk-btn-default.fxk-btn-color-default {
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-default:hover {
+  -fx-background-color: -fxk-primary-hover;
+}
+.fxk-btn-default.fxk-btn-color-default:pressed,
+.fxk-btn-default.fxk-btn-color-default:armed {
+  -fx-background-color: -fxk-primary-pressed;
+}
+.fxk-btn-default.fxk-btn-color-default:disabled {
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+  -fx-border-color: transparent;
+}
+
+.fxk-btn-default.fxk-btn-color-alternative {
+  -fx-background-color: -fxk-surface;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+}
+.fxk-btn-default.fxk-btn-color-alternative:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-btn-default.fxk-btn-color-alternative:pressed,
+.fxk-btn-default.fxk-btn-color-alternative:armed {
+  -fx-background-color: -fxk-border;
+}
+.fxk-btn-default.fxk-btn-color-alternative:disabled {
+  -fx-background-color: -fxk-surface;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border-strong;
+}
+
+.fxk-btn-default.fxk-btn-color-dark {
+  -fx-background-color: -fxk-gray-800;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-dark:hover,
+.fxk-btn-default.fxk-btn-color-dark:pressed,
+.fxk-btn-default.fxk-btn-color-dark:armed {
+  -fx-background-color: -fxk-gray-900;
+}
+.fxk-btn-default.fxk-btn-color-dark:disabled {
+  -fx-background-color: -fxk-gray-800;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-light {
+  -fx-background-color: -fxk-white;
+  -fx-text-fill: -fxk-gray-900;
+  -fx-border-color: -fxk-gray-300;
+  -fx-border-width: 1px;
+}
+.fxk-btn-default.fxk-btn-color-light:hover,
+.fxk-btn-default.fxk-btn-color-light:pressed,
+.fxk-btn-default.fxk-btn-color-light:armed {
+  -fx-background-color: -fxk-gray-100;
+}
+.fxk-btn-default.fxk-btn-color-light:disabled {
+  -fx-background-color: -fxk-white;
+  -fx-text-fill: -fxk-gray-900;
+  -fx-border-color: -fxk-gray-300;
+}
+
+.fxk-btn-default.fxk-btn-color-blue {
+  -fx-background-color: -fxk-blue-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-blue:hover,
+.fxk-btn-default.fxk-btn-color-blue:pressed,
+.fxk-btn-default.fxk-btn-color-blue:armed {
+  -fx-background-color: -fxk-blue-800;
+}
+.fxk-btn-default.fxk-btn-color-blue:disabled {
+  -fx-background-color: -fxk-blue-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-cyan {
+  -fx-background-color: -fxk-cyan-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-cyan:hover,
+.fxk-btn-default.fxk-btn-color-cyan:pressed,
+.fxk-btn-default.fxk-btn-color-cyan:armed {
+  -fx-background-color: -fxk-cyan-800;
+}
+.fxk-btn-default.fxk-btn-color-cyan:disabled {
+  -fx-background-color: -fxk-cyan-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-gray {
+  -fx-background-color: -fxk-gray-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-gray:hover,
+.fxk-btn-default.fxk-btn-color-gray:pressed,
+.fxk-btn-default.fxk-btn-color-gray:armed {
+  -fx-background-color: -fxk-gray-800;
+}
+.fxk-btn-default.fxk-btn-color-gray:disabled {
+  -fx-background-color: -fxk-gray-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-green {
+  -fx-background-color: -fxk-green-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-green:hover,
+.fxk-btn-default.fxk-btn-color-green:pressed,
+.fxk-btn-default.fxk-btn-color-green:armed {
+  -fx-background-color: -fxk-green-800;
+}
+.fxk-btn-default.fxk-btn-color-green:disabled {
+  -fx-background-color: -fxk-green-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-indigo {
+  -fx-background-color: -fxk-indigo-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-indigo:hover,
+.fxk-btn-default.fxk-btn-color-indigo:pressed,
+.fxk-btn-default.fxk-btn-color-indigo:armed {
+  -fx-background-color: -fxk-indigo-800;
+}
+.fxk-btn-default.fxk-btn-color-indigo:disabled {
+  -fx-background-color: -fxk-indigo-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-lime {
+  -fx-background-color: -fxk-lime-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-lime:hover,
+.fxk-btn-default.fxk-btn-color-lime:pressed,
+.fxk-btn-default.fxk-btn-color-lime:armed {
+  -fx-background-color: -fxk-lime-800;
+}
+.fxk-btn-default.fxk-btn-color-lime:disabled {
+  -fx-background-color: -fxk-lime-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-pink {
+  -fx-background-color: -fxk-pink-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-pink:hover,
+.fxk-btn-default.fxk-btn-color-pink:pressed,
+.fxk-btn-default.fxk-btn-color-pink:armed {
+  -fx-background-color: -fxk-pink-800;
+}
+.fxk-btn-default.fxk-btn-color-pink:disabled {
+  -fx-background-color: -fxk-pink-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-purple {
+  -fx-background-color: -fxk-purple-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-purple:hover,
+.fxk-btn-default.fxk-btn-color-purple:pressed,
+.fxk-btn-default.fxk-btn-color-purple:armed {
+  -fx-background-color: -fxk-purple-800;
+}
+.fxk-btn-default.fxk-btn-color-purple:disabled {
+  -fx-background-color: -fxk-purple-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-red {
+  -fx-background-color: -fxk-red-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-red:hover,
+.fxk-btn-default.fxk-btn-color-red:pressed,
+.fxk-btn-default.fxk-btn-color-red:armed {
+  -fx-background-color: -fxk-red-800;
+}
+.fxk-btn-default.fxk-btn-color-red:disabled {
+  -fx-background-color: -fxk-red-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-teal {
+  -fx-background-color: -fxk-teal-700;
+  -fx-text-fill: -fxk-white;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-teal:hover,
+.fxk-btn-default.fxk-btn-color-teal:pressed,
+.fxk-btn-default.fxk-btn-color-teal:armed {
+  -fx-background-color: -fxk-teal-800;
+}
+.fxk-btn-default.fxk-btn-color-teal:disabled {
+  -fx-background-color: -fxk-teal-700;
+  -fx-text-fill: -fxk-white;
+}
+
+.fxk-btn-default.fxk-btn-color-yellow {
+  -fx-background-color: -fxk-yellow-400;
+  -fx-text-fill: -fxk-gray-900;
+  -fx-border-color: transparent;
+}
+.fxk-btn-default.fxk-btn-color-yellow:hover,
+.fxk-btn-default.fxk-btn-color-yellow:pressed,
+.fxk-btn-default.fxk-btn-color-yellow:armed {
+  -fx-background-color: -fxk-yellow-500;
+}
+.fxk-btn-default.fxk-btn-color-yellow:disabled {
+  -fx-background-color: -fxk-yellow-400;
+  -fx-text-fill: -fxk-gray-900;
+}
+
+.fxk-btn-default.fxk-btn-color-default .ikonli-font-icon {
+  -fx-icon-color: -fxk-on-primary;
+}
+.fxk-btn-default.fxk-btn-color-alternative .ikonli-font-icon {
+  -fx-icon-color: -fxk-text;
+}
+.fxk-btn-default.fxk-btn-color-dark .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-light .ikonli-font-icon {
+  -fx-icon-color: -fxk-gray-900;
+}
+.fxk-btn-default.fxk-btn-color-blue .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-cyan .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-gray .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-green .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-indigo .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-lime .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-pink .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-purple .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-red .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-teal .ikonli-font-icon {
+  -fx-icon-color: -fxk-white;
+}
+.fxk-btn-default.fxk-btn-color-yellow .ikonli-font-icon {
+  -fx-icon-color: -fxk-gray-900;
+}

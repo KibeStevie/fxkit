@@ -3,18 +3,18 @@ package dev.fxkit.showcase;
 import dev.fxkit.core.FxKit;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
+import java.util.List;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -29,10 +29,11 @@ import javafx.stage.Stage;
  * utility stylesheets and picks the theme, and the nodes below carry utility classes.
  * {@code showcase.css} only holds the few rules utilities cannot express.
  *
- * <p>For now the window shows every page stacked in one scroll: the color palette, then a page per
- * component ({@code FxButton}'s is {@link ButtonPage}, {@code FxCard}'s is {@link CardPage}), then
- * {@link FxmlDemoPage} proving both work from FXML. The navigation shell that hosts one page at a time
- * arrives in Phase 3.
+ * <p>Below the header sits {@link ShowcaseShell} (#39): a sidebar lists every page - the color palette,
+ * then a page per component ({@code FxButton}'s is {@link ButtonPage}, {@code FxCard}'s is
+ * {@link CardPage}), then {@link FxmlDemoPage} proving both work from FXML - and the content area shows
+ * one of them at a time (#40). This class only owns the {@link #pages()} registry and the header; the
+ * shell owns navigation.
  */
 public class ShowcaseApp extends Application {
 
@@ -55,13 +56,9 @@ public class ShowcaseApp extends Application {
         header.setAlignment(Pos.CENTER_LEFT);
         header.getStyleClass().addAll("bg-surface", "p-4");
 
-        VBox pages = new VBox(PalettePage.create(), ButtonPage.create(), CardPage.create(), FxmlDemoPage.create());
+        Node shell = ShowcaseShell.create(pages());
 
-        ScrollPane scroll = new ScrollPane(pages);
-        scroll.setFitToWidth(true);
-        scroll.getStyleClass().add("showcase-scroll");
-
-        BorderPane root = new BorderPane(scroll);
+        BorderPane root = new BorderPane(shell);
         root.setTop(header);
         root.getStyleClass().add("bg-background");
 
@@ -75,6 +72,19 @@ public class ShowcaseApp extends Application {
         stage.setTitle("FXKit Showcase");
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * The showcase's page registry (#40): one {@link ShowcasePage} per existing page, in sidebar order.
+     * {@code Colors} (from Phase 1) comes first as the default page {@link ShowcaseShell} shows on
+     * launch; {@code Button} and {@code Card} (Phase 2) follow, then {@code FXML} (#33) last.
+     */
+    private static List<ShowcasePage> pages() {
+        return List.of(
+                new ShowcasePage("Colors", PalettePage::create),
+                new ShowcasePage("Button", ButtonPage::create),
+                new ShowcasePage("Card", CardPage::create),
+                new ShowcasePage("FXML", FxmlDemoPage::create));
     }
 
     /** The button offers the theme you would switch TO. */

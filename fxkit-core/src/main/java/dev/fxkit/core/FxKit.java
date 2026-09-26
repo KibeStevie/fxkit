@@ -23,6 +23,13 @@ public final class FxKit {
     /** Styling for FXKit's Java components (FxButton, ...), keyed to their style classes. */
     private static final String COMPONENTS_CSS = "components.css";
 
+    /**
+     * Named-color styling for {@code Variant.DEFAULT} (FxButton's {@code Color} property). Scoped
+     * under {@code .fxk-btn-default.fxk-btn-color-*}, so it only takes effect together with
+     * {@link #COMPONENTS_CSS}, which is what defines {@code .fxk-btn-default} in the first place.
+     */
+    private static final String COLORS_CSS = "colors.css";
+
     private FxKit() {
         // static utility class, not meant to be instantiated
     }
@@ -69,6 +76,20 @@ public final class FxKit {
      */
     public static String componentsStylesheet() {
         return stylesheet(COMPONENTS_CSS);
+    }
+
+    /**
+     * Returns the URL of FXKit's named-color stylesheet ({@code FxButton.Color}, applied when
+     * {@code Variant.DEFAULT} is set). It only works together with {@link #componentsStylesheet()},
+     * because its selectors are scoped under the {@code .fxk-btn-default} class that
+     * {@code components.css} defines.
+     *
+     * @return the external form of the {@code colors.css} URL
+     * @throws IllegalStateException if the stylesheet is missing from the module
+     * @see #stylesheet(String)
+     */
+    public static String colorsStylesheet() {
+        return stylesheet(COLORS_CSS);
     }
 
     /**

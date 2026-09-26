@@ -1,43 +1,39 @@
 package dev.fxkit.core.components;
 
-import dev.fxkit.core.internal.EnumStyleClassSync;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import dev.fxkit.core.internal.ClassNameStyler;
+import dev.fxkit.core.internal.EnumStyleClassSync;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+
 /**
- * A {@link Button} styled by FXKit's design tokens, with a typed {@link Variant} property so it can be
- * styled without writing CSS.
+ * A {@link Button} styled by FXKit's design tokens, with typed {@link Variant}, {@link Color} and
+ * {@link Size} properties so it can be styled without writing CSS, plus a {@link #classNameProperty()}
+ * escape hatch for anything those don't cover.
  *
- * <p>{@code FxButton} is a plain subclass of {@code Button} (see
- * {@code docs/adr/ADR-002-button-base-class.md} for why): every standard {@code Button}/{@code ButtonBase}
- * API — {@code setOnAction}, {@code setDefaultButton}, {@code setGraphic}, mnemonic parsing, keyboard
- * activation, and its accessibility role — keeps working exactly as it does today. The only thing
- * {@code FxButton} adds is {@link #variantProperty()} (plus {@link #sizeProperty()} and
- * {@link #iconProperty()}), which select the look.
+ * <p>{@code FxButton} is a plain subclass of {@code Button}: every standard {@code Button}/
+ * {@code ButtonBase} API keeps working exactly as it does today.
  *
- * <p>Requires FXKit's stylesheets to be installed on the scene (see
- * {@code dev.fxkit.core.theme.ThemeManager#apply}); without them the button falls back to the plain
- * JavaFX look.
+ * <h2>Variant, Color and Size</h2>
+ * Each of {@link #variantProperty()}, {@link #colorProperty()} and {@link #sizeProperty()} is kept in
+ * sync with a style class via {@link EnumStyleClassSync}. {@link Color} only has a visual effect when
+ * {@link #getVariant()} is {@link Variant#DEFAULT}: every other variant (PRIMARY, DANGER, ...) pins its
+ * own colors from semantic tokens in {@code components.css} and never matches a {@code fxk-btn-color-*}
+ * selector.
  *
- * <h2>Icons (#36, stretch)</h2>
- * An icon can come from either of two places, and both work from Java or FXML:
- * <ul>
- *   <li>{@link #setIcon(Ikon)} for an <a href="https://kordamp.org/ikonli/">Ikonli</a> {@link Ikon} -
- *       FxButton wraps it in an {@code org.kordamp.ikonli.javafx.FontIcon} and installs that as the
- *       button's {@code graphic} for you, colored to match the current {@link Variant} (see
- *       {@code components.css}). Ikonli's icon-pack modules are optional: add whichever pack you want
- *       (e.g. {@code ikonli-materialdesign2-pack}) to your own project; FxKit only depends on
- *       {@code ikonli-core}/{@code ikonli-javafx}, never a specific pack.</li>
- *   <li>{@link #setGraphic(javafx.scene.Node)} (inherited from {@code Labeled}) for any other
- *       {@code Node} - unchanged from plain {@code Button}, including a hand-built {@code FontIcon} of
- *       your own (e.g. {@code <graphic><FontIcon iconLiteral="fas-save"/></graphic>} in FXML).</li>
- * </ul>
- * For an icon-only button, set accessible text or a tooltip so it remains usable with a screen reader -
- * {@link #setIcon(Ikon, String)} does both in one call.
+ * <h2>className</h2>
+ * {@link #classNameProperty()} accepts Tailwind-like utility tokens, resolved to inline style by
+ * {@link ClassNameStyler} - see that class's javadoc for the full grammar, including gradients
+ * ({@code "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br"}) and
+ * pseudo-class scoping ({@code hover:}, {@code pressed:}, {@code armed:}, {@code focus:},
+ * {@code disabled:}). Because it resolves to inline style, {@code className} always overrides
+ * {@code Variant}/{@code Color} for the same CSS property without ever touching their style classes.
  *
  * <h2>Java</h2>
  * <pre>{@code
@@ -45,6 +41,10 @@ import org.kordamp.ikonli.javafx.FontIcon;
  * save.setVariant(FxButton.Variant.PRIMARY);
  * save.setSize(FxButton.Size.LG);
  * save.setOnAction(e -> saveForm());
+ *
+ * FxButton gradient = new FxButton("Blue");
+ * gradient.setClassName(
+ *     "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white hover:bg-gradient-to-br");
  * }</pre>
  *
  * <h2>FXML</h2>
@@ -54,29 +54,33 @@ import org.kordamp.ikonli.javafx.FontIcon;
  */
 public class FxButton extends Button {
 
-    /** Base style class every {@code FxButton} carries, regardless of variant or size. */
     public static final String STYLE_CLASS = "fxk-btn";
 
-    /** Prefix used for the variant style class, e.g. {@code fxk-btn-danger} for {@link Variant#DANGER}. */
     private static final String VARIANT_STYLE_CLASS_PREFIX = "fxk-btn-";
-
-    /** Prefix used for the size style class, e.g. {@code fxk-btn-size-lg} for {@link Size#LG}. */
     private static final String SIZE_STYLE_CLASS_PREFIX = "fxk-btn-size-";
+    private static final String COLOR_STYLE_CLASS_PREFIX = "fxk-btn-color-";
 
-    /** The default variant a new {@code FxButton} is created with. */
     public static final Variant DEFAULT_VARIANT = Variant.PRIMARY;
-
-    /** The default size a new {@code FxButton} is created with. */
     public static final Size DEFAULT_SIZE = Size.MD;
+    public static final Color DEFAULT_COLOR = Color.DEFAULT;
 
     /**
-     * The look of an {@code FxButton}. Each variant is styled from semantic tokens only
-     * (see {@code docs/design-tokens.md}), so it looks right in both light and dark themes.
+     * The look of an {@code FxButton}. Each variant is styled from semantic tokens only, so it looks
+     * right in both light and dark themes - except {@link #DEFAULT}, whose fill comes from
+     * {@link #colorProperty()} instead.
      */
     public enum Variant {
 
         /** The main, high-emphasis action on a screen. Solid fill using the brand/primary token. */
         PRIMARY,
+
+        /**
+         * Solid fill whose color comes from {@link #colorProperty()} instead of a fixed semantic
+         * token. {@link Color#DEFAULT} reproduces {@link #PRIMARY}'s look; combine with any other
+         * {@link Color} for flowbite-style named colors. {@code Color} has no effect under any other
+         * variant.
+         */
+        DEFAULT,
 
         /** A lower-emphasis action, often paired with a {@link #PRIMARY} button. Neutral, outlined fill. */
         SECONDARY,
@@ -95,20 +99,34 @@ public class FxButton extends Button {
     }
 
     /**
-     * The size of an {@code FxButton}. Each size sets padding and font size from the same spacing and
-     * font-size scales as the rest of FXKit ({@code tools/scales.txt}), independently of {@link Variant}:
-     * any variant can be combined with any size.
+     * A named fill for {@link Variant#DEFAULT}, styled in {@code colors.css}. Has no visual effect
+     * under any other variant.
+     */
+    public enum Color {
+        DEFAULT, ALTERNATIVE, DARK, LIGHT,
+        BLUE, CYAN, GRAY, GREEN, INDIGO,
+        LIME, PINK, PURPLE, RED, TEAL, YELLOW
+    }
+
+    /**
+     * The size of an {@code FxButton}. Independent of {@link Variant}: any size can be combined with
+     * any variant.
      */
     public enum Size {
+        /** 32px tall, compact horizontal padding, smallest text. Dense toolbars, table row actions. */
+        XS,
 
-        /** Compact padding ({@code space-1}/{@code space-3}) and {@code text-sm} (12px). Dense layouts, toolbars. */
+        /** 36px tall. Secondary actions in a form or toolbar. */
         SM,
 
-        /** The default: {@code space-2}/{@code space-4} padding and {@code text-base} (14px). */
+        /** The default: 40px tall, base text. */
         MD,
 
-        /** Roomier padding ({@code space-3}/{@code space-6}) and {@code text-lg} (16px). Primary calls to action. */
-        LG
+        /** 48px tall, base text. Primary calls to action. */
+        LG,
+
+        /** 52px tall, base text, roomiest padding. Hero sections, standalone CTAs. */
+        XL
     }
 
     private final ObjectProperty<Variant> variant =
@@ -117,22 +135,17 @@ public class FxButton extends Button {
     private final ObjectProperty<Size> size =
             new SimpleObjectProperty<>(this, "size", DEFAULT_SIZE);
 
+    private final ObjectProperty<Color> color =
+            new SimpleObjectProperty<>(this, "color", DEFAULT_COLOR);
+
     private final ObjectProperty<Ikon> icon = new SimpleObjectProperty<>(this, "icon");
 
-    /**
-     * Creates an {@code FxButton} with no text and the {@linkplain #DEFAULT_VARIANT default variant}
-     * and {@linkplain #DEFAULT_SIZE default size}.
-     */
+    private final StringProperty className = new SimpleStringProperty(this, "className", "");
+
     public FxButton() {
         initialize();
     }
 
-    /**
-     * Creates an {@code FxButton} with the given text, and the {@linkplain #DEFAULT_VARIANT default
-     * variant} and {@linkplain #DEFAULT_SIZE default size}.
-     *
-     * @param text the button's text
-     */
     public FxButton(String text) {
         super(text);
         initialize();
@@ -142,16 +155,11 @@ public class FxButton extends Button {
         getStyleClass().add(STYLE_CLASS);
         EnumStyleClassSync.sync(this, VARIANT_STYLE_CLASS_PREFIX, variant);
         EnumStyleClassSync.sync(this, SIZE_STYLE_CLASS_PREFIX, size);
+        EnumStyleClassSync.sync(this, COLOR_STYLE_CLASS_PREFIX, color);
         icon.addListener((observable, oldValue, newValue) -> applyIcon(newValue));
+        className.addListener((observable, oldValue, newValue) -> ClassNameStyler.apply(this, newValue));
     }
 
-    /**
-     * Puts {@code icon}'s glyph on the button's {@code graphic}, reusing the existing
-     * {@code FontIcon} if the graphic already is one (so repeatedly changing the icon doesn't churn
-     * through node instances), or clears the graphic if {@code icon} is {@code null} and it was FxButton
-     * that put a {@code FontIcon} there in the first place. A graphic set directly via
-     * {@link #setGraphic(javafx.scene.Node)} that isn't a {@code FontIcon} is left alone.
-     */
     private void applyIcon(Ikon icon) {
         if (icon == null) {
             if (getGraphic() instanceof FontIcon) {
@@ -166,85 +174,38 @@ public class FxButton extends Button {
         }
     }
 
-    /**
-     * @return the button's current variant
-     */
-    public Variant getVariant() {
-        return variant.get();
-    }
+    public Variant getVariant() { return variant.get(); }
+    public void setVariant(Variant variant) { this.variant.set(variant); }
+    public ObjectProperty<Variant> variantProperty() { return variant; }
+
+    public Size getSize() { return size.get(); }
+    public void setSize(Size size) { this.size.set(size); }
+    public ObjectProperty<Size> sizeProperty() { return size; }
+
+    public Color getColor() { return color.get(); }
+    public void setColor(Color color) { this.color.set(color); }
+    public ObjectProperty<Color> colorProperty() { return color; }
 
     /**
-     * Sets the button's variant. Applies the new variant's style immediately and removes the previous
-     * variant's style.
+     * @return the button's current {@code className} string (never {@code null}; empty if unset)
+     */
+    public String getClassName() { return className.get(); }
+
+    /**
+     * Sets arbitrary Tailwind-like utility tokens; see the class javadoc's "className" section for the
+     * grammar. Pass {@code ""} or {@code null} to clear everything this property previously applied.
      *
-     * @param variant the variant to apply; must not be {@code null}
+     * @param className space-separated utility tokens, optionally pseudo-class-scoped
      */
-    public void setVariant(Variant variant) {
-        this.variant.set(variant);
-    }
+    public void setClassName(String className) { this.className.set(className); }
+    public StringProperty classNameProperty() { return className; }
 
-    /**
-     * @return the variant property, for binding or listening
-     */
-    public ObjectProperty<Variant> variantProperty() {
-        return variant;
-    }
+    public Ikon getIcon() { return icon.get(); }
 
-    /**
-     * @return the button's current size
-     */
-    public Size getSize() {
-        return size.get();
-    }
-
-    /**
-     * Sets the button's size. Applies the new size's style immediately and removes the previous size's
-     * style. Independent of {@link #setVariant(Variant)}: any size can be combined with any variant.
-     *
-     * @param size the size to apply; must not be {@code null}
-     */
-    public void setSize(Size size) {
-        this.size.set(size);
-    }
-
-    /**
-     * @return the size property, for binding or listening
-     */
-    public ObjectProperty<Size> sizeProperty() {
-        return size;
-    }
-
-    /**
-     * @return the button's current icon, or {@code null} if none is set
-     */
-    public Ikon getIcon() {
-        return icon.get();
-    }
-
-    /**
-     * Sets the button's icon from an Ikonli {@link Ikon}. Installs (or updates) a {@code FontIcon} as
-     * the button's {@code graphic}, colored to match the current {@link Variant}; pass {@code null} to
-     * remove it. For an icon-only button, pair this with {@link #setAccessibleText(String)} or
-     * {@link #setTooltip(javafx.scene.control.Tooltip)} - or use {@link #setIcon(Ikon, String)}, which
-     * does both - so the button stays usable with a screen reader.
-     *
-     * @param icon the icon to show, or {@code null} to clear it
-     */
     public void setIcon(Ikon icon) {
         this.icon.set(icon);
     }
 
-    /**
-     * Sets the button's icon (see {@link #setIcon(Ikon)}) and also sets {@code accessibleText} as both
-     * this button's {@linkplain #setAccessibleText(String) accessible text} and, if no
-     * {@linkplain #setTooltip(javafx.scene.control.Tooltip) tooltip} is already set, a new tooltip with
-     * that same text. Intended for icon-only buttons (no {@link #setText(String)}), where the icon alone
-     * isn't accessible.
-     *
-     * @param icon           the icon to show, or {@code null} to clear it
-     * @param accessibleText the accessible text (and, if none is set yet, tooltip text) to give the
-     *                       button; must not be {@code null}
-     */
     public void setIcon(Ikon icon, String accessibleText) {
         setIcon(icon);
         setAccessibleText(accessibleText);
@@ -253,10 +214,5 @@ public class FxButton extends Button {
         }
     }
 
-    /**
-     * @return the icon property, for binding or listening
-     */
-    public ObjectProperty<Ikon> iconProperty() {
-        return icon;
-    }
+    public ObjectProperty<Ikon> iconProperty() { return icon; }
 }

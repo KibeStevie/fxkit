@@ -24,13 +24,13 @@
  * -------------------------------------------------------------------------- */
 
 .fxk-btn {
-    -fx-background-radius: 6px;   /* rounded-md */
-    -fx-border-radius: 6px;
-    -fx-border-width: 1px;
-    -fx-background-insets: 0;
-    -fx-font-weight: 600;         /* font-semibold */
-    -fx-cursor: hand;
-    -fx-graphic-text-gap: 8px;    /* space-2, between an icon (#36) and the button's text */
+  -fx-background-radius: 6px; /* rounded-md */
+  -fx-border-radius: 6px;
+  -fx-border-width: 1px;
+  -fx-background-insets: 0;
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-cursor: hand;
+  -fx-graphic-text-gap: 8px; /* space-2, between an icon (#36) and the button's text */
 }
 
 /* #29: a visible focus ring, the same for every variant, so keyboard users always
@@ -38,8 +38,8 @@
  * (one class + one pseudo-class) beats a single ".fxk-btn-<variant>" rule, so it
  * overrides a variant's own border-color (e.g. OUTLINE's) while focused. */
 .fxk-btn:focused {
-    -fx-border-color: -fxk-focus-ring;
-    -fx-border-width: 2px;
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-width: 2px;
 }
 
 /* #29: dims every variant uniformly; each variant also pins its own resting
@@ -47,128 +47,159 @@
  * disabled (JavaFX still tracks :hover on disabled nodes even though they no
  * longer receive clicks). */
 .fxk-btn:disabled {
-    -fx-opacity: 0.55;
-    -fx-cursor: default;
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
 }
 
-/* ---- Sizes (#28): padding from the spacing scale, font size from the font-size
- * scale (tools/scales.txt). Combine with any variant. ---------------------- */
+/* ---- Sizes: fixed height (Flowbite parity), horizontal-only padding, font size from the type
+ * scale. Combine with any Variant/Color. min-height AND pref-height are both set because JavaFX
+ * will let a button grow past min-height if its content (icon + text + padding) needs more room -
+ * pref-height alone doesn't prevent that growth, but pinning both keeps the height stable for the
+ * normal case while still letting the button grow rather than clip if content genuinely needs it. */
+
+.fxk-btn-size-xs {
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-padding: 0 12px 0 12px; /* px-3 */
+  -fx-font-size: 11px; /* text-xs */
+}
 
 .fxk-btn-size-sm {
-    -fx-padding: 4px 12px 4px 12px;   /* space-1 / space-3 */
-    -fx-font-size: 12px;              /* text-sm */
+  -fx-min-height: 36px;
+  -fx-pref-height: 36px;
+  -fx-padding: 0 12px 0 12px; /* px-3 */
+  -fx-font-size: 12px; /* text-sm */
 }
 
 .fxk-btn-size-md {
-    -fx-padding: 8px 16px 8px 16px;   /* space-2 / space-4 */
-    -fx-font-size: 14px;              /* text-base */
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-padding: 0 20px 0 20px; /* px-5 */
+  -fx-font-size: 12px; /* text-sm */
 }
 
 .fxk-btn-size-lg {
-    -fx-padding: 12px 24px 12px 24px; /* space-3 / space-6 */
-    -fx-font-size: 16px;              /* text-lg */
+  -fx-min-height: 48px;
+  -fx-pref-height: 48px;
+  -fx-padding: 0 20px 0 20px; /* px-5 */
+  -fx-font-size: 14px; /* text-base */
+}
+
+.fxk-btn-size-xl {
+  -fx-min-height: 52px;
+  -fx-pref-height: 52px;
+  -fx-padding: 0 24px 0 24px; /* px-6 */
+  -fx-font-size: 14px; /* text-base */
 }
 
 /* PRIMARY: solid brand fill */
 .fxk-btn-primary {
-    -fx-background-color: -fxk-primary;
-    -fx-text-fill: -fxk-on-primary;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+  -fx-border-color: transparent;
 }
 .fxk-btn-primary:hover {
-    -fx-background-color: -fxk-primary-hover;
+  -fx-background-color: -fxk-primary-hover;
 }
-.fxk-btn-primary:pressed, .fxk-btn-primary:armed {
-    -fx-background-color: -fxk-primary-pressed;
+.fxk-btn-primary:pressed,
+.fxk-btn-primary:armed {
+  -fx-background-color: -fxk-primary-pressed;
 }
 .fxk-btn-primary:disabled {
-    -fx-background-color: -fxk-primary;
-    -fx-text-fill: -fxk-on-primary;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+  -fx-border-color: transparent;
 }
 
 /* SECONDARY: neutral fill, visible border */
 .fxk-btn-secondary {
-    -fx-background-color: -fxk-surface-alt;
-    -fx-text-fill: -fxk-text;
-    -fx-border-color: -fxk-border;
+  -fx-background-color: -fxk-surface-alt;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border;
 }
 .fxk-btn-secondary:hover {
-    -fx-background-color: -fxk-border;
+  -fx-background-color: -fxk-border;
 }
-.fxk-btn-secondary:pressed, .fxk-btn-secondary:armed {
-    -fx-background-color: -fxk-border-strong;
+.fxk-btn-secondary:pressed,
+.fxk-btn-secondary:armed {
+  -fx-background-color: -fxk-border-strong;
 }
 .fxk-btn-secondary:disabled {
-    -fx-background-color: -fxk-surface-alt;
-    -fx-text-fill: -fxk-text;
-    -fx-border-color: -fxk-border;
+  -fx-background-color: -fxk-surface-alt;
+  -fx-text-fill: -fxk-text;
+  -fx-border-color: -fxk-border;
 }
 
 /* DANGER: solid destructive fill */
 .fxk-btn-danger {
-    -fx-background-color: -fxk-danger;
-    -fx-text-fill: -fxk-on-danger;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-danger;
+  -fx-text-fill: -fxk-on-danger;
+  -fx-border-color: transparent;
 }
-.fxk-btn-danger:hover, .fxk-btn-danger:pressed, .fxk-btn-danger:armed {
-    -fx-background-color: -fxk-danger-hover;
+.fxk-btn-danger:hover,
+.fxk-btn-danger:pressed,
+.fxk-btn-danger:armed {
+  -fx-background-color: -fxk-danger-hover;
 }
 .fxk-btn-danger:disabled {
-    -fx-background-color: -fxk-danger;
-    -fx-text-fill: -fxk-on-danger;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-danger;
+  -fx-text-fill: -fxk-on-danger;
+  -fx-border-color: transparent;
 }
 
 /* SUCCESS: solid confirming fill */
 .fxk-btn-success {
-    -fx-background-color: -fxk-success;
-    -fx-text-fill: -fxk-on-success;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-success;
+  -fx-text-fill: -fxk-on-success;
+  -fx-border-color: transparent;
 }
-.fxk-btn-success:hover, .fxk-btn-success:pressed, .fxk-btn-success:armed {
-    -fx-background-color: -fxk-success-hover;
+.fxk-btn-success:hover,
+.fxk-btn-success:pressed,
+.fxk-btn-success:armed {
+  -fx-background-color: -fxk-success-hover;
 }
 .fxk-btn-success:disabled {
-    -fx-background-color: -fxk-success;
-    -fx-text-fill: -fxk-on-success;
-    -fx-border-color: transparent;
+  -fx-background-color: -fxk-success;
+  -fx-text-fill: -fxk-on-success;
+  -fx-border-color: transparent;
 }
 
 /* GHOST: no fill or border until interacted with */
 .fxk-btn-ghost {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fxk-primary;
-    -fx-border-color: transparent;
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: transparent;
 }
 .fxk-btn-ghost:hover {
-    -fx-background-color: -fxk-surface-alt;
+  -fx-background-color: -fxk-surface-alt;
 }
-.fxk-btn-ghost:pressed, .fxk-btn-ghost:armed {
-    -fx-background-color: -fxk-border;
+.fxk-btn-ghost:pressed,
+.fxk-btn-ghost:armed {
+  -fx-background-color: -fxk-border;
 }
 .fxk-btn-ghost:disabled {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fxk-primary;
-    -fx-border-color: transparent;
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: transparent;
 }
 
 /* OUTLINE: no fill, but a visible border */
 .fxk-btn-outline {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fxk-primary;
-    -fx-border-color: -fxk-primary;
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: -fxk-primary;
 }
 .fxk-btn-outline:hover {
-    -fx-background-color: -fxk-surface-alt;
+  -fx-background-color: -fxk-surface-alt;
 }
-.fxk-btn-outline:pressed, .fxk-btn-outline:armed {
-    -fx-background-color: -fxk-border;
+.fxk-btn-outline:pressed,
+.fxk-btn-outline:armed {
+  -fx-background-color: -fxk-border;
 }
 .fxk-btn-outline:disabled {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fxk-primary;
-    -fx-border-color: -fxk-primary;
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-primary;
+  -fx-border-color: -fxk-primary;
 }
 
 /* ---- Icons (#36): FxButton.setIcon(Ikon) puts a FontIcon (Ikonli, org.kordamp.ikonli.javafx) in the
@@ -177,16 +208,40 @@
  * combination FxButton already has needs to set these explicitly, mirroring that variant/size's own
  * text-fill and font-size one-for-one. -------------------------------------------------------------- */
 
-.fxk-btn-primary .ikonli-font-icon   { -fx-icon-color: -fxk-on-primary; }
-.fxk-btn-secondary .ikonli-font-icon { -fx-icon-color: -fxk-text; }
-.fxk-btn-danger .ikonli-font-icon    { -fx-icon-color: -fxk-on-danger; }
-.fxk-btn-success .ikonli-font-icon   { -fx-icon-color: -fxk-on-success; }
-.fxk-btn-ghost .ikonli-font-icon     { -fx-icon-color: -fxk-primary; }
-.fxk-btn-outline .ikonli-font-icon   { -fx-icon-color: -fxk-primary; }
+.fxk-btn-primary .ikonli-font-icon {
+  -fx-icon-color: -fxk-on-primary;
+}
+.fxk-btn-secondary .ikonli-font-icon {
+  -fx-icon-color: -fxk-text;
+}
+.fxk-btn-danger .ikonli-font-icon {
+  -fx-icon-color: -fxk-on-danger;
+}
+.fxk-btn-success .ikonli-font-icon {
+  -fx-icon-color: -fxk-on-success;
+}
+.fxk-btn-ghost .ikonli-font-icon {
+  -fx-icon-color: -fxk-primary;
+}
+.fxk-btn-outline .ikonli-font-icon {
+  -fx-icon-color: -fxk-primary;
+}
 
-.fxk-btn-size-sm .ikonli-font-icon { -fx-icon-size: 12px; }   /* text-sm, matches the size's font-size */
-.fxk-btn-size-md .ikonli-font-icon { -fx-icon-size: 14px; }   /* text-base */
-.fxk-btn-size-lg .ikonli-font-icon { -fx-icon-size: 16px; }   /* text-lg */
+.fxk-btn-size-xs .ikonli-font-icon {
+  -fx-icon-size: 11px;
+} /* text-xs */
+.fxk-btn-size-sm .ikonli-font-icon {
+  -fx-icon-size: 12px;
+} /* text-sm */
+.fxk-btn-size-md .ikonli-font-icon {
+  -fx-icon-size: 12px;
+} /* text-sm */
+.fxk-btn-size-lg .ikonli-font-icon {
+  -fx-icon-size: 14px;
+} /* text-base */
+.fxk-btn-size-xl .ikonli-font-icon {
+  -fx-icon-size: 14px;
+} /* text-base */
 
 /* -----------------------------------------------------------------------------
  * FxCard (dev.fxkit.core.components.FxCard)
@@ -203,39 +258,38 @@
  * -------------------------------------------------------------------------- */
 
 .fxk-card {
-    -fx-background-color: -fxk-surface;
-    -fx-background-radius: 8px;   /* rounded-lg */
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-border-color: -fxk-border;
-    -fx-background-insets: 0;
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-radius: 8px;
+  -fx-border-width: 1px;
+  -fx-border-color: -fxk-border;
+  -fx-background-insets: 0;
 }
 
 .fxk-card-header,
 .fxk-card-body,
 .fxk-card-footer {
-    -fx-padding: 16px;   /* space-4 */
+  -fx-padding: 16px; /* space-4 */
 }
 
 .fxk-card-divider .line {
-    -fx-border-color: -fxk-border transparent transparent transparent;
-    -fx-border-width: 1px 0 0 0;
-    -fx-border-insets: 0;
+  -fx-border-color: -fxk-border transparent transparent transparent;
+  -fx-border-width: 1px 0 0 0;
+  -fx-border-insets: 0;
 }
 
 .fxk-card-elevation-none {
-    -fx-effect: null;
+  -fx-effect: null;
 }
 
 .fxk-card-elevation-sm {
-    -fx-effect: -fxk-shadow-sm;
+  -fx-effect: -fxk-shadow-sm;
 }
 
 .fxk-card-elevation-md {
-    -fx-effect: -fxk-shadow-md;
+  -fx-effect: -fxk-shadow-md;
 }
 
 .fxk-card-elevation-lg {
-    -fx-effect: -fxk-shadow-lg;
+  -fx-effect: -fxk-shadow-lg;
 }
-

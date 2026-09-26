@@ -17,6 +17,7 @@ module dev.fxkit.core {
     // used internally by FxButton, never in a public method signature, so it stays a plain requires.
     requires transitive org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
+    requires java.logging;
 
     // Packages other modules are allowed to use.
     exports dev.fxkit.core;

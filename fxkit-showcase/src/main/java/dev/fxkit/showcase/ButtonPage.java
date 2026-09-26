@@ -30,7 +30,7 @@ final class ButtonPage {
 
     /** Builds the page. Put it in the same scroll content as the other showcase sections. */
     static Node create() {
-        VBox page = new VBox(24, heading(), sizeAndVariantGrid(), disabledRow(), iconRow());
+        VBox page = new VBox(24, heading(), snippet(), sizeAndVariantGrid(), disabledRow(), iconRow());
         page.getStyleClass().addAll("bg-background", "p-8");
         return page;
     }
@@ -40,6 +40,16 @@ final class ButtonPage {
                 text("FxButton", "text-xl", "font-semibold", "text-body"),
                 text("Every variant x size (#28), plus disabled (#29). "
                         + "Tab to a button to see the keyboard focus ring.", "text-sm", "text-muted"));
+    }
+
+    /** #41: a representative snippet for the grid below - one variant and size, set the same way. */
+    private static Node snippet() {
+        String code = """
+                FxButton save = new FxButton("Button");
+                save.setVariant(FxButton.Variant.PRIMARY);
+                save.setSize(FxButton.Size.MD);
+                """;
+        return CodeBlock.create(code);
     }
 
     /** #28 task: "Check all 6 variants x 3 sizes in the showcase." */

@@ -4,8 +4,7 @@
   It depends on fxkit-core exactly the way an outside developer would.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -48,7 +47,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <!-- format for a modular app:  <module name>/<fully qualified main class> -->
-          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.ShowcaseApp</mainClass>
+          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.ClassNameTestApp</mainClass>
         </configuration>
       </plugin>
     </plugins>

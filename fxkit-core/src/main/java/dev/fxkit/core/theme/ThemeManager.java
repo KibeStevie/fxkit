@@ -1,8 +1,9 @@
 package dev.fxkit.core.theme;
 
-import dev.fxkit.core.FxKit;
 import java.util.List;
 import java.util.Objects;
+
+import dev.fxkit.core.FxKit;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,9 +18,9 @@ import javafx.scene.Scene;
  *
  * <p>What {@code apply} does:
  * <ol>
- *   <li>makes sure FXKit's stylesheets ({@code tokens.css}, {@code utilities.css}, then
- *       {@code components.css}) are in the scene, exactly once, and placed <em>before</em>
- *       your own stylesheets so your CSS can override them;</li>
+ *   <li>makes sure FXKit's stylesheets ({@code tokens.css}, {@code utilities.css},
+ *       {@code components.css}, then {@code colors.css}) are in the scene, exactly once, and
+ *       placed <em>before</em> your own stylesheets so your CSS can override them;</li>
  *   <li>adds or removes the {@value #DARK_CLASS} style class on the scene's root node,
  *       which switches the semantic tokens ({@code .root.dark} in {@code tokens.css}).</li>
  * </ol>
@@ -83,9 +84,19 @@ public final class ThemeManager {
         return next;
     }
 
-    /** Puts tokens.css, utilities.css, then components.css at the front of the list, each only if absent. */
+    /**
+     * Puts tokens.css, utilities.css, components.css, then colors.css at the front of the list, each
+     * only if absent. colors.css is last because its selectors (.fxk-btn-default.fxk-btn-color-*) are
+     * more specific than anything in components.css, so it only needs to come after it conceptually -
+     * components.css is what defines .fxk-btn-default in the first place.
+     */
     private static void installStylesheets(List<String> sheets) {
-        String[] fxkit = {FxKit.tokensStylesheet(), FxKit.utilitiesStylesheet(), FxKit.componentsStylesheet()};
+        String[] fxkit = {
+                FxKit.tokensStylesheet(),
+                FxKit.utilitiesStylesheet(),
+                FxKit.componentsStylesheet(),
+                FxKit.colorsStylesheet()
+        };
         for (int position = 0; position < fxkit.length; position++) {
             if (!sheets.contains(fxkit[position])) {
                 sheets.add(position, fxkit[position]);

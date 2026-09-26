@@ -24,7 +24,7 @@ final class CardPage {
 
     /** Builds the page. Put it in the same scroll content as the other showcase sections. */
     static Node create() {
-        VBox page = new VBox(24, heading(), elevationRow(), partialSlotsRow());
+        VBox page = new VBox(24, heading(), snippet(), elevationRow(), partialSlotsRow());
         page.getStyleClass().addAll("bg-background", "p-8");
         return page;
     }
@@ -34,6 +34,18 @@ final class CardPage {
                 text("FxCard", "text-xl", "font-semibold", "text-body"),
                 text("Header/body/footer slots (#31) and elevation levels (#32).",
                         "text-sm", "text-muted"));
+    }
+
+    /** #41: a representative snippet for {@link #fullCard(Elevation)} below. */
+    private static Node snippet() {
+        String code = """
+                FxCard card = new FxCard();
+                card.setElevation(FxCard.Elevation.MD);
+                card.setHeader(new Label("MD"));
+                card.setBody(new Label("This can't be undone."));
+                card.setFooter(deleteButton);
+                """;
+        return CodeBlock.create(code);
     }
 
     /** #32 acceptance criterion: an elevation property with levels mapped to the shadow scale. */

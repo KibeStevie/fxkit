@@ -25,110 +25,182 @@
  * ========================================================================== */
 
 .root {
-    /* ---- 1. Color scales ------------------------------------------------ */
+  /* ---- 1. Color scales ------------------------------------------------ */
 
-    -fxk-white: #ffffff;
-    -fxk-black: #000000;
+  -fxk-white: #ffffff;
+  -fxk-black: #000000;
 
-    /* gray */
-    -fxk-gray-50: #f9fafb;
-    -fxk-gray-100: #f3f4f6;
-    -fxk-gray-200: #e5e7eb;
-    -fxk-gray-300: #d1d5db;
-    -fxk-gray-400: #9ca3af;
-    -fxk-gray-500: #6b7280;
-    -fxk-gray-600: #4b5563;
-    -fxk-gray-700: #374151;
-    -fxk-gray-800: #1f2937;
-    -fxk-gray-900: #111827;
+  /* gray */
+  -fxk-gray-50: #f9fafb;
+  -fxk-gray-100: #f3f4f6;
+  -fxk-gray-200: #e5e7eb;
+  -fxk-gray-300: #d1d5db;
+  -fxk-gray-400: #9ca3af;
+  -fxk-gray-500: #6b7280;
+  -fxk-gray-600: #4b5563;
+  -fxk-gray-700: #374151;
+  -fxk-gray-800: #1f2937;
+  -fxk-gray-900: #111827;
 
-    /* blue */
-    -fxk-blue-50: #eff6ff;
-    -fxk-blue-100: #dbeafe;
-    -fxk-blue-200: #bfdbfe;
-    -fxk-blue-300: #93c5fd;
-    -fxk-blue-400: #60a5fa;
-    -fxk-blue-500: #3b82f6;
-    -fxk-blue-600: #2563eb;
-    -fxk-blue-700: #1d4ed8;
-    -fxk-blue-800: #1e40af;
-    -fxk-blue-900: #1e3a8a;
+  /* blue */
+  -fxk-blue-50: #eff6ff;
+  -fxk-blue-100: #dbeafe;
+  -fxk-blue-200: #bfdbfe;
+  -fxk-blue-300: #93c5fd;
+  -fxk-blue-400: #60a5fa;
+  -fxk-blue-500: #3b82f6;
+  -fxk-blue-600: #2563eb;
+  -fxk-blue-700: #1d4ed8;
+  -fxk-blue-800: #1e40af;
+  -fxk-blue-900: #1e3a8a;
 
-    /* red */
-    -fxk-red-50: #fef2f2;
-    -fxk-red-100: #fee2e2;
-    -fxk-red-200: #fecaca;
-    -fxk-red-300: #fca5a5;
-    -fxk-red-400: #f87171;
-    -fxk-red-500: #ef4444;
-    -fxk-red-600: #dc2626;
-    -fxk-red-700: #b91c1c;
-    -fxk-red-800: #991b1b;
-    -fxk-red-900: #7f1d1d;
+  /* red */
+  -fxk-red-50: #fef2f2;
+  -fxk-red-100: #fee2e2;
+  -fxk-red-200: #fecaca;
+  -fxk-red-300: #fca5a5;
+  -fxk-red-400: #f87171;
+  -fxk-red-500: #ef4444;
+  -fxk-red-600: #dc2626;
+  -fxk-red-700: #b91c1c;
+  -fxk-red-800: #991b1b;
+  -fxk-red-900: #7f1d1d;
 
-    /* green */
-    -fxk-green-50: #f0fdf4;
-    -fxk-green-100: #dcfce7;
-    -fxk-green-200: #bbf7d0;
-    -fxk-green-300: #86efac;
-    -fxk-green-400: #4ade80;
-    -fxk-green-500: #22c55e;
-    -fxk-green-600: #16a34a;
-    -fxk-green-700: #15803d;
-    -fxk-green-800: #166534;
-    -fxk-green-900: #14532d;
+  /* green */
+  -fxk-green-50: #f0fdf4;
+  -fxk-green-100: #dcfce7;
+  -fxk-green-200: #bbf7d0;
+  -fxk-green-300: #86efac;
+  -fxk-green-400: #4ade80;
+  -fxk-green-500: #22c55e;
+  -fxk-green-600: #16a34a;
+  -fxk-green-700: #15803d;
+  -fxk-green-800: #166534;
+  -fxk-green-900: #14532d;
 
-    /* yellow */
-    -fxk-yellow-50: #fefce8;
-    -fxk-yellow-100: #fef9c3;
-    -fxk-yellow-200: #fef08a;
-    -fxk-yellow-300: #fde047;
-    -fxk-yellow-400: #facc15;
-    -fxk-yellow-500: #eab308;
-    -fxk-yellow-600: #ca8a04;
-    -fxk-yellow-700: #a16207;
-    -fxk-yellow-800: #854d0e;
-    -fxk-yellow-900: #713f12;
+  /* yellow */
+  -fxk-yellow-50: #fefce8;
+  -fxk-yellow-100: #fef9c3;
+  -fxk-yellow-200: #fef08a;
+  -fxk-yellow-300: #fde047;
+  -fxk-yellow-400: #facc15;
+  -fxk-yellow-500: #eab308;
+  -fxk-yellow-600: #ca8a04;
+  -fxk-yellow-700: #a16207;
+  -fxk-yellow-800: #854d0e;
+  -fxk-yellow-900: #713f12;
 
-    /* ---- 2. Semantic tokens (light theme) ------------------------------- */
+  /* cyan */
+  -fxk-cyan-50: #ecfeff;
+  -fxk-cyan-100: #cffafe;
+  -fxk-cyan-200: #a5f3fc;
+  -fxk-cyan-300: #67e8f9;
+  -fxk-cyan-400: #22d3ee;
+  -fxk-cyan-500: #06b6d4;
+  -fxk-cyan-600: #0891b2;
+  -fxk-cyan-700: #0e7490;
+  -fxk-cyan-800: #155e75;
+  -fxk-cyan-900: #164e63;
 
-    /* Surfaces */
-    -fxk-background:      -fxk-gray-50;
-    -fxk-surface:         -fxk-white;
-    -fxk-surface-alt:     -fxk-gray-100;
+  /* indigo */
+  -fxk-indigo-50: #eef2ff;
+  -fxk-indigo-100: #e0e7ff;
+  -fxk-indigo-200: #c7d2fe;
+  -fxk-indigo-300: #a5b4fc;
+  -fxk-indigo-400: #818cf8;
+  -fxk-indigo-500: #6366f1;
+  -fxk-indigo-600: #4f46e5;
+  -fxk-indigo-700: #4338ca;
+  -fxk-indigo-800: #3730a3;
+  -fxk-indigo-900: #312e81;
 
-    /* Text */
-    -fxk-text:            -fxk-gray-900;
-    -fxk-text-muted:      -fxk-gray-500;
+  /* lime */
+  -fxk-lime-50: #f7fee7;
+  -fxk-lime-100: #ecfccb;
+  -fxk-lime-200: #d9f99d;
+  -fxk-lime-300: #bef264;
+  -fxk-lime-400: #a3e635;
+  -fxk-lime-500: #84cc16;
+  -fxk-lime-600: #65a30d;
+  -fxk-lime-700: #4d7c0f;
+  -fxk-lime-800: #3f6212;
+  -fxk-lime-900: #365314;
 
-    /* Borders and focus */
-    -fxk-border:          -fxk-gray-200;
-    -fxk-border-strong:   -fxk-gray-300;
-    -fxk-focus-ring:      -fxk-blue-500;
+  /* pink */
+  -fxk-pink-50: #fdf2f8;
+  -fxk-pink-100: #fce7f3;
+  -fxk-pink-200: #fbcfe8;
+  -fxk-pink-300: #f9a8d4;
+  -fxk-pink-400: #f472b6;
+  -fxk-pink-500: #ec4899;
+  -fxk-pink-600: #db2777;
+  -fxk-pink-700: #be185d;
+  -fxk-pink-800: #9d174d;
+  -fxk-pink-900: #831843;
 
-    /* Primary (brand / main action) */
-    -fxk-primary:         -fxk-blue-600;
-    -fxk-primary-hover:   -fxk-blue-700;
-    -fxk-primary-pressed: -fxk-blue-800;
-    -fxk-on-primary:      -fxk-white;
+  /* purple */
+  -fxk-purple-50: #faf5ff;
+  -fxk-purple-100: #f3e8ff;
+  -fxk-purple-200: #e9d5ff;
+  -fxk-purple-300: #d8b4fe;
+  -fxk-purple-400: #c084fc;
+  -fxk-purple-500: #a855f7;
+  -fxk-purple-600: #9333ea;
+  -fxk-purple-700: #7e22ce;
+  -fxk-purple-800: #6b21a8;
+  -fxk-purple-900: #581c87;
 
-    /* Status */
-    -fxk-danger:          -fxk-red-600;
-    -fxk-danger-hover:    -fxk-red-700;
-    -fxk-on-danger:       -fxk-white;
-    -fxk-success:         -fxk-green-700;
-    -fxk-success-hover:   -fxk-green-800;
-    -fxk-on-success:      -fxk-white;
-    -fxk-warning:         -fxk-yellow-500;
-    -fxk-warning-hover:   -fxk-yellow-600;
-    -fxk-on-warning:      -fxk-gray-900;
+  /* teal */
+  -fxk-teal-50: #f0fdfa;
+  -fxk-teal-100: #ccfbf1;
+  -fxk-teal-200: #99f6e4;
+  -fxk-teal-300: #5eead4;
+  -fxk-teal-400: #2dd4bf;
+  -fxk-teal-500: #14b8a6;
+  -fxk-teal-600: #0d9488;
+  -fxk-teal-700: #0f766e;
+  -fxk-teal-800: #115e59;
+  -fxk-teal-900: #134e4a;
 
-    /* ---- 3. Elevation (light theme) ------------------------------------
+  /* ---- 2. Semantic tokens (light theme) ------------------------------- */
+
+  /* Surfaces */
+  -fxk-background: -fxk-gray-50;
+  -fxk-surface: -fxk-white;
+  -fxk-surface-alt: -fxk-gray-100;
+
+  /* Text */
+  -fxk-text: -fxk-gray-900;
+  -fxk-text-muted: -fxk-gray-500;
+
+  /* Borders and focus */
+  -fxk-border: -fxk-gray-200;
+  -fxk-border-strong: -fxk-gray-300;
+  -fxk-focus-ring: -fxk-blue-500;
+
+  /* Primary (brand / main action) */
+  -fxk-primary: -fxk-blue-600;
+  -fxk-primary-hover: -fxk-blue-700;
+  -fxk-primary-pressed: -fxk-blue-800;
+  -fxk-on-primary: -fxk-white;
+
+  /* Status */
+  -fxk-danger: -fxk-red-600;
+  -fxk-danger-hover: -fxk-red-700;
+  -fxk-on-danger: -fxk-white;
+  -fxk-success: -fxk-green-700;
+  -fxk-success-hover: -fxk-green-800;
+  -fxk-on-success: -fxk-white;
+  -fxk-warning: -fxk-yellow-500;
+  -fxk-warning-hover: -fxk-yellow-600;
+  -fxk-on-warning: -fxk-gray-900;
+
+  /* ---- 3. Elevation (light theme) ------------------------------------
      * A whole dropshadow(...) effect works as a looked-up value in JavaFX.
      * Usage: -fx-effect: -fxk-shadow-md;  or the class .shadow-md          */
-    -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.10), 3,  0, 0, 1);
-    -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8,  0, 0, 3);
-    -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 16, 0, 0, 6);
+  -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
+  -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);
+  -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 16, 0, 0, 6);
 }
 
 /* =============================================================================
@@ -144,39 +216,39 @@
  * ========================================================================== */
 
 .root.dark {
-    /* Surfaces */
-    -fxk-background:      -fxk-gray-900;
-    -fxk-surface:         -fxk-gray-800;
-    -fxk-surface-alt:     -fxk-gray-700;
+  /* Surfaces */
+  -fxk-background: -fxk-gray-900;
+  -fxk-surface: -fxk-gray-800;
+  -fxk-surface-alt: -fxk-gray-700;
 
-    /* Text */
-    -fxk-text:            -fxk-gray-100;
-    -fxk-text-muted:      -fxk-gray-400;
+  /* Text */
+  -fxk-text: -fxk-gray-100;
+  -fxk-text-muted: -fxk-gray-400;
 
-    /* Borders and focus */
-    -fxk-border:          -fxk-gray-700;
-    -fxk-border-strong:   -fxk-gray-600;
-    -fxk-focus-ring:      -fxk-blue-400;
+  /* Borders and focus */
+  -fxk-border: -fxk-gray-700;
+  -fxk-border-strong: -fxk-gray-600;
+  -fxk-focus-ring: -fxk-blue-400;
 
-    /* Primary: lighter on hover, darker when pressed */
-    -fxk-primary:         -fxk-blue-400;
-    -fxk-primary-hover:   -fxk-blue-300;
-    -fxk-primary-pressed: -fxk-blue-500;
-    -fxk-on-primary:      -fxk-gray-900;
+  /* Primary: lighter on hover, darker when pressed */
+  -fxk-primary: -fxk-blue-400;
+  -fxk-primary-hover: -fxk-blue-300;
+  -fxk-primary-pressed: -fxk-blue-500;
+  -fxk-on-primary: -fxk-gray-900;
 
-    /* Status */
-    -fxk-danger:          -fxk-red-400;
-    -fxk-danger-hover:    -fxk-red-300;
-    -fxk-on-danger:       -fxk-gray-900;
-    -fxk-success:         -fxk-green-400;
-    -fxk-success-hover:   -fxk-green-300;
-    -fxk-on-success:      -fxk-gray-900;
-    -fxk-warning:         -fxk-yellow-400;
-    -fxk-warning-hover:   -fxk-yellow-300;
-    -fxk-on-warning:      -fxk-gray-900;
+  /* Status */
+  -fxk-danger: -fxk-red-400;
+  -fxk-danger-hover: -fxk-red-300;
+  -fxk-on-danger: -fxk-gray-900;
+  -fxk-success: -fxk-green-400;
+  -fxk-success-hover: -fxk-green-300;
+  -fxk-on-success: -fxk-gray-900;
+  -fxk-warning: -fxk-yellow-400;
+  -fxk-warning-hover: -fxk-yellow-300;
+  -fxk-on-warning: -fxk-gray-900;
 
-    /* Elevation: shadows need more opacity to show on dark surfaces */
-    -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.40), 3,  0, 0, 1);
-    -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8,  0, 0, 3);
-    -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.50), 16, 0, 0, 6);
+  /* Elevation: shadows need more opacity to show on dark surfaces */
+  -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 3, 0, 0, 1);
+  -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8, 0, 0, 3);
+  -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 16, 0, 0, 6);
 }

@@ -1,7 +1,9 @@
 package dev.fxkit.showcase;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -26,7 +28,7 @@ final class FxmlDemoPage {
 
     /** Builds the page. Put it in the same scroll content as the other showcase sections. */
     static Node create() {
-        VBox page = new VBox(24, heading(), load());
+        VBox page = new VBox(24, heading(), source(), load());
         page.getStyleClass().addAll("bg-background", "p-8");
         return page;
     }
@@ -36,6 +38,20 @@ final class FxmlDemoPage {
                 text("FXML", "text-xl", "font-semibold", "text-body"),
                 text("The buttons and card below are built from fxml-demo.fxml, not Java (#33).",
                         "text-sm", "text-muted"));
+    }
+
+    /**
+     * #41: shows {@code fxml-demo.fxml}'s actual source, read back from the same resource {@link #load()}
+     * loads - rather than a separate copy of the text - so the snippet can never drift from what the page
+     * below it really renders.
+     */
+    private static Node source() {
+        try (InputStream in = FxmlDemoPage.class.getResourceAsStream("fxml-demo.fxml")) {
+            String fxml = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            return CodeBlock.create(fxml);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read fxml-demo.fxml for the snippet panel", e);
+        }
     }
 
     private static Node load() {
