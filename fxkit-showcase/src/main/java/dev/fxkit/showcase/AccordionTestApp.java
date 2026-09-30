@@ -1,9 +1,9 @@
 package dev.fxkit.showcase;
 
-import dev.fxkit.core.components.FxAccordion;
-import dev.fxkit.core.components.FxAccordionContent;
-import dev.fxkit.core.components.FxAccordionPanel;
-import dev.fxkit.core.components.FxAccordionTitle;
+import dev.fxkit.core.components.accordion.FxAccordion;
+import dev.fxkit.core.components.accordion.FxAccordionContent;
+import dev.fxkit.core.components.accordion.FxAccordionPanel;
+import dev.fxkit.core.components.accordion.FxAccordionTitle;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.application.Application;

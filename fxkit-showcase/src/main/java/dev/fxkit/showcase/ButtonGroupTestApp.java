@@ -3,8 +3,8 @@ package dev.fxkit.showcase;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.devicons.Devicons;
 
-import dev.fxkit.core.components.FxButton;
-import dev.fxkit.core.components.FxButtonGroup;
+import dev.fxkit.core.components.button.FxButtonGroup;
+import dev.fxkit.core.components.button.FxButton;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.application.Application;

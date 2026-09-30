@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.button;
 
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;

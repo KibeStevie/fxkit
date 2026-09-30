@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.accordion;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

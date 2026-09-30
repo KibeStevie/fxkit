@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.button;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;

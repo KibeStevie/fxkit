@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.accordion;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import javafx.beans.property.BooleanProperty;

@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.accordion;
 
 import java.util.Objects;
 

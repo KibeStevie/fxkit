@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.avatar;
 
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;

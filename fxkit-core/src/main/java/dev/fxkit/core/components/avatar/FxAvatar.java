@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.avatar;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import dev.fxkit.core.internal.EnumStyleClassSync;

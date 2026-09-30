@@ -1,4 +1,4 @@
-package dev.fxkit.core.components;
+package dev.fxkit.core.components.breadcrumb;
 
 import java.util.ArrayList;
 import java.util.List;
