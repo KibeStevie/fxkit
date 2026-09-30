@@ -36,6 +36,7 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.dropdown;
     exports dev.fxkit.core.components.spinner;
     exports dev.fxkit.core.components.toast;
+    exports dev.fxkit.core.components.timeline;
 
     // Lets FXMLLoader create FxButton (and later components) by reflection from
     // FXML.

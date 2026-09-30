@@ -1481,3 +1481,38 @@
   -fxk-toast-icon-bg: -fxk-yellow-800;
   -fxk-toast-icon-fg: -fxk-yellow-200;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxTimeline colors (flowbite-react timeline theme).
+ *
+ * Append this block to colors.css. ".fxk-timeline" only DEFINES looked-up colors; components.css
+ * consumes them on the marker, ring and icon (children inherit looked-up colors).
+ *
+ *   -fxk-timeline-marker-bg  plain dot            bg-gray-200        dark:bg-gray-700
+ *   -fxk-timeline-ring       dot border + icon    white              dark:gray-900
+ *                            ring (hides line)    (-fxk-surface)     (-fxk-background)
+ *   -fxk-timeline-icon-bg    icon circle          bg-primary-200     dark:bg-primary-900
+ *   -fxk-timeline-icon-fg    icon                 text-primary-600   dark:text-primary-300
+ *
+ * FXKit's primary is blue (-fxk-primary is blue-600), so the icon circle uses the blue scale; Flowbite's
+ * own default primary is cyan, which is why its screenshots are teal. To match them, swap blue for cyan here.
+ *
+ * The ring must match whatever the timeline sits on. On a page painted with -fxk-background (not
+ * -fxk-surface), override it, e.g.  .my-page .fxk-timeline { -fxk-timeline-ring: -fxk-background; }
+ * -------------------------------------------------------------------------- */
+
+.fxk-timeline {
+  -fxk-timeline-marker-bg: -fxk-gray-200;
+  -fxk-timeline-ring: -fxk-surface;
+  -fxk-timeline-icon-bg: -fxk-blue-200;
+  -fxk-timeline-icon-fg: -fxk-blue-600;
+}
+
+/* ---- dark theme ---- */
+
+.root.dark .fxk-timeline {
+  -fxk-timeline-marker-bg: -fxk-gray-700;
+  -fxk-timeline-ring: -fxk-background;
+  -fxk-timeline-icon-bg: -fxk-blue-900;
+  -fxk-timeline-icon-fg: -fxk-blue-300;
+}

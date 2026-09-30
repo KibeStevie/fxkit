@@ -1245,3 +1245,139 @@
   -fx-stroke-width: 2px;
   -fx-stroke-line-cap: round;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxTimeline (dev.fxkit.core.components.timeline.FxTimeline / FxTimelineItem / FxTimelinePoint /
+ * FxTimelineContent / FxTimelineTime / FxTimelineTitle / FxTimelineBody)
+ *
+ * Append this block to the END of components.css; append timeline-colors.css to colors.css.
+ *
+ * Structure only. colors.css DEFINES four looked-up colors on ".fxk-timeline" (-fxk-timeline-marker-bg,
+ * -ring, -icon-bg, -icon-fg); everything here consumes them. Looked-up colors are inherited by children,
+ * so the marker and icon need no per-theme selectors.
+ *
+ * Orientation classes are set from Java on each part (fxk-timeline-horizontal/-vertical,
+ * fxk-timeline-item-*, fxk-timeline-point-*), so no rule depends on being inside an FxTimeline.
+ *
+ * Flowbite mapping (timeline theme):
+ *   root vertical     relative border-l border-gray-200       -> 1px left border, -fxk-border
+ *   item vertical     mb-10 ml-6                              -> padding 0 0 40 24
+ *   item horizontal   relative mb-6 sm:mb-0                   -> equal-width column (pref-width 0 + hgrow)
+ *   content horiz.    mt-3 sm:pr-8                            -> padding 12 32 0 0
+ *   time              mb-1 text-sm text-gray-400              -> 12px, 4px below, muted
+ *   title             text-lg font-semibold text-gray-900     -> 16px, 600, -fxk-text
+ *   body              mb-4 text-base text-gray-500            -> 14px, 16px below, -fxk-text-muted
+ *   marker            h-3 w-3 rounded-full border border-white bg-gray-200
+ *   marker + icon     h-6 w-6 rounded-full bg-primary-200 ring-8 ring-white, icon h-3 w-3
+ *   line (horizontal) h-0.5 w-full bg-gray-200                -> 2px, -fxk-border
+ *
+ * The marker is an unmanaged child pinned to its point's top-left corner in Java; the translate-x/-y
+ * rules below center it on the line: x by half its width, y by the vertical-timeline offset (mt-1.5 for
+ * the dot, none for the icon) or, in a horizontal timeline, by half the difference to the 2px line.
+ * -------------------------------------------------------------------------- */
+
+/* ---- Root ---- */
+
+.fxk-timeline-vertical {
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 0 0 0 1px; /* border-l */
+}
+
+/* ---- Items ---- */
+
+.fxk-timeline-item-vertical {
+  -fx-padding: 0 0 40px 24px; /* mb-10 ml-6 */
+}
+
+/* pref-width 0 + HBox.setHgrow(ALWAYS) (set in FxTimeline) = every column gets the same share of the width */
+.fxk-timeline-item-horizontal {
+  -fx-pref-width: 0;
+}
+
+/* ---- Point: line + marker ---- */
+
+.fxk-timeline-line {
+  -fx-background-color: -fxk-border;
+  -fx-min-height: 2px; /* h-0.5 */
+  -fx-pref-height: 2px;
+  -fx-max-height: 2px;
+}
+
+.fxk-timeline-marker {
+  -fx-alignment: CENTER;
+  -fx-min-width: 12px; /* h-3 w-3 */
+  -fx-pref-width: 12px;
+  -fx-max-width: 12px;
+  -fx-min-height: 12px;
+  -fx-pref-height: 12px;
+  -fx-max-height: 12px;
+  -fx-background-color: -fxk-timeline-marker-bg;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-timeline-ring; /* border border-white */
+  -fx-border-width: 1px;
+  -fx-border-radius: 9999px;
+  -fx-translate-x: -6px; /* -left-1.5: centered on the line */
+}
+.fxk-timeline-point-vertical .fxk-timeline-marker {
+  -fx-translate-y: 6px; /* mt-1.5 */
+}
+.fxk-timeline-point-horizontal .fxk-timeline-marker {
+  -fx-translate-y: -5px; /* centered on the 2px line: (2 - 12) / 2 */
+}
+
+/* Icon marker. Declared after the plain marker at the same specificity, so its sizes win; the two
+ * orientation rules below have two classes, so they win over the plain ones above. The first
+ * background layer is the ring: negative insets paint it 8px OUTSIDE the circle (ring-8), hiding the
+ * line behind it without taking any layout space. */
+.fxk-timeline-marker-icon {
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+  -fx-background-color: -fxk-timeline-ring, -fxk-timeline-icon-bg;
+  -fx-background-insets: -8px, 0;
+  -fx-background-radius: 9999px, 9999px;
+  -fx-border-width: 0;
+  -fx-translate-x: -12px; /* -left-3 */
+}
+.fxk-timeline-point-vertical .fxk-timeline-marker-icon {
+  -fx-translate-y: 0;
+}
+.fxk-timeline-point-horizontal .fxk-timeline-marker-icon {
+  -fx-translate-y: -11px; /* (2 - 24) / 2 */
+}
+
+.fxk-timeline-icon {
+  -fx-icon-color: -fxk-timeline-icon-fg;
+  -fx-icon-size: 12px; /* h-3 w-3 */
+}
+
+/* ---- Content ---- */
+
+.fxk-timeline-item-horizontal > .fxk-timeline-content {
+  -fx-padding: 12px 32px 0 0; /* mt-3 sm:pr-8 */
+}
+
+.fxk-timeline-time {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: normal; /* font-normal */
+  -fx-text-fill: -fxk-text-muted;
+  -fx-opacity: 0.8; /* text-gray-400 is lighter than the muted text token */
+  -fx-padding: 0 0 4px 0; /* mb-1 */
+}
+
+.fxk-timeline-title {
+  -fx-font-size: 16px; /* text-lg */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text;
+}
+
+.fxk-timeline-body {
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: normal; /* font-normal */
+  -fx-text-fill: -fxk-text-muted;
+  -fx-padding: 0 0 16px 0; /* mb-4 */
+}
