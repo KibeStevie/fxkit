@@ -23,6 +23,13 @@ module dev.fxkit.core {
     exports dev.fxkit.core;
     exports dev.fxkit.core.theme;
     exports dev.fxkit.core.components;
+    exports dev.fxkit.core.components.accordion;
+    exports dev.fxkit.core.components.avatar;
+    exports dev.fxkit.core.components.alert;
+    exports dev.fxkit.core.components.badge;
+    exports dev.fxkit.core.components.breadcrumb;
+    exports dev.fxkit.core.components.button;
+
 
     // Lets FXMLLoader create FxButton (and later components) by reflection from FXML.
     opens dev.fxkit.core.components to javafx.fxml;

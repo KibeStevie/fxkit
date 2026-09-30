@@ -6,8 +6,8 @@ import java.util.List;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.devicons.Devicons;
 
-import dev.fxkit.core.components.FxBreadcrumb;
-import dev.fxkit.core.components.FxBreadcrumbItem;
+import dev.fxkit.core.components.breadcrumb.FxBreadcrumb;
+import dev.fxkit.core.components.breadcrumb.FxBreadcrumbItem;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.application.Application;

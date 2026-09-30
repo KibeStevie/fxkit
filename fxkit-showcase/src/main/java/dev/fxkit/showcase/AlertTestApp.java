@@ -3,7 +3,7 @@ package dev.fxkit.showcase;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.devicons.Devicons;
 
-import dev.fxkit.core.components.FxAlert;
+import dev.fxkit.core.components.alert.FxAlert;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.animation.PauseTransition;

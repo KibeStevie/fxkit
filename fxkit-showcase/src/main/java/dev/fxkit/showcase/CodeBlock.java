@@ -1,6 +1,6 @@
 package dev.fxkit.showcase;
 
-import dev.fxkit.core.components.FxButton;
+import dev.fxkit.core.components.button.FxButton;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;

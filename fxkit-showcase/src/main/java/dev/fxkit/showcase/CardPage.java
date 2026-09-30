@@ -1,6 +1,6 @@
 package dev.fxkit.showcase;
 
-import dev.fxkit.core.components.FxButton;
+import dev.fxkit.core.components.button.FxButton;
 import dev.fxkit.core.components.FxCard;
 import dev.fxkit.core.components.FxCard.Elevation;
 import javafx.scene.Node;

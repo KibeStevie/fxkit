@@ -6,9 +6,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import dev.fxkit.core.FxKit;
-import dev.fxkit.core.components.FxAvatar;
-import dev.fxkit.core.components.FxAvatarGroup;
-import dev.fxkit.core.components.FxAvatarGroupCounter;
+import dev.fxkit.core.components.avatar.FxAvatar;
+import dev.fxkit.core.components.avatar.FxAvatarGroup;
+import dev.fxkit.core.components.avatar.FxAvatarGroupCounter;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.application.Application;

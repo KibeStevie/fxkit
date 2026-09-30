@@ -3,7 +3,7 @@ package dev.fxkit.showcase;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.devicons.Devicons;
 
-import dev.fxkit.core.components.FxBadge;
+import dev.fxkit.core.components.badge.FxBadge;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
 import javafx.animation.PauseTransition;
