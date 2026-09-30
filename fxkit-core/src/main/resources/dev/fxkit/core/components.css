@@ -1126,3 +1126,122 @@
   -fx-stroke: -fxk-spinner-arc;
   -fx-stroke-line-cap: round; /* Flowbite's arc has rounded ends */
 }
+
+/* -----------------------------------------------------------------------------
+ * FxToast (dev.fxkit.core.components.toast.FxToast)
+ *
+ * REPLACES the previous FxToast block at the end of components.css (from this header down).
+ *
+ * Structure only. ".fxk-toast-color-*" (colors.css) DEFINES four looked-up colors on the toast
+ * node; everything here just consumes them, same split as FxBadge:
+ *   -fxk-toast-bg       the toast's own background (tinted with the color, in both themes)
+ *   -fxk-toast-fg       message text
+ *   -fxk-toast-icon-bg  the 32px icon box, and the close button's hover fill
+ *   -fxk-toast-icon-fg  the icon, the bare FEEDBACK icon, and the close button's resting color
+ * The semantic fallbacks on .fxk-toast only apply when colors.css is not loaded (or color is null).
+ *
+ * Flowbite mapping (toast theme):
+ *   root.base   flex w-full max-w-xs items-center rounded-lg p-4 shadow
+ *               -> 320px wide, 8px radius, 16px padding, -fxk-shadow-md
+ *   icon box    inline-flex h-8 w-8 rounded-lg + color   -> 32px square, 8px radius
+ *   text        ml-3 text-sm font-normal                 -> 12px gap (16px in feedback: pl-4), 12px text
+ *   feedback    bare h-5 w-5 icon                        -> .fxk-toast-feedback: no box, 20px icon
+ *   toggle.base -m-1.5 ml-auto h-8 w-8 rounded-lg p-1.5 hover:bg-... focus:ring-2
+ *               -> margins/grow set in FxToast.java
+ * -------------------------------------------------------------------------- */
+
+.fxk-toast {
+  -fxk-toast-bg: -fxk-surface;
+  -fxk-toast-fg: -fxk-text-muted;
+  -fxk-toast-icon-bg: -fxk-surface-alt;
+  -fxk-toast-icon-fg: -fxk-text-muted;
+
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-spacing: 12px; /* ml-3 */
+  -fx-padding: 16px; /* p-4 */
+  -fx-pref-width: 320px; /* w-full max-w-xs */
+  -fx-max-width: 320px;
+  -fx-background-color: -fxk-toast-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-insets: 0;
+  -fx-effect: -fxk-shadow-md; /* shadow */
+}
+
+.fxk-toast-feedback {
+  -fx-spacing: 16px; /* pl-4 */
+}
+
+/* Descendant rule: a Label inside a custom content node follows the toast's color too. */
+.fxk-toast .label,
+.fxk-toast-text {
+  -fx-text-fill: -fxk-toast-fg;
+}
+
+.fxk-toast-text {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: normal; /* font-normal */
+}
+
+/* ---- Icon ---- */
+
+.fxk-toast-icon-box {
+  -fx-alignment: CENTER;
+  -fx-min-width: 32px; /* h-8 w-8 */
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+  -fx-background-color: -fxk-toast-icon-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+}
+
+.fxk-toast-icon {
+  -fx-icon-color: -fxk-toast-icon-fg;
+  -fx-icon-size: 20px; /* h-5 w-5 */
+}
+
+/* Feedback: no icon box, just the icon straight on the toast's background. */
+.fxk-toast-feedback .fxk-toast-icon-box {
+  -fx-background-color: transparent;
+  -fx-min-width: 20px;
+  -fx-pref-width: 20px;
+  -fx-max-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+}
+
+/* ---- Close button (ToastToggle) ---- */
+
+.fxk-toast-close {
+  -fxk-toast-close-fg: -fxk-toast-icon-fg;
+  -fx-min-width: 32px; /* h-8 w-8 */
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+  -fx-padding: 6px; /* p-1.5 */
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px; /* reserved so the focus ring never shifts layout */
+  -fx-border-radius: 8px;
+  -fx-cursor: hand;
+}
+.fxk-toast-close:hover {
+  -fxk-toast-close-fg: -fxk-toast-fg; /* hover:text-<c>-900 */
+  -fx-background-color: -fxk-toast-icon-bg; /* hover:bg-<c>-200 */
+}
+.fxk-toast-close:focused {
+  -fx-border-color: -fxk-focus-ring; /* focus:ring-2 */
+}
+
+.fxk-toast-close-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-toast-close-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+}

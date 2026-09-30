@@ -1414,3 +1414,70 @@
 .root.dark .fxk-spinner-light.fxk-spinner-color-gray {
   -fxk-spinner-arc: -fxk-gray-600;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxToast colors (flowbite-inspired).
+ *
+ * REPLACES the previous FxToast block at the end of colors.css (from this header down).
+ *
+ * The toast itself is now tinted: each ".fxk-toast-color-*" rule only DEFINES four looked-up
+ * colors on the toast node; components.css consumes them, so one rule per color covers every part
+ * in both themes.
+ *
+ *            toast bg     text (fg)   icon box     icon / close
+ *   light    <c>-100      <c>-800     <c>-200      <c>-600
+ *   dark     <c>-900      <c>-100     <c>-800      <c>-200
+ *
+ * WARNING is Flowbite's orange. FXKit's palette has no orange scale, so it uses yellow like
+ * FxAlert's warning; its light icon is one shade darker (700) for contrast on yellow-200.
+ * -------------------------------------------------------------------------- */
+
+.fxk-toast-color-info {
+  -fxk-toast-bg: -fxk-cyan-100;
+  -fxk-toast-fg: -fxk-cyan-800;
+  -fxk-toast-icon-bg: -fxk-cyan-200;
+  -fxk-toast-icon-fg: -fxk-cyan-600;
+}
+.fxk-toast-color-success {
+  -fxk-toast-bg: -fxk-green-100;
+  -fxk-toast-fg: -fxk-green-800;
+  -fxk-toast-icon-bg: -fxk-green-200;
+  -fxk-toast-icon-fg: -fxk-green-600;
+}
+.fxk-toast-color-failure {
+  -fxk-toast-bg: -fxk-red-100;
+  -fxk-toast-fg: -fxk-red-800;
+  -fxk-toast-icon-bg: -fxk-red-200;
+  -fxk-toast-icon-fg: -fxk-red-600;
+}
+.fxk-toast-color-warning {
+  -fxk-toast-bg: -fxk-yellow-100;
+  -fxk-toast-fg: -fxk-yellow-800;
+  -fxk-toast-icon-bg: -fxk-yellow-200;
+  -fxk-toast-icon-fg: -fxk-yellow-700;
+}
+
+.root.dark .fxk-toast-color-info {
+  -fxk-toast-bg: -fxk-cyan-900;
+  -fxk-toast-fg: -fxk-cyan-100;
+  -fxk-toast-icon-bg: -fxk-cyan-800;
+  -fxk-toast-icon-fg: -fxk-cyan-200;
+}
+.root.dark .fxk-toast-color-success {
+  -fxk-toast-bg: -fxk-green-900;
+  -fxk-toast-fg: -fxk-green-100;
+  -fxk-toast-icon-bg: -fxk-green-800;
+  -fxk-toast-icon-fg: -fxk-green-200;
+}
+.root.dark .fxk-toast-color-failure {
+  -fxk-toast-bg: -fxk-red-900;
+  -fxk-toast-fg: -fxk-red-100;
+  -fxk-toast-icon-bg: -fxk-red-800;
+  -fxk-toast-icon-fg: -fxk-red-200;
+}
+.root.dark .fxk-toast-color-warning {
+  -fxk-toast-bg: -fxk-yellow-900;
+  -fxk-toast-fg: -fxk-yellow-100;
+  -fxk-toast-icon-bg: -fxk-yellow-800;
+  -fxk-toast-icon-fg: -fxk-yellow-200;
+}
