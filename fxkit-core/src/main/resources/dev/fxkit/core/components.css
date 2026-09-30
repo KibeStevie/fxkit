@@ -225,6 +225,383 @@
   -fx-background-radius: 9999px;
   -fx-border-radius: 9999px;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxAlert (dev.fxkit.core.components.FxAlert)
+ *
+ * Base rules apply to every color; ".fxk-alert-color-*" (colors.css) sets only
+ * background/border/text/close-button colors, so the two combine freely - same
+ * split as FxButton's variant/color. ".fxk-alert-border-accent" (Flowbite's
+ * withBorderAccent) adds a 4px top border only; a color's own border-color is
+ * always set below regardless of the accent flag, so toggling the width alone
+ * is enough to reveal or hide it (the same top-only shorthand as
+ * ".fxk-card-divider .line" above).
+ * -------------------------------------------------------------------------- */
+
+.fxk-alert {
+  -fx-spacing: 8px; /* gap-2 */
+  -fx-padding: 16px; /* p-4 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-radius: 8px;
+  -fx-border-width: 0;
+  -fx-background-insets: 0;
+}
+
+.fxk-alert-border-accent {
+  -fx-border-width: 4 0 0 0; /* border-t-4 */
+}
+
+.fxk-alert-wrapper {
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-spacing: 12px; /* icon's mr-3, reused as icon/body/close gap */
+}
+
+.fxk-alert-icon {
+  -fx-icon-size: 20px; /* icon: h-5 w-5 */
+}
+
+.fxk-alert-title {
+  -fx-font-weight: 500; /* font-medium */
+}
+
+/* closeButton.base: "-m-1.5 ml-auto inline-flex h-8 w-8 rounded-lg p-1.5 focus:ring-2".
+ * "ml-auto" (push to the row's end) is achieved instead by HBox.setHgrow(ALWAYS) on the
+ * body node in FxAlert.refresh() - there's no negative-margin equivalent in JavaFX CSS,
+ * but the visual result (close button pinned to the far end of the row) is the same. */
+.fxk-alert-close {
+  -fx-min-width: 32px; /* h-8 */
+  -fx-min-height: 32px;
+  -fx-pref-width: 32px;
+  -fx-pref-height: 32px;
+  -fx-padding: 6px; /* p-1.5 */
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-radius: 8px;
+  -fx-border-width: 0;
+  -fx-font-size: 14px;
+  -fx-font-weight: 600;
+  -fx-cursor: hand;
+}
+.fxk-alert-close:focused {
+  /* focus:ring-2, simplified to one semantic ring color rather than Flowbite's
+   * per-color ring shade - consistent with how FxButton's own :focused rule works. */
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-width: 2px;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxBadge (dev.fxkit.core.components.FxBadge)
+ *
+ * Structure only. ".fxk-badge-color-*" (colors.css) DEFINES -fxk-badge-bg / -bg-hover / -fg /
+ * -border / -close-hover; everything here just consumes them, so one rule per part covers all
+ * 17 colors in both themes. Looked-up colors are inherited by children, which is why the
+ * Label, FontIcon and close Button below can read -fxk-badge-fg without per-color selectors.
+ *
+ * Flowbite mapping: base "flex h-fit items-center gap-1 font-semibold"; icon.off (text badge)
+ * "rounded px-2 py-0.5"; icon.on (icon only, no text) "rounded-full p-1.5"; sizes only change
+ * the font size (their own padding is overridden by icon.off/on via twMerge in Flowbite).
+ * ".fxk-badge-dismissible" is Flowbite's chip: ps-1.5 pe-0.5 py-0.5 plus a 1px border.
+ * -------------------------------------------------------------------------- */
+
+.fxk-badge {
+  -fx-background-color: -fxk-badge-bg;
+  -fx-background-radius: 4px; /* rounded */
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-badge-border;
+  -fx-border-radius: 4px;
+  -fx-border-width: 0; /* revealed by .fxk-badge-dismissible */
+  -fx-padding: 2px 8px 2px 8px; /* py-0.5 px-2 */
+  -fx-spacing: 4px; /* gap-1 */
+  -fx-alignment: CENTER_LEFT;
+}
+.fxk-badge:hover {
+  -fx-background-color: -fxk-badge-bg-hover;
+}
+
+.fxk-badge-size-xs {
+  -fx-font-size: 11px; /* text-xs */
+}
+.fxk-badge-size-sm {
+  -fx-font-size: 12px; /* text-sm */
+}
+
+.fxk-badge-text {
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-badge-fg;
+  -fx-fill: -fxk-badge-fg;
+}
+
+.fxk-badge-icon {
+  -fx-icon-color: -fxk-badge-fg;
+  -fx-icon-size: 12px; /* h-3 w-3 (xs) */
+}
+.fxk-badge-size-sm .fxk-badge-icon {
+  -fx-icon-size: 14px; /* h-3.5 w-3.5 (sm) */
+}
+
+/* Icon only (no text, no close button): a circle, uniform padding. */
+.fxk-badge-icon-only {
+  -fx-background-radius: 9999px;
+  -fx-border-radius: 9999px;
+  -fx-padding: 6px; /* p-1.5 */
+}
+
+/* Dismissible chip: 1px border in the color's own shade, tighter right padding for the button. */
+.fxk-badge-dismissible {
+  -fx-border-width: 1px;
+  -fx-padding: 1px 1px 1px 6px; /* ps-1.5 pe-0.5 py-0.5, minus the 1px border */
+}
+
+.fxk-badge-close {
+  -fx-background-color: transparent;
+  -fx-background-radius: 2px; /* rounded-xs */
+  -fx-background-insets: 0;
+  -fx-text-fill: -fxk-badge-fg;
+  -fx-min-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-width: 16px;
+  -fx-pref-height: 16px;
+  -fx-padding: 0;
+  -fx-font-size: 12px;
+  -fx-font-weight: 700;
+  -fx-cursor: hand;
+}
+.fxk-badge-close:hover {
+  -fx-background-color: -fxk-badge-close-hover;
+}
+.fxk-badge-close:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-width: 1px;
+  -fx-border-radius: 2px;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxBreadcrumb (dev.fxkit.core.components.FxBreadcrumb / FxBreadcrumbItem)
+ *
+ * Append this block to components.css.
+ *
+ * ".fxk-breadcrumb" is the row. ".fxk-breadcrumb-solid" is Flowbite's "background color" example
+ * (bg-gray-50 px-5 py-3 dark:bg-gray-800); -fxk-surface-alt is the closest semantic token in both
+ * themes. Items extend Hyperlink, so the Modena hyperlink look (padding, underline, dotted focus
+ * border) is reset here. Each item defines one local color, -fxk-breadcrumb-fg, and both the text
+ * and the icon read it - FontIcon ignores -fx-text-fill, same situation as FxButton's icons.
+ *
+ * Flowbite mapping (item theme):
+ *   href.off (current page)  text-gray-500 dark:text-gray-400          -> -fxk-text-muted
+ *   href.on  (link)          text-gray-700 hover:text-gray-900 ...     -> -fxk-text, hover -fxk-primary
+ *   icon                     mr-2 h-4 w-4                              -> gap 8px, icon-size 16px
+ *   chevron                  mx-1 md:mx-2 h-4 w-4 text-gray-400        -> 6px side padding, muted stroke
+ * -------------------------------------------------------------------------- */
+
+.fxk-breadcrumb {
+  -fx-alignment: CENTER_LEFT; /* items-center */
+}
+
+.fxk-breadcrumb-solid {
+  -fx-background-color: -fxk-surface-alt;
+  -fx-padding: 12px 20px 12px 20px; /* py-3 px-5 */
+}
+
+.fxk-breadcrumb-separator {
+  -fx-alignment: CENTER;
+  -fx-padding: 0 6px 0 6px; /* mx-1 .. md:mx-2 */
+}
+
+.fxk-breadcrumb-chevron {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-text-muted;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+  -fx-opacity: 0.7; /* text-gray-400 is lighter than the muted text token */
+}
+
+.fxk-breadcrumb-item {
+  -fxk-breadcrumb-fg: -fxk-text-muted;
+  -fx-text-fill: -fxk-breadcrumb-fg;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+  -fx-border-width: 0;
+  -fx-graphic-text-gap: 8px; /* icon's mr-2 */
+  -fx-cursor: default;
+}
+
+.fxk-breadcrumb-item .ikonli-font-icon {
+  -fx-icon-color: -fxk-breadcrumb-fg;
+  -fx-icon-size: 16px; /* h-4 w-4 */
+}
+
+/* Item with an onAction handler (Flowbite href.on). */
+.fxk-breadcrumb-item-link {
+  -fxk-breadcrumb-fg: -fxk-text;
+  -fx-cursor: hand;
+}
+.fxk-breadcrumb-item-link:hover {
+  -fxk-breadcrumb-fg: -fxk-primary;
+}
+
+/* Visible keyboard focus ring, same as FxButton. Negative border-insets draw the ring outside the
+ * item's bounds, so focusing never shifts the layout. */
+.fxk-breadcrumb-item:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxAccordion (dev.fxkit.core.components.FxAccordion / FxAccordionPanel /
+ * FxAccordionTitle / FxAccordionContent)
+ *
+ * Append this block to components.css.
+ *
+ * Flowbite mapping (accordion theme):
+ *   root.base    divide-y border-gray-200      -> 1px -fxk-border; panels carry the divider
+ *   root.flush   off: rounded-lg border        -> 1px border, 8px radius
+ *                on:  border-b                 -> bottom border only (.fxk-accordion-flush)
+ *   title.base   p-5 font-medium text-gray-500 -> 20px total padding, weight 500, text-muted
+ *   title hover  hover:bg-gray-100             -> -fxk-surface-alt
+ *   title open   bg-gray-100 text-gray-900     -> -fxk-surface-alt + -fxk-text
+ *   title arrow  h-6 w-6, rotate-180 when open -> 24px box, -fx-rotate: 180
+ *   content      p-5 dark:bg-gray-900          -> 20px padding, -fxk-surface
+ *
+ * The panel gets .fxk-accordion-first / -last from FxAccordion (JavaFX CSS has no
+ * :first-child), used for the divider and Flowbite's first:rounded-t-lg / last:rounded-b-lg.
+ * Corner radius is 7px, the accordion's 8px minus its 1px border, so children sit flush inside.
+ *
+ * The title reserves its focus ring as a 2px transparent border (18px padding + 2px border =
+ * Flowbite's 20px), so focusing only recolors the border and never shifts the layout.
+ * Each title defines one local color, -fxk-accordion-fg, that its text, arrow and icon read.
+ * -------------------------------------------------------------------------- */
+
+.fxk-accordion {
+  -fx-background-color: transparent;
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px; /* rounded-lg */
+}
+
+.fxk-accordion-flush {
+  -fx-border-width: 0 0 1 0; /* border-b */
+  -fx-border-radius: 0;
+}
+
+/* divide-y: a 1px line above every panel except the first */
+.fxk-accordion-panel {
+  -fx-border-color: -fxk-border transparent transparent transparent;
+  -fx-border-width: 1px 0 0 0;
+}
+.fxk-accordion-first {
+  -fx-border-width: 0;
+}
+
+.fxk-accordion-title {
+  -fxk-accordion-fg: -fxk-text-muted;
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: 8px;
+  -fx-padding: 18px; /* p-5 (20px) minus the 2px focus border */
+  -fx-background-color: transparent;
+  -fx-background-radius: 0;
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-radius: 0;
+  -fx-cursor: hand;
+}
+.fxk-accordion-title:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-accordion-title:focused {
+  -fx-border-color: -fxk-focus-ring;
+}
+.fxk-accordion-title-open {
+  -fxk-accordion-fg: -fxk-text;
+  -fx-background-color: -fxk-surface-alt;
+}
+
+.fxk-accordion-title-label {
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-accordion-fg;
+}
+
+.fxk-accordion-arrow-box {
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-min-height: 24px;
+  -fx-pref-width: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-width: 24px;
+  -fx-max-height: 24px;
+}
+.fxk-accordion-arrow {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-accordion-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+.fxk-accordion-title-open .fxk-accordion-arrow-box {
+  -fx-rotate: 180; /* rotate-180 */
+}
+
+/* Leading title icon: an Ikonli FontIcon, or an SVGPath with .fxk-accordion-icon */
+.fxk-accordion-title .ikonli-font-icon {
+  -fx-icon-color: -fxk-accordion-fg;
+  -fx-icon-size: 20px; /* h-5 w-5 */
+}
+.fxk-accordion-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-accordion-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* Corner rounding, weakest to strongest (equal specificity: later wins):
+ *   first -> top corners      last -> bottom corners (when its content is hidden)
+ *   only panel -> all corners    last + open -> square (content carries the bottom corners)
+ *   only panel + open -> top corners */
+.fxk-accordion-first > .fxk-accordion-title {
+  -fx-background-radius: 7px 7px 0 0;
+  -fx-border-radius: 7px 7px 0 0;
+}
+.fxk-accordion-last > .fxk-accordion-title {
+  -fx-background-radius: 0 0 7px 7px;
+  -fx-border-radius: 0 0 7px 7px;
+}
+.fxk-accordion-first.fxk-accordion-last > .fxk-accordion-title {
+  -fx-background-radius: 7px;
+  -fx-border-radius: 7px;
+}
+.fxk-accordion-last.fxk-accordion-open > .fxk-accordion-title {
+  -fx-background-radius: 0;
+  -fx-border-radius: 0;
+}
+.fxk-accordion-first.fxk-accordion-last.fxk-accordion-open
+  > .fxk-accordion-title {
+  -fx-background-radius: 7px 7px 0 0;
+  -fx-border-radius: 7px 7px 0 0;
+}
+
+.fxk-accordion-content {
+  -fx-padding: 20px; /* p-5 */
+  -fx-spacing: 8px; /* mb-2 between paragraphs */
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 0;
+}
+.fxk-accordion-last > .fxk-accordion-content {
+  -fx-background-radius: 0 0 7px 7px;
+}
+
+.fxk-accordion-text {
+  -fx-font-size: 14px; /* text-base */
+  -fx-text-fill: -fxk-text-muted;
+}
+
 /* -----------------------------------------------------------------------------
  * FxCard (dev.fxkit.core.components.FxCard)
  *

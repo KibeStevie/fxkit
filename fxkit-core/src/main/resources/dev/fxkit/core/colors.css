@@ -677,3 +677,544 @@
 .fxk-btn-outline.fxk-btn-color-default:armed .ikonli-font-icon {
   -fx-icon-color: -fxk-white;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxAlert colors (flowbite-inspired). ".fxk-alert-color-*" sets the alert's own
+ * background/border/text. ".fxk-alert-color-* .fxk-alert-text/.fxk-alert-icon/
+ * .fxk-alert-close" are descendant rules, same reasoning as FxButton's
+ * ".fxk-btn-default.fxk-btn-color-* .ikonli-font-icon" above: -fx-fill (Text)
+ * and -fx-icon-color (FontIcon) don't inherit from an ancestor's -fx-text-fill
+ * in JavaFX CSS, so each needs its own explicit rule. ".fxk-alert-text" sets
+ * both -fx-text-fill and -fx-fill together (like utilities.css's .text-* pairs)
+ * so the same class works whether attached to a Label or a Text node - relevant
+ * if you style a custom FxAlert#setContent(Node) body by hand. Synonym colors
+ * (info/cyan, failure/red, success/green, warning/yellow) share one rule via a
+ * grouped selector, matching Flowbite's own theme map.
+ * -------------------------------------------------------------------------- */
+
+.fxk-alert-color-info,
+.fxk-alert-color-cyan {
+  -fx-background-color: -fxk-cyan-100;
+  -fx-border-color: -fxk-cyan-500;
+  -fx-text-fill: -fxk-cyan-700;
+}
+.fxk-alert-color-info .fxk-alert-text,
+.fxk-alert-color-cyan .fxk-alert-text {
+  -fx-text-fill: -fxk-cyan-700;
+  -fx-fill: -fxk-cyan-700;
+}
+.fxk-alert-color-info .fxk-alert-icon,
+.fxk-alert-color-cyan .fxk-alert-icon {
+  -fx-icon-color: -fxk-cyan-700;
+}
+.fxk-alert-color-info .fxk-alert-close,
+.fxk-alert-color-cyan .fxk-alert-close {
+  -fx-background-color: -fxk-cyan-100;
+  -fx-text-fill: -fxk-cyan-500;
+}
+.fxk-alert-color-info .fxk-alert-close:hover,
+.fxk-alert-color-cyan .fxk-alert-close:hover {
+  -fx-background-color: -fxk-cyan-200;
+}
+
+.fxk-alert-color-gray {
+  -fx-background-color: -fxk-gray-100;
+  -fx-border-color: -fxk-gray-500;
+  -fx-text-fill: -fxk-gray-700;
+}
+.fxk-alert-color-gray .fxk-alert-text {
+  -fx-text-fill: -fxk-gray-700;
+  -fx-fill: -fxk-gray-700;
+}
+.fxk-alert-color-gray .fxk-alert-icon {
+  -fx-icon-color: -fxk-gray-700;
+}
+.fxk-alert-color-gray .fxk-alert-close {
+  -fx-background-color: -fxk-gray-100;
+  -fx-text-fill: -fxk-gray-500;
+}
+.fxk-alert-color-gray .fxk-alert-close:hover {
+  -fx-background-color: -fxk-gray-200;
+}
+
+.fxk-alert-color-failure,
+.fxk-alert-color-red {
+  -fx-background-color: -fxk-red-100;
+  -fx-border-color: -fxk-red-500;
+  -fx-text-fill: -fxk-red-700;
+}
+.fxk-alert-color-failure .fxk-alert-text,
+.fxk-alert-color-red .fxk-alert-text {
+  -fx-text-fill: -fxk-red-700;
+  -fx-fill: -fxk-red-700;
+}
+.fxk-alert-color-failure .fxk-alert-icon,
+.fxk-alert-color-red .fxk-alert-icon {
+  -fx-icon-color: -fxk-red-700;
+}
+.fxk-alert-color-failure .fxk-alert-close,
+.fxk-alert-color-red .fxk-alert-close {
+  -fx-background-color: -fxk-red-100;
+  -fx-text-fill: -fxk-red-500;
+}
+.fxk-alert-color-failure .fxk-alert-close:hover,
+.fxk-alert-color-red .fxk-alert-close:hover {
+  -fx-background-color: -fxk-red-200;
+}
+
+.fxk-alert-color-success,
+.fxk-alert-color-green {
+  -fx-background-color: -fxk-green-100;
+  -fx-border-color: -fxk-green-500;
+  -fx-text-fill: -fxk-green-700;
+}
+.fxk-alert-color-success .fxk-alert-text,
+.fxk-alert-color-green .fxk-alert-text {
+  -fx-text-fill: -fxk-green-700;
+  -fx-fill: -fxk-green-700;
+}
+.fxk-alert-color-success .fxk-alert-icon,
+.fxk-alert-color-green .fxk-alert-icon {
+  -fx-icon-color: -fxk-green-700;
+}
+.fxk-alert-color-success .fxk-alert-close,
+.fxk-alert-color-green .fxk-alert-close {
+  -fx-background-color: -fxk-green-100;
+  -fx-text-fill: -fxk-green-500;
+}
+.fxk-alert-color-success .fxk-alert-close:hover,
+.fxk-alert-color-green .fxk-alert-close:hover {
+  -fx-background-color: -fxk-green-200;
+}
+
+.fxk-alert-color-warning,
+.fxk-alert-color-yellow {
+  -fx-background-color: -fxk-yellow-100;
+  -fx-border-color: -fxk-yellow-500;
+  -fx-text-fill: -fxk-yellow-700;
+}
+.fxk-alert-color-warning .fxk-alert-text,
+.fxk-alert-color-yellow .fxk-alert-text {
+  -fx-text-fill: -fxk-yellow-700;
+  -fx-fill: -fxk-yellow-700;
+}
+.fxk-alert-color-warning .fxk-alert-icon,
+.fxk-alert-color-yellow .fxk-alert-icon {
+  -fx-icon-color: -fxk-yellow-700;
+}
+.fxk-alert-color-warning .fxk-alert-close,
+.fxk-alert-color-yellow .fxk-alert-close {
+  -fx-background-color: -fxk-yellow-100;
+  -fx-text-fill: -fxk-yellow-500;
+}
+.fxk-alert-color-warning .fxk-alert-close:hover,
+.fxk-alert-color-yellow .fxk-alert-close:hover {
+  -fx-background-color: -fxk-yellow-200;
+}
+
+.fxk-alert-color-blue {
+  -fx-background-color: -fxk-blue-100;
+  -fx-border-color: -fxk-blue-500;
+  -fx-text-fill: -fxk-blue-700;
+}
+.fxk-alert-color-blue .fxk-alert-text {
+  -fx-text-fill: -fxk-blue-700;
+  -fx-fill: -fxk-blue-700;
+}
+.fxk-alert-color-blue .fxk-alert-icon {
+  -fx-icon-color: -fxk-blue-700;
+}
+.fxk-alert-color-blue .fxk-alert-close {
+  -fx-background-color: -fxk-blue-100;
+  -fx-text-fill: -fxk-blue-500;
+}
+.fxk-alert-color-blue .fxk-alert-close:hover {
+  -fx-background-color: -fxk-blue-200;
+}
+
+.fxk-alert-color-pink {
+  -fx-background-color: -fxk-pink-100;
+  -fx-border-color: -fxk-pink-500;
+  -fx-text-fill: -fxk-pink-700;
+}
+.fxk-alert-color-pink .fxk-alert-text {
+  -fx-text-fill: -fxk-pink-700;
+  -fx-fill: -fxk-pink-700;
+}
+.fxk-alert-color-pink .fxk-alert-icon {
+  -fx-icon-color: -fxk-pink-700;
+}
+.fxk-alert-color-pink .fxk-alert-close {
+  -fx-background-color: -fxk-pink-100;
+  -fx-text-fill: -fxk-pink-500;
+}
+.fxk-alert-color-pink .fxk-alert-close:hover {
+  -fx-background-color: -fxk-pink-200;
+}
+
+.fxk-alert-color-lime {
+  -fx-background-color: -fxk-lime-100;
+  -fx-border-color: -fxk-lime-500;
+  -fx-text-fill: -fxk-lime-700;
+}
+.fxk-alert-color-lime .fxk-alert-text {
+  -fx-text-fill: -fxk-lime-700;
+  -fx-fill: -fxk-lime-700;
+}
+.fxk-alert-color-lime .fxk-alert-icon {
+  -fx-icon-color: -fxk-lime-700;
+}
+.fxk-alert-color-lime .fxk-alert-close {
+  -fx-background-color: -fxk-lime-100;
+  -fx-text-fill: -fxk-lime-500;
+}
+.fxk-alert-color-lime .fxk-alert-close:hover {
+  -fx-background-color: -fxk-lime-200;
+}
+
+.fxk-alert-color-dark {
+  -fx-background-color: -fxk-gray-800;
+  -fx-border-color: -fxk-gray-600;
+  -fx-text-fill: -fxk-gray-200;
+}
+.fxk-alert-color-dark .fxk-alert-text {
+  -fx-text-fill: -fxk-gray-200;
+  -fx-fill: -fxk-gray-200;
+}
+.fxk-alert-color-dark .fxk-alert-icon {
+  -fx-icon-color: -fxk-gray-200;
+}
+.fxk-alert-color-dark .fxk-alert-close {
+  -fx-background-color: -fxk-gray-100;
+  -fx-text-fill: -fxk-gray-500;
+}
+.fxk-alert-color-dark .fxk-alert-close:hover {
+  -fx-background-color: -fxk-gray-200;
+}
+
+.fxk-alert-color-indigo {
+  -fx-background-color: -fxk-indigo-100;
+  -fx-border-color: -fxk-indigo-500;
+  -fx-text-fill: -fxk-indigo-700;
+}
+.fxk-alert-color-indigo .fxk-alert-text {
+  -fx-text-fill: -fxk-indigo-700;
+  -fx-fill: -fxk-indigo-700;
+}
+.fxk-alert-color-indigo .fxk-alert-icon {
+  -fx-icon-color: -fxk-indigo-700;
+}
+.fxk-alert-color-indigo .fxk-alert-close {
+  -fx-background-color: -fxk-indigo-100;
+  -fx-text-fill: -fxk-indigo-500;
+}
+.fxk-alert-color-indigo .fxk-alert-close:hover {
+  -fx-background-color: -fxk-indigo-200;
+}
+
+.fxk-alert-color-purple {
+  -fx-background-color: -fxk-purple-100;
+  -fx-border-color: -fxk-purple-500;
+  -fx-text-fill: -fxk-purple-700;
+}
+.fxk-alert-color-purple .fxk-alert-text {
+  -fx-text-fill: -fxk-purple-700;
+  -fx-fill: -fxk-purple-700;
+}
+.fxk-alert-color-purple .fxk-alert-icon {
+  -fx-icon-color: -fxk-purple-700;
+}
+.fxk-alert-color-purple .fxk-alert-close {
+  -fx-background-color: -fxk-purple-100;
+  -fx-text-fill: -fxk-purple-500;
+}
+.fxk-alert-color-purple .fxk-alert-close:hover {
+  -fx-background-color: -fxk-purple-200;
+}
+
+.fxk-alert-color-teal {
+  -fx-background-color: -fxk-teal-100;
+  -fx-border-color: -fxk-teal-500;
+  -fx-text-fill: -fxk-teal-700;
+}
+.fxk-alert-color-teal .fxk-alert-text {
+  -fx-text-fill: -fxk-teal-700;
+  -fx-fill: -fxk-teal-700;
+}
+.fxk-alert-color-teal .fxk-alert-icon {
+  -fx-icon-color: -fxk-teal-700;
+}
+.fxk-alert-color-teal .fxk-alert-close {
+  -fx-background-color: -fxk-teal-100;
+  -fx-text-fill: -fxk-teal-500;
+}
+.fxk-alert-color-teal .fxk-alert-close:hover {
+  -fx-background-color: -fxk-teal-200;
+}
+
+.fxk-alert-color-light {
+  -fx-background-color: -fxk-gray-50;
+  -fx-border-color: -fxk-gray-400;
+  -fx-text-fill: -fxk-gray-600;
+}
+.fxk-alert-color-light .fxk-alert-text {
+  -fx-text-fill: -fxk-gray-600;
+  -fx-fill: -fxk-gray-600;
+}
+.fxk-alert-color-light .fxk-alert-icon {
+  -fx-icon-color: -fxk-gray-600;
+}
+.fxk-alert-color-light .fxk-alert-close {
+  -fx-background-color: -fxk-gray-50;
+  -fx-text-fill: -fxk-gray-500;
+}
+.fxk-alert-color-light .fxk-alert-close:hover {
+  -fx-background-color: -fxk-gray-100;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxBadge colors (flowbite-react badge theme, one-for-one).
+ *
+ * Each ".fxk-badge-color-*" rule only DEFINES five looked-up colors on the badge node; the
+ * structural rules in components.css consume them (background, hover, border, text, icon,
+ * close button). Looked-up colors are inherited by child nodes in JavaFX CSS, which is what
+ * lets the Label/FontIcon/close Button children pick them up without a descendant rule per
+ * color (unlike FxAlert, where each color repeats .fxk-alert-text/-icon/-close rules).
+ *
+ * Light values come from the plain rules; ".root.dark ..." repeats them with Flowbite's
+ * "dark:" shades (ThemeManager adds the "dark" class to the scene root, see tokens.css).
+ * Synonyms sharing a Flowbite rule (failure/red, success/green, warning/yellow) are grouped;
+ * info/cyan differ only in their dark text shade, so they stay separate, as in Flowbite.
+ * -------------------------------------------------------------------------- */
+
+.fxk-badge-color-info {
+  -fxk-badge-bg: -fxk-cyan-100;
+  -fxk-badge-bg-hover: -fxk-cyan-200;
+  -fxk-badge-fg: -fxk-cyan-800;
+  -fxk-badge-border: -fxk-cyan-200;
+  -fxk-badge-close-hover: -fxk-cyan-300;
+}
+
+.fxk-badge-color-cyan {
+  -fxk-badge-bg: -fxk-cyan-100;
+  -fxk-badge-bg-hover: -fxk-cyan-200;
+  -fxk-badge-fg: -fxk-cyan-800;
+  -fxk-badge-border: -fxk-cyan-200;
+  -fxk-badge-close-hover: -fxk-cyan-300;
+}
+
+.fxk-badge-color-gray {
+  -fxk-badge-bg: -fxk-gray-100;
+  -fxk-badge-bg-hover: -fxk-gray-200;
+  -fxk-badge-fg: -fxk-gray-800;
+  -fxk-badge-border: -fxk-gray-200;
+  -fxk-badge-close-hover: -fxk-gray-300;
+}
+
+.fxk-badge-color-failure,
+.fxk-badge-color-red {
+  -fxk-badge-bg: -fxk-red-100;
+  -fxk-badge-bg-hover: -fxk-red-200;
+  -fxk-badge-fg: -fxk-red-800;
+  -fxk-badge-border: -fxk-red-200;
+  -fxk-badge-close-hover: -fxk-red-300;
+}
+
+.fxk-badge-color-success,
+.fxk-badge-color-green {
+  -fxk-badge-bg: -fxk-green-100;
+  -fxk-badge-bg-hover: -fxk-green-200;
+  -fxk-badge-fg: -fxk-green-800;
+  -fxk-badge-border: -fxk-green-200;
+  -fxk-badge-close-hover: -fxk-green-300;
+}
+
+.fxk-badge-color-warning,
+.fxk-badge-color-yellow {
+  -fxk-badge-bg: -fxk-yellow-100;
+  -fxk-badge-bg-hover: -fxk-yellow-200;
+  -fxk-badge-fg: -fxk-yellow-800;
+  -fxk-badge-border: -fxk-yellow-200;
+  -fxk-badge-close-hover: -fxk-yellow-300;
+}
+
+.fxk-badge-color-indigo {
+  -fxk-badge-bg: -fxk-indigo-100;
+  -fxk-badge-bg-hover: -fxk-indigo-200;
+  -fxk-badge-fg: -fxk-indigo-800;
+  -fxk-badge-border: -fxk-indigo-200;
+  -fxk-badge-close-hover: -fxk-indigo-300;
+}
+
+.fxk-badge-color-purple {
+  -fxk-badge-bg: -fxk-purple-100;
+  -fxk-badge-bg-hover: -fxk-purple-200;
+  -fxk-badge-fg: -fxk-purple-800;
+  -fxk-badge-border: -fxk-purple-200;
+  -fxk-badge-close-hover: -fxk-purple-300;
+}
+
+.fxk-badge-color-pink {
+  -fxk-badge-bg: -fxk-pink-100;
+  -fxk-badge-bg-hover: -fxk-pink-200;
+  -fxk-badge-fg: -fxk-pink-800;
+  -fxk-badge-border: -fxk-pink-200;
+  -fxk-badge-close-hover: -fxk-pink-300;
+}
+
+.fxk-badge-color-blue {
+  -fxk-badge-bg: -fxk-blue-100;
+  -fxk-badge-bg-hover: -fxk-blue-200;
+  -fxk-badge-fg: -fxk-blue-800;
+  -fxk-badge-border: -fxk-blue-200;
+  -fxk-badge-close-hover: -fxk-blue-300;
+}
+
+.fxk-badge-color-lime {
+  -fxk-badge-bg: -fxk-lime-100;
+  -fxk-badge-bg-hover: -fxk-lime-200;
+  -fxk-badge-fg: -fxk-lime-800;
+  -fxk-badge-border: -fxk-lime-200;
+  -fxk-badge-close-hover: -fxk-lime-300;
+}
+
+.fxk-badge-color-teal {
+  -fxk-badge-bg: -fxk-teal-100;
+  -fxk-badge-bg-hover: -fxk-teal-200;
+  -fxk-badge-fg: -fxk-teal-800;
+  -fxk-badge-border: -fxk-teal-200;
+  -fxk-badge-close-hover: -fxk-teal-300;
+}
+
+.fxk-badge-color-dark {
+  -fxk-badge-bg: -fxk-gray-600;
+  -fxk-badge-bg-hover: -fxk-gray-500;
+  -fxk-badge-fg: -fxk-gray-100;
+  -fxk-badge-border: -fxk-gray-500;
+  -fxk-badge-close-hover: -fxk-gray-400;
+}
+
+.fxk-badge-color-light {
+  -fxk-badge-bg: -fxk-gray-200;
+  -fxk-badge-bg-hover: -fxk-gray-300;
+  -fxk-badge-fg: -fxk-gray-800;
+  -fxk-badge-border: -fxk-gray-300;
+  -fxk-badge-close-hover: -fxk-gray-400;
+}
+
+/* ---- dark theme ---- */
+
+.root.dark .fxk-badge-color-info {
+  -fxk-badge-bg: -fxk-cyan-200;
+  -fxk-badge-bg-hover: -fxk-cyan-300;
+  -fxk-badge-fg: -fxk-cyan-800;
+  -fxk-badge-border: -fxk-cyan-300;
+  -fxk-badge-close-hover: -fxk-cyan-400;
+}
+
+.root.dark .fxk-badge-color-cyan {
+  -fxk-badge-bg: -fxk-cyan-200;
+  -fxk-badge-bg-hover: -fxk-cyan-300;
+  -fxk-badge-fg: -fxk-cyan-900;
+  -fxk-badge-border: -fxk-cyan-300;
+  -fxk-badge-close-hover: -fxk-cyan-400;
+}
+
+.root.dark .fxk-badge-color-gray {
+  -fxk-badge-bg: -fxk-gray-700;
+  -fxk-badge-bg-hover: -fxk-gray-600;
+  -fxk-badge-fg: -fxk-gray-300;
+  -fxk-badge-border: -fxk-gray-600;
+  -fxk-badge-close-hover: -fxk-gray-500;
+}
+
+.root.dark .fxk-badge-color-failure,
+.root.dark .fxk-badge-color-red {
+  -fxk-badge-bg: -fxk-red-200;
+  -fxk-badge-bg-hover: -fxk-red-300;
+  -fxk-badge-fg: -fxk-red-900;
+  -fxk-badge-border: -fxk-red-300;
+  -fxk-badge-close-hover: -fxk-red-400;
+}
+
+.root.dark .fxk-badge-color-success,
+.root.dark .fxk-badge-color-green {
+  -fxk-badge-bg: -fxk-green-200;
+  -fxk-badge-bg-hover: -fxk-green-300;
+  -fxk-badge-fg: -fxk-green-900;
+  -fxk-badge-border: -fxk-green-300;
+  -fxk-badge-close-hover: -fxk-green-400;
+}
+
+.root.dark .fxk-badge-color-warning,
+.root.dark .fxk-badge-color-yellow {
+  -fxk-badge-bg: -fxk-yellow-200;
+  -fxk-badge-bg-hover: -fxk-yellow-300;
+  -fxk-badge-fg: -fxk-yellow-900;
+  -fxk-badge-border: -fxk-yellow-300;
+  -fxk-badge-close-hover: -fxk-yellow-400;
+}
+
+.root.dark .fxk-badge-color-indigo {
+  -fxk-badge-bg: -fxk-indigo-200;
+  -fxk-badge-bg-hover: -fxk-indigo-300;
+  -fxk-badge-fg: -fxk-indigo-900;
+  -fxk-badge-border: -fxk-indigo-300;
+  -fxk-badge-close-hover: -fxk-indigo-400;
+}
+
+.root.dark .fxk-badge-color-purple {
+  -fxk-badge-bg: -fxk-purple-200;
+  -fxk-badge-bg-hover: -fxk-purple-300;
+  -fxk-badge-fg: -fxk-purple-900;
+  -fxk-badge-border: -fxk-purple-300;
+  -fxk-badge-close-hover: -fxk-purple-400;
+}
+
+.root.dark .fxk-badge-color-pink {
+  -fxk-badge-bg: -fxk-pink-200;
+  -fxk-badge-bg-hover: -fxk-pink-300;
+  -fxk-badge-fg: -fxk-pink-900;
+  -fxk-badge-border: -fxk-pink-300;
+  -fxk-badge-close-hover: -fxk-pink-400;
+}
+
+.root.dark .fxk-badge-color-blue {
+  -fxk-badge-bg: -fxk-blue-200;
+  -fxk-badge-bg-hover: -fxk-blue-300;
+  -fxk-badge-fg: -fxk-blue-900;
+  -fxk-badge-border: -fxk-blue-300;
+  -fxk-badge-close-hover: -fxk-blue-400;
+}
+
+.root.dark .fxk-badge-color-lime {
+  -fxk-badge-bg: -fxk-lime-200;
+  -fxk-badge-bg-hover: -fxk-lime-300;
+  -fxk-badge-fg: -fxk-lime-900;
+  -fxk-badge-border: -fxk-lime-300;
+  -fxk-badge-close-hover: -fxk-lime-400;
+}
+
+.root.dark .fxk-badge-color-teal {
+  -fxk-badge-bg: -fxk-teal-200;
+  -fxk-badge-bg-hover: -fxk-teal-300;
+  -fxk-badge-fg: -fxk-teal-900;
+  -fxk-badge-border: -fxk-teal-300;
+  -fxk-badge-close-hover: -fxk-teal-400;
+}
+
+.root.dark .fxk-badge-color-dark {
+  -fxk-badge-bg: -fxk-gray-900;
+  -fxk-badge-bg-hover: -fxk-gray-700;
+  -fxk-badge-fg: -fxk-gray-200;
+  -fxk-badge-border: -fxk-gray-700;
+  -fxk-badge-close-hover: -fxk-gray-600;
+}
+
+.root.dark .fxk-badge-color-light {
+  -fxk-badge-bg: -fxk-gray-400;
+  -fxk-badge-bg-hover: -fxk-gray-500;
+  -fxk-badge-fg: -fxk-gray-900;
+  -fxk-badge-border: -fxk-gray-500;
+  -fxk-badge-close-hover: -fxk-gray-600;
+}
