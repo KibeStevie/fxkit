@@ -870,3 +870,84 @@
 .fxk-card-elevation-lg {
   -fx-effect: -fxk-shadow-lg;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxButtonGroup (dev.fxkit.core.components.FxButtonGroup)
+ *
+ * Append this block to the END of components.css.
+ *
+ * Flowbite mapping (buttonGroup theme):
+ *   base   inline-flex rounded-md shadow-sm   -> HBox, 0 spacing, 6px radius, -fxk-shadow-sm
+ *   Button positionInGroup start / middle / end
+ *          rounded-s-lg / rounded-none / rounded-e-lg, inner borders dropped
+ *          -> .fxk-btn-group-start / -middle / -end / -only, set by FxButtonGroup.java
+ *
+ * Why these selectors: three classes (.fxk-btn-group > .fxk-btn.fxk-btn-group-<position>) outrank
+ * ".fxk-btn-pill" (1) and colors.css's ".fxk-btn-outline.fxk-btn-color-*" border-width (2). They only
+ * set radius and border WIDTH, never colors, so they can't fight any variant or color rule.
+ *
+ * Borders: each non-first button drops its LEFT border, so two neighbours share exactly one divider
+ * (the previous button's right border). Border order in JavaFX is top right bottom left.
+ *
+ * Pill rules come after the plain ones at the same specificity, so they win.
+ * -------------------------------------------------------------------------- */
+
+.fxk-btn-group {
+  -fx-spacing: 0;
+  -fx-effect: -fxk-shadow-sm; /* shadow-sm */
+}
+
+/* An effect on a transparent node shadows its glyphs and borders, so outline groups skip it. */
+.fxk-btn-group-outline {
+  -fx-effect: null;
+}
+
+/* ---- Corners (rounded-md = 6px; inner corners square) ---- */
+
+.fxk-btn-group > .fxk-btn.fxk-btn-group-start {
+  -fx-background-radius: 6px 0 0 6px;
+  -fx-border-radius: 6px 0 0 6px;
+}
+
+.fxk-btn-group > .fxk-btn.fxk-btn-group-middle {
+  -fx-background-radius: 0;
+  -fx-border-radius: 0;
+  -fx-border-width: 1px 1px 1px 0;
+}
+
+.fxk-btn-group > .fxk-btn.fxk-btn-group-end {
+  -fx-background-radius: 0 6px 6px 0;
+  -fx-border-radius: 0 6px 6px 0;
+  -fx-border-width: 1px 1px 1px 0;
+}
+
+.fxk-btn-group > .fxk-btn.fxk-btn-group-only {
+  -fx-background-radius: 6px;
+  -fx-border-radius: 6px;
+}
+
+/* ---- Pill: only the OUTER ends go fully round ---- */
+
+.fxk-btn-group-pill > .fxk-btn.fxk-btn-group-start {
+  -fx-background-radius: 9999px 0 0 9999px;
+  -fx-border-radius: 9999px 0 0 9999px;
+}
+
+.fxk-btn-group-pill > .fxk-btn.fxk-btn-group-end {
+  -fx-background-radius: 0 9999px 9999px 0;
+  -fx-border-radius: 0 9999px 9999px 0;
+}
+
+.fxk-btn-group-pill > .fxk-btn.fxk-btn-group-only {
+  -fx-background-radius: 9999px;
+  -fx-border-radius: 9999px;
+}
+
+/* ---- Focus ring (Flowbite: focus:border-r / focus:border-l) ----
+ * Four classes, so it beats the border-width rules above and the per-color :hover border colors.
+ * A focused button shows the same full ring as a standalone FxButton. */
+
+.fxk-btn-group > .fxk-btn.fxk-btn-group-item:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-width: 2px;
+}

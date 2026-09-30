@@ -47,7 +47,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <!-- format for a modular app:  <module name>/<fully qualified main class> -->
-          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.AvatarTestApp</mainClass>
+          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.ButtonGroupTestApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
