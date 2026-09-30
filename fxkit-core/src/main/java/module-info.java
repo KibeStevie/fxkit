@@ -11,10 +11,14 @@ module dev.fxkit.core {
     // Needed once components load FXML or ship FXML files.
     requires javafx.fxml;
 
-    // Ikonli (#36, stretch: icon support on FxButton). "transitive" because FxButton.Ikon-typed API
-    // (setIcon(Ikon), iconProperty()) puts org.kordamp.ikonli.Ikon in our own public API, same reasoning
-    // as "requires transitive javafx.controls" above for Button. ikonli.javafx (FontIcon) is only ever
-    // used internally by FxButton, never in a public method signature, so it stays a plain requires.
+    // Ikonli (#36, stretch: icon support on FxButton). "transitive" because
+    // FxButton.Ikon-typed API
+    // (setIcon(Ikon), iconProperty()) puts org.kordamp.ikonli.Ikon in our own
+    // public API, same reasoning
+    // as "requires transitive javafx.controls" above for Button. ikonli.javafx
+    // (FontIcon) is only ever
+    // used internally by FxButton, never in a public method signature, so it stays
+    // a plain requires.
     requires transitive org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires java.logging;
@@ -30,10 +34,14 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.breadcrumb;
     exports dev.fxkit.core.components.button;
     exports dev.fxkit.core.components.dropdown;
+    exports dev.fxkit.core.components.spinner;
 
-    // Lets FXMLLoader create FxButton (and later components) by reflection from FXML.
+    // Lets FXMLLoader create FxButton (and later components) by reflection from
+    // FXML.
     opens dev.fxkit.core.components to javafx.fxml;
 
-    // dev.fxkit.core.internal (EnumStyleClassSync, ...) is intentionally not exported or
-    // opened: it is shared only between packages inside this module, never public API.
+    // dev.fxkit.core.internal (EnumStyleClassSync, ...) is intentionally not
+    // exported or
+    // opened: it is shared only between packages inside this module, never public
+    // API.
 }

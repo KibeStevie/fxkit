@@ -225,6 +225,9 @@
   -fx-background-radius: 9999px;
   -fx-border-radius: 9999px;
 }
+.fxk-btn-processing {
+  -fx-cursor: default;
+}
 
 /* -----------------------------------------------------------------------------
  * FxAlert (dev.fxkit.core.components.FxAlert)
@@ -1087,4 +1090,39 @@
   -fx-max-height: 9px;
   -fx-background-color: -fxk-border;
   -fx-background-insets: 4px 0 4px 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxSpinner (dev.fxkit.core.components.FxSpinner)
+ *
+ * Append this block to the END of components.css; append spinner-colors.css to colors.css.
+ *
+ * Structure only. FxSpinner.java sets the geometry (size, radius, stroke WIDTH) because JavaFX CSS
+ * can't size a Circle or make a stroke proportional to the node - it is derived from
+ * FxSpinner.Size, the same 12/16/24/32/40px as Flowbite's h-3 .. h-10. This file only sets how the
+ * two shapes are painted, from two looked-up colors:
+ *   -fxk-spinner-track   the ring        (Flowbite: text-gray-200, dark:text-gray-600)
+ *   -fxk-spinner-arc     the moving arc  (Flowbite: fill-<color>-600)
+ * Both are REDEFINED per color and theme in colors.css. The semantic fallbacks below only apply when
+ * colors.css is not loaded, so the spinner never paints with an unresolved lookup.
+ * Looked-up colors are inherited by children, so the shapes need no per-color selectors.
+ *
+ * The shapes are stroked rings (-fx-fill transparent), not filled paths: the stroke is centered on
+ * the circle's edge, FxSpinner.java insets the radius by half of it to keep the ring inside its box.
+ * -------------------------------------------------------------------------- */
+
+.fxk-spinner {
+  -fxk-spinner-track: -fxk-border;
+  -fxk-spinner-arc: -fxk-primary;
+}
+
+.fxk-spinner-track {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-spinner-track;
+}
+
+.fxk-spinner-arc {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-spinner-arc;
+  -fx-stroke-line-cap: round; /* Flowbite's arc has rounded ends */
 }

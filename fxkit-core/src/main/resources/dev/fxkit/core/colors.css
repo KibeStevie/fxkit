@@ -1332,3 +1332,85 @@
 .root.dark .fxk-avatar-color-teal {
   -fxk-avatar-ring: -fxk-teal-400;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxSpinner colors (flowbite-react spinner theme, one-for-one).
+ *
+ * Append this block to colors.css. Each rule only DEFINES looked-up colors on the spinner;
+ * components.css consumes them (see the FxSpinner block there).
+ *
+ * Flowbite mapping:
+ *   base          text-gray-200                 -> track gray-200
+ *   light.off     dark:text-gray-600            -> track gray-600 under .root.dark
+ *   color.*       fill-<color>-600 (success: green-500, warning: yellow-400)
+ *   gray          fill-gray-600, dark:fill-gray-300
+ *   light.on      no dark: variants             -> .fxk-spinner-light restates the light values
+ * default follows the theme's primary token (Flowbite's primary-600), so it needs no dark rule.
+ * info/cyan, failure/red, success/green, warning/yellow are synonyms and share one rule.
+ * indigo/blue/lime/teal are not in Flowbite's spinner theme; they use 600, like the other 600 colors.
+ * -------------------------------------------------------------------------- */
+
+.fxk-spinner {
+  -fxk-spinner-track: -fxk-gray-200;
+}
+
+.fxk-spinner-color-default {
+  -fxk-spinner-arc: -fxk-primary;
+}
+.fxk-spinner-color-gray {
+  -fxk-spinner-arc: -fxk-gray-600;
+}
+.fxk-spinner-color-info,
+.fxk-spinner-color-cyan {
+  -fxk-spinner-arc: -fxk-cyan-600;
+}
+.fxk-spinner-color-failure,
+.fxk-spinner-color-red {
+  -fxk-spinner-arc: -fxk-red-600;
+}
+.fxk-spinner-color-success,
+.fxk-spinner-color-green {
+  -fxk-spinner-arc: -fxk-green-500;
+}
+.fxk-spinner-color-warning,
+.fxk-spinner-color-yellow {
+  -fxk-spinner-arc: -fxk-yellow-400;
+}
+.fxk-spinner-color-pink {
+  -fxk-spinner-arc: -fxk-pink-600;
+}
+.fxk-spinner-color-purple {
+  -fxk-spinner-arc: -fxk-purple-600;
+}
+.fxk-spinner-color-indigo {
+  -fxk-spinner-arc: -fxk-indigo-600;
+}
+.fxk-spinner-color-blue {
+  -fxk-spinner-arc: -fxk-blue-600;
+}
+.fxk-spinner-color-lime {
+  -fxk-spinner-arc: -fxk-lime-600;
+}
+.fxk-spinner-color-teal {
+  -fxk-spinner-arc: -fxk-teal-600;
+}
+
+/* ---- dark theme ---- */
+
+.root.dark .fxk-spinner {
+  -fxk-spinner-track: -fxk-gray-600;
+}
+.root.dark .fxk-spinner-color-gray {
+  -fxk-spinner-arc: -fxk-gray-300;
+}
+
+/* ---- light: keep the light-theme colors in the dark theme ----
+ * Declared after the dark rules. Three classes each, so equal specificity with the dark rules above
+ * and later-wins; the gray arc needs four classes to beat ".root.dark .fxk-spinner-color-gray". */
+
+.root.dark .fxk-spinner-light {
+  -fxk-spinner-track: -fxk-gray-200;
+}
+.root.dark .fxk-spinner-light.fxk-spinner-color-gray {
+  -fxk-spinner-arc: -fxk-gray-600;
+}
