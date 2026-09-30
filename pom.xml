@@ -9,8 +9,7 @@
   Child modules declare WHAT they use; this file decides WHICH VERSION.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <!-- NOTE: groupId is a placeholder. Before publishing to Maven Central (Phase 7)
@@ -18,7 +17,7 @@
   <groupId>dev.fxkit</groupId>
   <artifactId>fxkit-parent</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>   <!-- a parent/aggregator produces no jar, only a pom -->
+  <packaging>pom</packaging>  <!-- a parent/aggregator produces no jar, only a pom -->
 
   <name>FXKit</name>
   <description>Tailwind-inspired UI component library for JavaFX desktop apps</description>

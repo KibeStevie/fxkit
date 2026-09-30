@@ -951,3 +951,140 @@
   -fx-border-color: -fxk-focus-ring;
   -fx-border-width: 2px;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxDropdown (dev.fxkit.core.components.dropdown.FxDropdown / FxDropdownItem /
+ * FxDropdownHeader / FxDropdownDivider)
+ *
+ * Append this block to the END of components.css.
+ *
+ * The trigger is FxDropdown itself (a Button). Unless inline it carries FxButton's own classes
+ * (.fxk-btn .fxk-btn-default .fxk-btn-color-default .fxk-btn-size-*), so it looks and behaves like
+ * FxButton's DEFAULT variant and needs no rules here. Only the chevron and the inline look are new.
+ *
+ * The menu is a Popup, which is a separate window: FxDropdown copies the owner scene's stylesheets
+ * and the "dark" root class onto it, so the tokens below resolve exactly as in the main scene.
+ *
+ * Flowbite mapping (dropdown theme):
+ *   arrowIcon               ml-2 h-4 w-4                    -> 16px box; gap 8px from .fxk-btn
+ *   floating.base           rounded shadow + border + bg    -> 4px radius, -fxk-shadow-md, -fxk-surface
+ *   floating.content        py-1                            -> 4px vertical padding
+ *   floating.divider        my-1 h-px bg-gray-100           -> 9px region, 1px line in the middle
+ *   floating.header         block px-4 py-2 text-sm         -> 16px/8px padding, 12px text
+ *   floating.item.base      px-4 py-2 text-sm hover:bg-...  -> 36px min height, -fxk-surface-alt when :active
+ *   floating.item.icon      mr-2 h-4 w-4                    -> gap 8px, icon-size 16px
+ *   inlineWrapper           flex items-center               -> .fxk-dropdown-inline
+ *
+ * ":active" is a custom pseudo-class set by FxDropdown on the one highlighted item (mouse hover,
+ * arrow keys, typeahead), so hover and keyboard never highlight two rows at once.
+ * -------------------------------------------------------------------------- */
+
+/* ---- Trigger ---- */
+
+.fxk-dropdown-arrow-box {
+  -fx-min-width: 16px; /* h-4 w-4 */
+  -fx-min-height: 16px;
+  -fx-pref-width: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-width: 16px;
+  -fx-max-height: 16px;
+}
+
+/* The stroke color is bound in Java to the button's text fill, so it follows every variant and
+ * the theme; only the shape of the stroke is set here. */
+.fxk-dropdown-arrow {
+  -fx-fill: transparent;
+  -fx-stroke-width: 1.5px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* Inline: plain text with a chevron. Resets the Modena button look (none of the .fxk-btn classes are
+ * present in this mode). */
+.fxk-dropdown-inline {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-padding: 0;
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 14px; /* text-base, inherited from the page in Flowbite */
+  -fx-graphic-text-gap: 8px; /* arrowIcon's ml-2 */
+  -fx-cursor: hand;
+}
+.fxk-dropdown-inline:focused {
+  /* Same ring as the breadcrumb items; negative insets draw it outside so focus never shifts layout. */
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+.fxk-dropdown-inline:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+
+/* ---- Menu ---- */
+
+.fxk-dropdown-menu {
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 4px; /* rounded */
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+  -fx-padding: 4px 0 4px 0; /* py-1 */
+  -fx-effect: -fxk-shadow-md; /* shadow */
+}
+
+/* ---- Items ---- */
+
+.fxk-dropdown-item {
+  -fx-alignment: CENTER_LEFT; /* justify-start items-center */
+  -fx-background-color: transparent;
+  -fx-background-radius: 0;
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+  -fx-padding: 8px 16px 8px 16px; /* py-2 px-4 */
+  -fx-min-height: 36px;
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-graphic-text-gap: 8px; /* icon's mr-2 */
+  -fx-cursor: hand;
+}
+.fxk-dropdown-item:active {
+  -fx-background-color: -fxk-surface-alt; /* hover:bg-gray-100 / focus:bg-gray-100 */
+}
+.fxk-dropdown-item:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+.fxk-dropdown-item .ikonli-font-icon {
+  -fx-icon-color: -fxk-text;
+  -fx-icon-size: 16px; /* h-4 w-4 */
+}
+
+/* ---- Header ---- */
+
+.fxk-dropdown-header-content {
+  -fx-padding: 8px 16px 8px 16px; /* py-2 px-4 */
+}
+/* Descendant rule: any Label a user puts into a header follows the theme too. */
+.fxk-dropdown-header .label {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-dropdown-header-subtitle {
+  -fx-font-weight: 500; /* font-medium */
+}
+
+/* ---- Divider ---- */
+
+/* 9px tall region, painted only in its middle 1px: my-1 (4px) + h-px (1px) + my-1 (4px). */
+.fxk-dropdown-divider {
+  -fx-min-height: 9px;
+  -fx-pref-height: 9px;
+  -fx-max-height: 9px;
+  -fx-background-color: -fxk-border;
+  -fx-background-insets: 4px 0 4px 0;
+}

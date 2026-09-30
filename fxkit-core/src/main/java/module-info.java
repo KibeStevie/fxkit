@@ -29,7 +29,7 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.badge;
     exports dev.fxkit.core.components.breadcrumb;
     exports dev.fxkit.core.components.button;
-
+    exports dev.fxkit.core.components.dropdown;
 
     // Lets FXMLLoader create FxButton (and later components) by reflection from FXML.
     opens dev.fxkit.core.components to javafx.fxml;
