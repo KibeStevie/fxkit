@@ -581,8 +581,7 @@
   -fx-background-radius: 0;
   -fx-border-radius: 0;
 }
-.fxk-accordion-first.fxk-accordion-last.fxk-accordion-open
-  > .fxk-accordion-title {
+.fxk-accordion-first.fxk-accordion-last.fxk-accordion-open > .fxk-accordion-title {
   -fx-background-radius: 7px 7px 0 0;
   -fx-border-radius: 7px 7px 0 0;
 }
@@ -600,6 +599,225 @@
 .fxk-accordion-text {
   -fx-font-size: 14px; /* text-base */
   -fx-text-fill: -fxk-text-muted;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxAvatar (dev.fxkit.core.components.FxAvatar / FxAvatarGroup / FxAvatarGroupCounter)
+ *
+ * Append this block to components.css; append avatar-colors.css to colors.css.
+ *
+ * Structure: .fxk-avatar (row) > .fxk-avatar-inner (fixed square) > .fxk-avatar-frame (ring +
+ * padding) > .fxk-avatar-face (clipped: image | initials | placeholder), plus .fxk-avatar-status
+ * as a sibling of the frame. FxAvatar.java clips the face to the rounded shape, so radius here
+ * only paints the face background and the ring.
+ *
+ * Flowbite mapping (avatar theme):
+ *   root.base      flex items-center space-x-4     -> 16px gap between avatar and content
+ *   img.base       rounded                         -> 4px radius; ".fxk-avatar-rounded" -> full
+ *   size           h-6 / h-8 / h-10 / h-20 / h-36  -> 24 / 32 / 40 / 80 / 144px
+ *   bordered       p-1 ring-2 + ring color         -> 4px padding + 2px ring drawn OUTSIDE via
+ *                                                     negative border-insets (never shifts layout)
+ *   stacked        ring-2 ring-gray-300            -> 2px ring in -fxk-border-strong
+ *   status.base    h-3.5 w-3.5 border-2 border-white -> 14px dot, 2px -fxk-surface border
+ *   img.off        bg-gray-100 dark:bg-gray-600    -> -fxk-surface-alt
+ *   placeholder    text-gray-400                   -> -fxk-text-muted
+ * Status dot colors use the semantic status tokens (success/danger/warning), so they follow the theme.
+ * -------------------------------------------------------------------------- */
+
+.fxk-avatar {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: 16px; /* space-x-4 */
+}
+
+.fxk-avatar-inner {
+  -fx-alignment: CENTER;
+}
+
+.fxk-avatar-size-xs .fxk-avatar-inner {
+  -fx-min-width: 24px;
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+}
+.fxk-avatar-size-sm .fxk-avatar-inner {
+  -fx-min-width: 32px;
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+}
+.fxk-avatar-size-md .fxk-avatar-inner {
+  -fx-min-width: 40px;
+  -fx-pref-width: 40px;
+  -fx-max-width: 40px;
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+}
+.fxk-avatar-size-lg .fxk-avatar-inner {
+  -fx-min-width: 80px;
+  -fx-pref-width: 80px;
+  -fx-max-width: 80px;
+  -fx-min-height: 80px;
+  -fx-pref-height: 80px;
+  -fx-max-height: 80px;
+}
+.fxk-avatar-size-xl .fxk-avatar-inner {
+  -fx-min-width: 144px;
+  -fx-pref-width: 144px;
+  -fx-max-width: 144px;
+  -fx-min-height: 144px;
+  -fx-pref-height: 144px;
+  -fx-max-height: 144px;
+}
+
+/* ---- Face ---- */
+
+.fxk-avatar-face {
+  -fx-background-color: -fxk-surface-alt;
+  -fx-background-radius: 4px; /* rounded */
+}
+.fxk-avatar-rounded .fxk-avatar-face {
+  -fx-background-radius: 9999px; /* rounded-full */
+}
+
+.fxk-avatar-placeholder {
+  -fx-fill: -fxk-text-muted;
+}
+
+/* initials: Flowbite keeps one font size; here it scales with the avatar so it fits xs..xl */
+.fxk-avatar-initials {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-weight: 500; /* font-medium */
+  -fx-font-size: 14px;
+}
+.fxk-avatar-size-xs .fxk-avatar-initials {
+  -fx-font-size: 9px;
+}
+.fxk-avatar-size-sm .fxk-avatar-initials {
+  -fx-font-size: 11px;
+}
+.fxk-avatar-size-md .fxk-avatar-initials {
+  -fx-font-size: 14px;
+}
+.fxk-avatar-size-lg .fxk-avatar-initials {
+  -fx-font-size: 28px;
+}
+.fxk-avatar-size-xl .fxk-avatar-initials {
+  -fx-font-size: 48px;
+}
+
+/* ---- Ring: bordered (colored) and stacked (neutral). Equal specificity, stacked comes later and wins. ---- */
+
+.fxk-avatar-bordered .fxk-avatar-frame {
+  -fx-padding: 4px; /* p-1 */
+  -fx-border-color: -fxk-avatar-ring;
+  -fx-border-width: 2px; /* ring-2 */
+  -fx-border-insets: -2px; /* drawn outside the frame, like a ring */
+  -fx-border-radius: 6px; /* 4px + 2px ring */
+}
+.fxk-avatar-bordered.fxk-avatar-rounded .fxk-avatar-frame {
+  -fx-border-radius: 9999px;
+}
+
+.fxk-avatar-stacked .fxk-avatar-frame {
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 6px;
+}
+.fxk-avatar-stacked.fxk-avatar-rounded .fxk-avatar-frame {
+  -fx-border-radius: 9999px;
+}
+
+/* ---- Status dot ---- */
+
+.fxk-avatar-status {
+  -fx-min-width: 14px; /* h-3.5 w-3.5 */
+  -fx-pref-width: 14px;
+  -fx-max-width: 14px;
+  -fx-min-height: 14px;
+  -fx-pref-height: 14px;
+  -fx-max-height: 14px;
+  -fx-background-color: -fxk-text-muted;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-surface;
+  -fx-border-width: 2px;
+  -fx-border-radius: 9999px;
+}
+.fxk-avatar-status-online {
+  -fx-background-color: -fxk-success;
+}
+.fxk-avatar-status-busy {
+  -fx-background-color: -fxk-danger;
+}
+.fxk-avatar-status-away {
+  -fx-background-color: -fxk-warning;
+}
+.fxk-avatar-status-offline {
+  -fx-background-color: -fxk-text-muted;
+}
+
+/* ---- Avatar with text ---- */
+
+.fxk-avatar-texts {
+  -fx-spacing: 4px; /* space-y-1 */
+}
+.fxk-avatar-title {
+  -fx-font-size: 14px;
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text;
+}
+.fxk-avatar-subtitle {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-text-muted;
+}
+
+/* ---- Group + counter ---- */
+
+.fxk-avatar-group {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: -16px; /* -space-x-4 */
+}
+
+/* Extends Hyperlink, so the Modena look (underline, padding, dotted focus border) is reset.
+ * Flowbite's bg-gray-700 / hover:bg-gray-600 / white text is theme-independent; the semantic
+ * equivalent used here is -fxk-text-muted on -fxk-surface, dimmed on hover. */
+.fxk-avatar-counter {
+  -fx-min-width: 40px; /* h-10 w-10 */
+  -fx-pref-width: 40px;
+  -fx-max-width: 40px;
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+  -fx-alignment: CENTER;
+  -fx-padding: 0;
+  -fx-underline: false;
+  -fx-font-size: 11px; /* text-xs */
+  -fx-font-weight: 500;
+  -fx-text-fill: -fxk-surface;
+  -fx-background-color: -fxk-text-muted;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 2px; /* ring-2 */
+  -fx-border-insets: -2px;
+  -fx-border-radius: 9999px;
+  -fx-cursor: hand;
+}
+.fxk-avatar-counter:hover,
+.fxk-avatar-counter:visited {
+  -fx-text-fill: -fxk-surface;
+}
+.fxk-avatar-counter:hover {
+  -fx-opacity: 0.85;
+}
+.fxk-avatar-counter:focused {
+  -fx-border-color: -fxk-focus-ring;
 }
 
 /* -----------------------------------------------------------------------------

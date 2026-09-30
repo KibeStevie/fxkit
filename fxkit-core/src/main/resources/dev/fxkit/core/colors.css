@@ -1218,3 +1218,117 @@
   -fxk-badge-border: -fxk-gray-500;
   -fxk-badge-close-hover: -fxk-gray-600;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxAvatar ring colors (flowbite-react avatar theme, root.color one-for-one).
+ *
+ * Each ".fxk-avatar-color-*" rule only DEFINES one looked-up color, -fxk-avatar-ring, on the
+ * avatar; components.css consumes it for the bordered ring. Looked-up colors are inherited by
+ * children, so the frame node picks it up without a descendant rule (same approach as FxBadge).
+ * Light values are Flowbite's plain ring-* shades; ".root.dark ..." repeats them with its dark: shades.
+ * info/failure/success/warning are synonyms of cyan/red/green/yellow, as elsewhere in FXKit.
+ * indigo/blue/lime/teal are not in Flowbite's avatar theme; they use 500 (light) and 400 (dark).
+ * -------------------------------------------------------------------------- */
+.fxk-avatar-color-info {
+  -fxk-avatar-ring: -fxk-cyan-400;
+}
+.fxk-avatar-color-cyan {
+  -fxk-avatar-ring: -fxk-cyan-400;
+}
+.fxk-avatar-color-gray {
+  -fxk-avatar-ring: -fxk-gray-500;
+}
+.fxk-avatar-color-failure {
+  -fxk-avatar-ring: -fxk-red-500;
+}
+.fxk-avatar-color-red {
+  -fxk-avatar-ring: -fxk-red-500;
+}
+.fxk-avatar-color-success {
+  -fxk-avatar-ring: -fxk-green-500;
+}
+.fxk-avatar-color-green {
+  -fxk-avatar-ring: -fxk-green-500;
+}
+.fxk-avatar-color-warning {
+  -fxk-avatar-ring: -fxk-yellow-300;
+}
+.fxk-avatar-color-yellow {
+  -fxk-avatar-ring: -fxk-yellow-300;
+}
+.fxk-avatar-color-purple {
+  -fxk-avatar-ring: -fxk-purple-500;
+}
+.fxk-avatar-color-pink {
+  -fxk-avatar-ring: -fxk-pink-500;
+}
+.fxk-avatar-color-light {
+  -fxk-avatar-ring: -fxk-gray-300;
+}
+.fxk-avatar-color-dark {
+  -fxk-avatar-ring: -fxk-gray-800;
+}
+.fxk-avatar-color-indigo {
+  -fxk-avatar-ring: -fxk-indigo-500;
+}
+.fxk-avatar-color-blue {
+  -fxk-avatar-ring: -fxk-blue-500;
+}
+.fxk-avatar-color-lime {
+  -fxk-avatar-ring: -fxk-lime-500;
+}
+.fxk-avatar-color-teal {
+  -fxk-avatar-ring: -fxk-teal-500;
+}
+/* ---- dark theme ---- */
+.root.dark .fxk-avatar-color-info {
+  -fxk-avatar-ring: -fxk-cyan-800;
+}
+.root.dark .fxk-avatar-color-cyan {
+  -fxk-avatar-ring: -fxk-cyan-800;
+}
+.root.dark .fxk-avatar-color-gray {
+  -fxk-avatar-ring: -fxk-gray-400;
+}
+.root.dark .fxk-avatar-color-failure {
+  -fxk-avatar-ring: -fxk-red-700;
+}
+.root.dark .fxk-avatar-color-red {
+  -fxk-avatar-ring: -fxk-red-700;
+}
+.root.dark .fxk-avatar-color-success {
+  -fxk-avatar-ring: -fxk-green-500;
+}
+.root.dark .fxk-avatar-color-green {
+  -fxk-avatar-ring: -fxk-green-500;
+}
+.root.dark .fxk-avatar-color-warning {
+  -fxk-avatar-ring: -fxk-yellow-500;
+}
+.root.dark .fxk-avatar-color-yellow {
+  -fxk-avatar-ring: -fxk-yellow-500;
+}
+.root.dark .fxk-avatar-color-purple {
+  -fxk-avatar-ring: -fxk-purple-600;
+}
+.root.dark .fxk-avatar-color-pink {
+  -fxk-avatar-ring: -fxk-pink-500;
+}
+.root.dark .fxk-avatar-color-light {
+  -fxk-avatar-ring: -fxk-gray-500;
+}
+.root.dark .fxk-avatar-color-dark {
+  -fxk-avatar-ring: -fxk-gray-800;
+}
+.root.dark .fxk-avatar-color-indigo {
+  -fxk-avatar-ring: -fxk-indigo-400;
+}
+.root.dark .fxk-avatar-color-blue {
+  -fxk-avatar-ring: -fxk-blue-400;
+}
+.root.dark .fxk-avatar-color-lime {
+  -fxk-avatar-ring: -fxk-lime-400;
+}
+.root.dark .fxk-avatar-color-teal {
+  -fxk-avatar-ring: -fxk-teal-400;
+}
