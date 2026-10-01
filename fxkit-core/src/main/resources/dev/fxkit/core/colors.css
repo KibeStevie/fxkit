@@ -1516,3 +1516,131 @@
   -fxk-timeline-icon-bg: -fxk-blue-900;
   -fxk-timeline-icon-fg: -fxk-blue-300;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxProgress colors (flowbite-react progress theme, color map one-for-one).
+ *
+ * Append this block to the END of colors.css. Each rule only DEFINES two looked-up colors on the
+ * FxProgress node; components.css consumes them (see the FxProgress block there):
+ *   -fxk-progress-bar   the fill
+ *   -fxk-progress-fg    text drawn on the fill (the inside labels)
+ *
+ * Fill colors are Flowbite's, including its dark: variants:
+ *   default  bg-primary-600                    -> -fxk-primary (follows the theme, so no dark rule)
+ *   dark     bg-gray-600   dark:bg-gray-300
+ *   red      bg-red-600    dark:bg-red-500
+ *   green    bg-green-600  dark:bg-green-500
+ *   indigo   bg-indigo-600 dark:bg-indigo-500
+ *   purple   bg-purple-600 dark:bg-purple-500
+ *   yellow   bg-yellow-400
+ *   blue / cyan / lime / teal  bg-<color>-600     gray bg-gray-500     pink bg-pink-500
+ *
+ * DEVIATION from Flowbite: its bar text is text-primary-300 (dark:text-primary-100) on EVERY color,
+ * which is unreadable on yellow and weak on several others. Here the text is "on-color", like the
+ * on-* tokens elsewhere in FXKit: white on the dark fills, gray-900 on the fills that are light
+ * (yellow, and the 300/500 fills the dark theme uses for dark / red / green). To get Flowbite's
+ * look back, set -fxk-progress-fg to -fxk-blue-300 (dark: -fxk-blue-100) in each rule.
+ * -------------------------------------------------------------------------- */
+
+.fxk-progress-color-default {
+  -fxk-progress-bar: -fxk-primary;
+  -fxk-progress-fg: -fxk-on-primary;
+}
+.fxk-progress-color-dark {
+  -fxk-progress-bar: -fxk-gray-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-blue {
+  -fxk-progress-bar: -fxk-blue-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-red {
+  -fxk-progress-bar: -fxk-red-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-green {
+  -fxk-progress-bar: -fxk-green-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-yellow {
+  -fxk-progress-bar: -fxk-yellow-400;
+  -fxk-progress-fg: -fxk-gray-900;
+}
+.fxk-progress-color-indigo {
+  -fxk-progress-bar: -fxk-indigo-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-purple {
+  -fxk-progress-bar: -fxk-purple-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-cyan {
+  -fxk-progress-bar: -fxk-cyan-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-gray {
+  -fxk-progress-bar: -fxk-gray-500;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-lime {
+  -fxk-progress-bar: -fxk-lime-600;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-pink {
+  -fxk-progress-bar: -fxk-pink-500;
+  -fxk-progress-fg: -fxk-white;
+}
+.fxk-progress-color-teal {
+  -fxk-progress-bar: -fxk-teal-600;
+  -fxk-progress-fg: -fxk-white;
+}
+
+/* ---- dark theme: only the colors Flowbite changes ---- */
+
+.root.dark .fxk-progress-color-dark {
+  -fxk-progress-bar: -fxk-gray-300;
+  -fxk-progress-fg: -fxk-gray-900;
+}
+.root.dark .fxk-progress-color-red {
+  -fxk-progress-bar: -fxk-red-500;
+  -fxk-progress-fg: -fxk-gray-900;
+}
+.root.dark .fxk-progress-color-green {
+  -fxk-progress-bar: -fxk-green-500;
+  -fxk-progress-fg: -fxk-gray-900;
+}
+.root.dark .fxk-progress-color-indigo {
+  -fxk-progress-bar: -fxk-indigo-500;
+}
+.root.dark .fxk-progress-color-purple {
+  -fxk-progress-bar: -fxk-purple-500;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxTooltip variants (flowbite tooltip theme "style"). Append this block to the END of colors.css.
+ * Defines the three tokens that the .fxk-tooltip rules in components.css consume.
+ *
+ *   light  border border-gray-200 bg-white text-gray-900                        (same in both themes)
+ *   dark   bg-gray-900 text-white dark:bg-gray-700
+ *   auto   light, then dark:border-none dark:bg-gray-700 dark:text-white
+ * -------------------------------------------------------------------------- */
+
+.fxk-tooltip-light,
+.fxk-tooltip-auto {
+  -fxk-tooltip-bg: -fxk-white;
+  -fxk-tooltip-fg: -fxk-gray-900;
+  -fxk-tooltip-border: -fxk-gray-200;
+}
+
+.fxk-tooltip-dark {
+  -fxk-tooltip-bg: -fxk-gray-900;
+  -fxk-tooltip-fg: -fxk-white;
+  -fxk-tooltip-border: transparent;
+}
+
+.root.dark .fxk-tooltip-dark,
+.root.dark .fxk-tooltip-auto {
+  -fxk-tooltip-bg: -fxk-gray-700;
+  -fxk-tooltip-fg: -fxk-white;
+  -fxk-tooltip-border: transparent;
+}

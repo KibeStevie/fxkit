@@ -1381,3 +1381,1154 @@
   -fx-text-fill: -fxk-text-muted;
   -fx-padding: 0 0 16px 0; /* mb-4 */
 }
+
+/* -----------------------------------------------------------------------------
+ * FxTable (dev.fxkit.core.components.table.FxTable / FxTableHead / FxTableBody / FxTableRow /
+ * FxTableCell / FxTableHeadCell)
+ *
+ * REPLACES the FxTable block from the first version in components.css.
+ *
+ * Flowbite mapping (table theme):
+ *   root.base       w-full text-left text-sm text-gray-500   -> 12px, cell text -fxk-text-muted
+ *   head.base       text-xs uppercase text-gray-700          -> 11px, upper-cased in Java
+ *   head.cell       bg-gray-50 px-6 py-3, rounded top        -> head background, 24 x 12, 8px top radius
+ *   body.cell       px-6 py-4                                -> 24 x 16
+ *   body divide-y   1px line between rows                    -> -fxk-table-divider on the row's top edge
+ *   row.hovered     hover:bg-gray-50 dark:hover:bg-gray-600  -> -fxk-table-hover-bg
+ *   row.striped     odd:bg-white even:bg-gray-50 (dark 800/700) -> body / -fxk-table-stripe-bg
+ *   root.shadow     drop-shadow-md behind the table          -> .fxk-table-shadow-sm/md/lg (tokens.css)
+ *
+ * COLORS. Five looked-up colors are defined on .fxk-table, redefined for the dark theme, and
+ * overridable per table: FxTable writes them as INLINE style when the user sets headBackground,
+ * bodyBackground, stripedBackground, hoverBackground or dividerColor. Inline style outranks every
+ * rule here, so a user color wins in both themes.
+ *
+ *   token                 light                    dark
+ *   -fxk-table-head-bg    -fxk-background          -fxk-surface-alt
+ *   -fxk-table-body-bg    -fxk-surface             -fxk-surface
+ *   -fxk-table-stripe-bg  -fxk-background          -fxk-surface-alt
+ *   -fxk-table-hover-bg   -fxk-background          -fxk-border-strong
+ *   -fxk-table-divider    -fxk-border              -fxk-border
+ *   -fxk-table-head-fg    -fxk-text                -fxk-text-muted   (head text; not user-settable)
+ *
+ * Position tags (first / last / odd / even on rows, last on cells) come from Java, since JavaFX CSS
+ * has no :first-child or :nth-child.
+ * -------------------------------------------------------------------------- */
+
+.fxk-table {
+  -fxk-table-head-bg: -fxk-background;
+  -fxk-table-body-bg: -fxk-surface;
+  -fxk-table-stripe-bg: -fxk-background;
+  -fxk-table-hover-bg: -fxk-background;
+  -fxk-table-divider: -fxk-border;
+  -fxk-table-head-fg: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  /* also the shape a shadow is cast from */
+  -fx-background-color: -fxk-table-body-bg;
+  -fx-background-radius: 8px;
+}
+.root.dark .fxk-table {
+  -fxk-table-head-bg: -fxk-surface-alt;
+  -fxk-table-stripe-bg: -fxk-surface-alt;
+  -fxk-table-hover-bg: -fxk-border-strong;
+  -fxk-table-head-fg: -fxk-text-muted;
+}
+
+/* ---- Shadow ---- */
+
+.fxk-table-shadow-sm { -fx-effect: -fxk-shadow-sm; }
+.fxk-table-shadow-md { -fx-effect: -fxk-shadow-md; }
+.fxk-table-shadow-lg { -fx-effect: -fxk-shadow-lg; }
+
+/* ---- Head ---- */
+
+.fxk-table-head {
+  -fx-background-color: -fxk-table-head-bg;
+  -fx-background-radius: 8px 8px 0 0; /* rounded-tl-lg / rounded-tr-lg */
+}
+
+/* ---- Body: divide-y, rows, striping, hover ---- */
+
+.fxk-table-body > .fxk-table-row {
+  -fx-background-color: -fxk-table-body-bg;
+  -fx-border-color: -fxk-table-divider transparent transparent transparent;
+  -fx-border-width: 1px 0 0 0;
+}
+.fxk-table-body > .fxk-table-row-first {
+  -fx-border-width: 0;
+}
+.fxk-table-body > .fxk-table-row-last {
+  -fx-background-radius: 0 0 8px 8px; /* rounded-bl-lg / rounded-br-lg */
+}
+.fxk-table-striped .fxk-table-body > .fxk-table-row-even {
+  -fx-background-color: -fxk-table-stripe-bg;
+}
+/* Three classes + a pseudo-class: wins over the striped rule above. */
+.fxk-table-hoverable .fxk-table-body > .fxk-table-row:hover {
+  -fx-background-color: -fxk-table-hover-bg;
+}
+
+/* ---- Cells ---- */
+
+.fxk-table-cell {
+  -fxk-table-cell-fg: -fxk-text-muted;
+  -fx-padding: 16px 24px 16px 24px; /* px-6 py-4 */
+}
+.fxk-table-cell .label {
+  -fx-text-fill: -fxk-table-cell-fg;
+}
+.fxk-table-cell-strong {
+  -fxk-table-cell-fg: -fxk-text;
+  -fx-font-weight: 500; /* font-medium */
+}
+.fxk-table-cell-compact {
+  -fx-padding: 16px; /* p-4 */
+}
+
+.fxk-table-head-cell {
+  -fxk-table-cell-fg: -fxk-table-head-fg;
+  -fx-padding: 12px 24px 12px 24px; /* px-6 py-3 */
+  -fx-font-size: 11px; /* text-xs */
+  -fx-font-weight: 600;
+}
+.fxk-table-head-cell.fxk-table-cell-compact {
+  -fx-padding: 16px; /* p-4 */
+}
+
+/* ---- Column dividers: a 1px line on every cell's right edge except the last ---- */
+
+.fxk-table-column-dividers .fxk-table-cell {
+  -fx-border-color: transparent -fxk-table-divider transparent transparent;
+  -fx-border-width: 0 1px 0 0;
+}
+.fxk-table-column-dividers .fxk-table-cell-last {
+  -fx-border-width: 0;
+}
+
+/* ---- Reordering ---- */
+
+.fxk-table-reorderable .fxk-table-head-cell {
+  -fx-cursor: hand;
+}
+.fxk-table-reorderable .fxk-table-head-cell-pinned {
+  -fx-cursor: default;
+}
+/* The cell being dragged floats above its neighbours. */
+.fxk-table-head-cell.fxk-table-cell-dragging {
+  -fx-background-color: -fxk-table-hover-bg;
+  -fx-background-radius: 4px;
+  -fx-effect: -fxk-shadow-md;
+  -fx-opacity: 0.95;
+}
+.fxk-table-drop-indicator {
+  -fx-background-color: -fxk-primary;
+  -fx-background-radius: 1px;
+}
+
+/* ---- Filter button (funnel) ---- */
+
+.fxk-table-filter-button {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 4px;
+  -fx-border-color: transparent;
+  -fx-border-width: 0;
+  -fx-padding: 3px;
+  -fx-cursor: hand;
+}
+.fxk-table-filter-button:hover {
+  -fx-background-color: -fxk-table-divider;
+}
+.fxk-table-filter-button:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+.fxk-table-filter-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-table-cell-fg;
+  -fx-stroke-width: 1.5px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+.fxk-table-filter-active .fxk-table-filter-icon {
+  -fx-fill: -fxk-primary;
+  -fx-stroke: -fxk-primary;
+}
+
+/* ---- Filter popup (its own window: Java copies the stylesheets and the dark class onto the host) ---- */
+
+.fxk-table-filter-host {
+  -fx-background-color: transparent;
+  -fx-padding: 12px; /* room for the card's shadow */
+}
+.fxk-table-filter-popup {
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 8px;
+  -fx-border-color: -fxk-border;
+  -fx-border-radius: 8px;
+  -fx-border-width: 1px;
+  -fx-padding: 12px;
+  -fx-spacing: 6px;
+  -fx-font-size: 12px;
+  -fx-effect: -fxk-shadow-md;
+}
+.fxk-table-filter-input {
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+  -fx-background-radius: 6px;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-radius: 6px;
+  -fx-border-width: 1px;
+  -fx-padding: 6px 10px 6px 10px;
+  -fx-text-fill: -fxk-text;
+  -fx-prompt-text-fill: -fxk-text-muted;
+  -fx-highlight-fill: -fxk-primary;
+  -fx-highlight-text-fill: -fxk-on-primary;
+}
+.fxk-table-filter-input:focused {
+  -fx-background-color: -fxk-surface;
+  -fx-border-color: -fxk-focus-ring;
+}
+
+/* ---- Link (Flowbite: font-medium text-primary-600 hover:underline) ---- */
+
+.fxk-table-link {
+  -fx-text-fill: -fxk-primary;
+  -fx-font-weight: 500;
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-padding: 0;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+.fxk-table-link:visited {
+  -fx-text-fill: -fxk-primary; /* a hyperlink is never "visited" here */
+}
+.fxk-table-link:hover {
+  -fx-underline: true;
+}
+.fxk-table-link:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+
+/* ---- Checkbox (16px box, 4px radius, filled with the primary color when checked) ---- */
+
+.fxk-table-checkbox {
+  -fx-padding: 0;
+  -fx-label-padding: 0;
+  -fx-alignment: CENTER;
+}
+.fxk-table-checkbox > .box {
+  -fx-padding: 3px; /* 16px box, 10px check mark */
+  -fx-min-width: 16px;
+  -fx-pref-width: 16px;
+  -fx-max-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+  -fx-background-radius: 4px;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+}
+.fxk-table-checkbox > .box > .mark {
+  -fx-background-color: transparent;
+}
+.fxk-table-checkbox:hover > .box {
+  -fx-border-color: -fxk-primary;
+}
+.fxk-table-checkbox:selected > .box,
+.fxk-table-checkbox:indeterminate > .box {
+  -fx-background-color: -fxk-primary;
+  -fx-border-color: -fxk-primary;
+}
+.fxk-table-checkbox:selected > .box > .mark,
+.fxk-table-checkbox:indeterminate > .box > .mark {
+  -fx-background-color: -fxk-on-primary;
+}
+/* Focus ring: an extra background layer painted 2px outside the box, so the layout never shifts. */
+.fxk-table-checkbox:focused > .box {
+  -fx-background-color: -fxk-focus-ring, -fxk-surface;
+  -fx-background-insets: -2px, 0;
+  -fx-background-radius: 6px, 4px;
+}
+.fxk-table-checkbox:focused:selected > .box,
+.fxk-table-checkbox:focused:indeterminate > .box {
+  -fx-background-color: -fxk-focus-ring, -fxk-primary;
+}
+.fxk-table-checkbox:disabled {
+  -fx-opacity: 0.5;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxRating (dev.fxkit.core.components.rating.FxRating / FxRatingStar / FxRatingAdvanced)
+ *
+ * Append this block to the END of components.css.
+ *
+ * Structure only. Two looked-up colors are defined on the root of each component and read by the
+ * parts below (looked-up colors are inherited by children), so one rule per part covers both themes
+ * and a caller can recolor a whole rating by redefining them on the FxRating / FxRatingAdvanced node:
+ *   -fxk-rating-filled   a filled star, and the advanced bar's fill   (Flowbite: text-yellow-400)
+ *   -fxk-rating-empty    an empty star                                (Flowbite: text-gray-300 / dark:text-gray-500)
+ * A FxRatingStar only has colors inside an FxRating (that is where they are defined).
+ *
+ * The star is a plain Region painted through -fx-shape, so its size and color are pure CSS:
+ * the shape scales to the region's box and keeps its aspect ratio (-fx-preserve-ratio).
+ *
+ * Flowbite mapping (rating theme):
+ *   root.base            flex items-center                   -> HBox, CENTER_LEFT, 2px gap (stars carry
+ *                                                               their own side margin in Flowbite's SVG)
+ *   star.sizes           h-5 w-5 / h-7 w-7 / h-10 w-10       -> 20 / 28 / 40px, set by .fxk-rating-size-*
+ *   star.filled / empty  text-yellow-400 / text-gray-300     -> -fxk-rating-filled / -fxk-rating-empty
+ *   <p> text             ml-2 text-sm font-medium text-gray-500 -> .fxk-rating-text
+ *   <p> score            ml-2 text-sm font-bold text-gray-900   -> .fxk-rating-score
+ *   dot                  mx-1.5 h-1 w-1 rounded-full bg-gray-500 -> .fxk-rating-dot (margin set in Java)
+ *   link                 text-sm font-medium underline hover:no-underline -> .fxk-rating-link
+ *
+ * Advanced rating theme:
+ *   base                 flex items-center                   -> .fxk-rating-advanced
+ *   label                text-sm font-medium text-cyan-600   -> 12px, 500, -fxk-primary
+ *   progress.base        mx-4 h-5 rounded bg-gray-200        -> 20px high, 4px radius, -fxk-border, 16px gap
+ *   progress.fill        h-5 rounded bg-yellow-400           -> -fxk-rating-filled
+ *   progress.label       text-sm font-medium text-cyan-600   -> same as label
+ * The label and percent label get a minimum width so the bars of several rows line up.
+ * -------------------------------------------------------------------------- */
+
+.fxk-rating,
+.fxk-rating-advanced {
+  -fxk-rating-filled: -fxk-warning;
+  -fxk-rating-empty: -fxk-border-strong;
+}
+.root.dark .fxk-rating,
+.root.dark .fxk-rating-advanced {
+  -fxk-rating-empty: -fxk-text-muted;
+}
+
+.fxk-rating {
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-spacing: 2px;
+}
+.fxk-rating-size-md {
+  -fx-spacing: 3px;
+}
+.fxk-rating-size-lg {
+  -fx-spacing: 4px;
+}
+
+/* ---- Star ---- */
+
+.fxk-rating-star {
+  -fx-shape: "M11.38 3.42 Q12 2.05 12.62 3.42 L14.77 8.21 Q15.06 8.84 15.75 8.92 L20.97 9.49 Q22.46 9.65 21.35 10.66 L17.46 14.19 Q16.95 14.66 17.09 15.34 L18.16 20.48 Q18.47 21.95 17.16 21.2 L12.61 18.6 Q12 18.25 11.39 18.6 L6.84 21.2 Q5.53 21.95 5.84 20.48 L6.91 15.34 Q7.05 14.66 6.54 14.19 L2.65 10.66 Q1.54 9.65 3.03 9.49 L8.25 8.92 Q8.94 8.84 9.23 8.21 Z";
+  -fx-scale-shape: true;
+  -fx-preserve-ratio: true;
+  -fx-background-color: -fxk-rating-empty;
+  -fx-background-insets: 0;
+  -fx-min-width: 20px; /* h-5 w-5 (sm) */
+  -fx-pref-width: 20px;
+  -fx-max-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+}
+.fxk-rating-star-filled {
+  -fx-background-color: -fxk-rating-filled;
+}
+
+/* Descendant selectors (two classes) outrank the single-class sm sizes above. */
+.fxk-rating-size-md .fxk-rating-star {
+  -fx-min-width: 28px; /* h-7 w-7 */
+  -fx-pref-width: 28px;
+  -fx-max-width: 28px;
+  -fx-min-height: 28px;
+  -fx-pref-height: 28px;
+  -fx-max-height: 28px;
+}
+.fxk-rating-size-lg .fxk-rating-star {
+  -fx-min-width: 40px; /* h-10 w-10 */
+  -fx-pref-width: 40px;
+  -fx-max-width: 40px;
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+}
+
+/* ---- Text next to the stars ---- */
+
+.fxk-rating-text {
+  -fx-padding: 0 0 0 6px; /* ml-2, minus the 2px gap */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text-muted;
+}
+
+.fxk-rating-score {
+  -fx-padding: 0 0 0 6px; /* ml-2, minus the 2px gap */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 700; /* font-bold */
+  -fx-text-fill: -fxk-text;
+}
+
+.fxk-rating-dot {
+  -fx-min-width: 4px; /* h-1 w-1 */
+  -fx-pref-width: 4px;
+  -fx-max-width: 4px;
+  -fx-min-height: 4px;
+  -fx-pref-height: 4px;
+  -fx-max-height: 4px;
+  -fx-background-color: -fxk-text-muted;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+}
+
+/* Extends Hyperlink: Modena's padding, visited color and dotted focus border are reset here. */
+.fxk-rating-link {
+  -fx-padding: 0;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text;
+  -fx-underline: true;
+  -fx-background-color: transparent;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+.fxk-rating-link:visited {
+  -fx-text-fill: -fxk-text; /* a hyperlink is never "visited" here */
+}
+.fxk-rating-link:hover {
+  -fx-underline: false; /* hover:no-underline */
+}
+.fxk-rating-link:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+
+/* ---- Advanced rating ---- */
+
+.fxk-rating-advanced {
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-spacing: 16px; /* mx-4 around the bar */
+}
+
+.fxk-rating-advanced-label,
+.fxk-rating-advanced-percent {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-primary;
+}
+.fxk-rating-advanced-label {
+  -fx-min-width: 48px;
+}
+.fxk-rating-advanced-percent {
+  -fx-min-width: 40px;
+}
+
+/* The bar's width is a default; FxRatingAdvanced.setBarWidth(...) overrides it from Java. */
+.fxk-rating-advanced-track {
+  -fx-min-width: 0;
+  -fx-pref-width: 240px;
+  -fx-min-height: 20px; /* h-5 */
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+  -fx-background-color: -fxk-border; /* bg-gray-200 / dark:bg-gray-700 */
+  -fx-background-radius: 4px; /* rounded */
+  -fx-background-insets: 0;
+}
+.fxk-rating-advanced-fill {
+  -fx-background-color: -fxk-rating-filled;
+  -fx-background-radius: 4px; /* rounded */
+  -fx-background-insets: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxProgress (dev.fxkit.core.components.FxProgress)
+ *
+ * Append this block to the END of components.css; append progress-colors.css to colors.css.
+ *
+ * Structure only. FxProgress.java sizes the fill (JavaFX CSS cannot express "width: 45%") and clips
+ * it to the track's pill shape. This file sets heights, fonts and how the parts are painted, from
+ * three looked-up colors that colors.css redefines per color and theme:
+ *   -fxk-progress-track   the empty track   (Flowbite: bg-gray-200, dark:bg-gray-700)
+ *   -fxk-progress-bar     the fill          (Flowbite: bg-<color>-600 ...)
+ *   -fxk-progress-fg      text on the fill  (see progress-colors.css for why this differs)
+ * The track color needs no per-theme rule: -fxk-border already is gray-200 in light, gray-700 in dark.
+ * The fallbacks on .fxk-progress only apply when colors.css is not loaded.
+ *
+ * Flowbite mapping (progress theme):
+ *   base    w-full overflow-hidden rounded-full         -> fills its parent, pill track, clipped in Java
+ *   label   mb-1 flex justify-between font-medium       -> 4px gap, 500 weight, -fxk-text
+ *   bar     space-x-2 rounded-full text-center font-medium leading-none  -> 8px gap, pill fill
+ *   size    h-1.5 / h-2.5 / h-4 / h-6                   -> 6 / 10 / 16 / 24px
+ * -------------------------------------------------------------------------- */
+
+.fxk-progress {
+  -fxk-progress-track: -fxk-border;
+  -fxk-progress-bar: -fxk-primary;
+  -fxk-progress-fg: -fxk-on-primary;
+  -fx-spacing: 4px; /* label's mb-1 */
+}
+
+/* ---- Outside labels ---- */
+
+.fxk-progress-label {
+  -fx-alignment: CENTER_LEFT;
+}
+.fxk-progress-label-item {
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text;
+}
+
+/* ---- Track ---- */
+
+.fxk-progress-track {
+  -fx-min-width: 0;
+  -fx-pref-width: 240px; /* only a default: in a VBox / StackPane it stretches (w-full) */
+  -fx-background-color: -fxk-progress-track;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+}
+
+/* Descendant selectors: the size class lives on the root, the height on the track. */
+.fxk-progress-size-sm .fxk-progress-track {
+  -fx-min-height: 6px; /* h-1.5 */
+  -fx-pref-height: 6px;
+  -fx-max-height: 6px;
+}
+.fxk-progress-size-md .fxk-progress-track {
+  -fx-min-height: 10px; /* h-2.5 */
+  -fx-pref-height: 10px;
+  -fx-max-height: 10px;
+}
+.fxk-progress-size-lg .fxk-progress-track {
+  -fx-min-height: 16px; /* h-4 */
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+}
+.fxk-progress-size-xl .fxk-progress-track {
+  -fx-min-height: 24px; /* h-6 */
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+}
+
+/* ---- Fill ---- */
+
+.fxk-progress-bar {
+  -fx-background-color: -fxk-progress-bar;
+  -fx-background-radius: 9999px;
+  -fx-background-insets: 0;
+  -fx-spacing: 8px; /* space-x-2 */
+  -fx-padding: 0;
+}
+
+/* Inside text. Flowbite inherits the page font size; here it is pinned so the text fits the two
+ * heights that can hold it (16px and 24px). On sm / md the bar is thinner than any text, so the
+ * label is clipped, as in Flowbite. */
+.fxk-progress-bar-text {
+  -fx-font-size: 11px; /* text-xs */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-progress-fg;
+}
+.fxk-progress-size-xl .fxk-progress-bar-text {
+  -fx-font-size: 12px; /* text-sm */
+}
+
+/* -----------------------------------------------------------------------------
+ * FxDatePicker (dev.fxkit.core.components.FxDatePicker)
+ *
+ * Append this block to the END of components.css. colors.css needs nothing: the datepicker has no
+ * per-color variants.
+ *
+ * Structure only. Colors come from semantic tokens, plus three looked-up tokens defined here because
+ * Flowbite's dark values are not the semantic ones:
+ *
+ *   token                  light            dark               Flowbite
+ *   -fxk-dp-bg             -fxk-surface     -fxk-surface-alt   bg-white / dark:bg-gray-700
+ *   -fxk-dp-hover          -fxk-surface-alt -fxk-border-strong hover:bg-gray-100 / dark:hover:bg-gray-600
+ *   -fxk-dp-input-bg       -fxk-background  -fxk-surface-alt   bg-gray-50 / dark:bg-gray-700 (the input)
+ *
+ * The calendar card is the content of a Popup, which is a separate window: FxDatePicker.show() copies the
+ * owner scene's stylesheets onto it and applies the owner's theme, so ".root.dark .fxk-dp-card" below
+ * matches there exactly as it does in the main scene. The card defines its own tokens (not the root)
+ * for the same reason: it is not a descendant of ".fxk-datepicker" when shown in the popup.
+ *
+ * Flowbite mapping (datepicker theme):
+ *   popup.inner        inline-block rounded-lg bg-white p-4 shadow-lg dark:bg-gray-700  -> .fxk-dp-card
+ *   popup.root.base    pt-2                                  -> 8px gap in FxDatePicker.show()
+ *   header.title       px-2 py-3 text-center font-semibold   -> .fxk-dp-title
+ *   selectors          mb-2 flex justify-between             -> .fxk-dp-selectors
+ *   selector button    rounded-lg px-5 py-2.5 text-sm font-semibold hover:bg-gray-100 focus:ring-2
+ *   view.base          p-1                                   -> .fxk-dp-view
+ *   days header        mb-1 grid grid-cols-7, h-6 text-sm font-medium text-gray-500  -> .fxk-dp-weekday
+ *   items              grid w-64 grid-cols-7 / grid-cols-4   -> .fxk-dp-grid, 256px
+ *   item               rounded-lg text-sm font-semibold leading-9 hover:bg-gray-100  -> .fxk-dp-item, 36px
+ *   item selected      bg-primary-700 text-white             -> -fxk-primary / -fxk-on-primary
+ *   item disabled      text-gray-500                         -> -fxk-text-muted
+ *   footer             mt-2 flex space-x-2                   -> .fxk-dp-footer
+ *   footer buttons     w-full rounded-lg px-5 py-2 text-sm font-medium focus:ring-4
+ *   today / clear      bg-primary-700 text-white / border border-gray-300 bg-white
+ *
+ * Focus rings use negative border-insets (as FxBreadcrumb does): drawn outside the control's bounds, so
+ * focusing never shifts the layout.
+ * -------------------------------------------------------------------------- */
+
+.fxk-datepicker {
+  -fxk-dp-input-bg: -fxk-background;
+}
+.root.dark .fxk-datepicker {
+  -fxk-dp-input-bg: -fxk-surface-alt;
+}
+
+/* ---- Input ---- */
+
+.fxk-dp-input-box {
+  -fx-alignment: CENTER_LEFT;
+}
+
+.fxk-dp-input {
+  -fx-pref-width: 240px; /* only a default: in a VBox / StackPane it stretches (w-full) */
+  -fx-background-color: -fxk-dp-input-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-padding: 10px 10px 10px 40px; /* p-2.5 pl-10 (room for the icon) */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-text;
+  -fx-prompt-text-fill: -fxk-text-muted;
+  -fx-highlight-fill: -fxk-primary;
+  -fx-highlight-text-fill: -fxk-on-primary;
+}
+.fxk-dp-input:focused {
+  -fx-background-color: -fxk-dp-input-bg; /* defeats Modena's focused background layers */
+  -fx-border-color: -fxk-focus-ring;
+}
+.fxk-dp-input:disabled {
+  -fx-opacity: 0.55;
+}
+
+.fxk-dp-icon {
+  -fx-fill: -fxk-text-muted; /* text-gray-500 dark:text-gray-400 */
+}
+
+/* ---- Popup window and card ---- */
+
+/* Transparent room around the card so its shadow is not clipped by the popup window. */
+.fxk-dp-popup-host {
+  -fx-padding: 16px; /* FxDatePicker.SHADOW_PAD */
+  -fx-background-color: transparent;
+}
+
+.fxk-dp-card {
+  -fxk-dp-bg: -fxk-surface;
+  -fxk-dp-hover: -fxk-surface-alt;
+  -fx-background-color: -fxk-dp-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-insets: 0;
+  -fx-padding: 16px; /* p-4 */
+  -fx-effect: -fxk-shadow-lg; /* shadow-lg */
+}
+.root.dark .fxk-dp-card {
+  -fxk-dp-bg: -fxk-surface-alt;
+  -fxk-dp-hover: -fxk-border-strong;
+}
+
+.fxk-dp-title {
+  -fx-alignment: CENTER;
+  -fx-text-alignment: center;
+  -fx-padding: 12px 8px 12px 8px; /* px-2 py-3 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text;
+}
+
+/* ---- Selectors: previous, view button, next ---- */
+
+.fxk-dp-selectors {
+  -fx-alignment: CENTER;
+  -fx-padding: 0 0 8px 0; /* mb-2 */
+}
+
+.fxk-dp-selector {
+  -fx-min-height: 40px; /* py-2.5 around a 20px line */
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+  -fx-padding: 0 20px 0 20px; /* px-5 */
+  -fx-background-color: -fxk-dp-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px;
+  -fx-border-width: 0;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text;
+  -fx-cursor: hand;
+}
+.fxk-dp-selector:hover {
+  -fx-background-color: -fxk-dp-hover;
+}
+.fxk-dp-selector:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 10px;
+}
+/* The view button of the widest view (decades) has nothing to open. */
+.fxk-dp-selector:disabled,
+.fxk-dp-selector:disabled:hover {
+  -fx-opacity: 1;
+  -fx-background-color: -fxk-dp-bg;
+  -fx-cursor: default;
+}
+
+.fxk-dp-arrow-box {
+  -fx-min-width: 16px; /* h-4 w-4 */
+  -fx-min-height: 16px;
+  -fx-pref-width: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-width: 16px;
+  -fx-max-height: 16px;
+}
+.fxk-dp-arrow {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-text;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* ---- Views ---- */
+
+.fxk-dp-view {
+  -fx-padding: 4px; /* p-1 */
+  -fx-spacing: 4px; /* weekday header's mb-1 */
+}
+
+.fxk-dp-grid {
+  -fx-min-width: 256px; /* w-64 */
+  -fx-pref-width: 256px;
+  -fx-max-width: 256px;
+}
+
+.fxk-dp-weekday {
+  -fx-min-height: 24px; /* h-6 */
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text-muted;
+}
+
+/* Day, month, year and decade cells. Rule order matters (selectors with a pseudo-class or two classes
+ * have the same specificity, so later wins): base, hover, outside, disabled, selected. */
+.fxk-dp-item {
+  -fx-min-height: 36px; /* leading-9 */
+  -fx-pref-height: 36px;
+  -fx-max-height: 36px;
+  -fx-padding: 0;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px;
+  -fx-border-width: 0;
+  -fx-alignment: CENTER;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text;
+  -fx-cursor: hand;
+}
+.fxk-dp-item:hover {
+  -fx-background-color: -fxk-dp-hover;
+}
+
+/* Days of the neighboring month, and the year / decade just outside the shown range. */
+.fxk-dp-item.fxk-dp-item-outside {
+  -fx-text-fill: -fxk-text-muted;
+}
+
+/* Filtered out or outside minDate..maxDate. JavaFX still tracks :hover on disabled nodes. */
+.fxk-dp-item:disabled,
+.fxk-dp-item:disabled:hover {
+  -fx-opacity: 1; /* Modena dims disabled buttons; the muted text is the signal here */
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-text-muted;
+  -fx-cursor: default;
+}
+
+.fxk-dp-item.fxk-dp-item-selected {
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+}
+.fxk-dp-item.fxk-dp-item-selected:hover {
+  -fx-background-color: -fxk-primary-hover;
+}
+.fxk-dp-item.fxk-dp-item-selected:disabled {
+  -fx-opacity: 0.55;
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+}
+
+/* Flowbite leaves "today" unstyled; the class is there for callers who want to mark it. */
+.fxk-dp-item-today {
+}
+
+/* ---- Footer: Today, Clear ---- */
+
+.fxk-dp-footer {
+  -fx-spacing: 8px; /* space-x-2 */
+  -fx-padding: 8px 0 0 0; /* mt-2 */
+}
+
+.fxk-dp-footer-btn {
+  -fx-min-height: 36px; /* py-2 around a 20px line */
+  -fx-pref-height: 36px;
+  -fx-max-height: 36px;
+  -fx-padding: 0 20px 0 20px; /* px-5 */
+  -fx-alignment: CENTER;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px;
+  -fx-border-width: 0;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-cursor: hand;
+}
+.fxk-dp-footer-btn:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 10px;
+}
+.fxk-dp-footer-btn:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+
+.fxk-dp-today {
+  -fx-background-color: -fxk-primary;
+  -fx-text-fill: -fxk-on-primary;
+}
+.fxk-dp-today:hover {
+  -fx-background-color: -fxk-primary-hover;
+}
+.fxk-dp-today:pressed,
+.fxk-dp-today:armed {
+  -fx-background-color: -fxk-primary-pressed;
+}
+.fxk-dp-today:disabled,
+.fxk-dp-today:disabled:hover {
+  -fx-background-color: -fxk-primary;
+}
+
+/* Two background layers draw the 1px border (the outer layer shows through a 1px inset),
+ * so the focus ring above can use the border property without conflict. */
+.fxk-dp-clear {
+  -fx-background-color: -fxk-border-strong, -fxk-dp-bg;
+  -fx-background-insets: 0, 1px;
+  -fx-background-radius: 8px, 7px;
+  -fx-text-fill: -fxk-text;
+}
+.fxk-dp-clear:hover {
+  -fx-background-color: -fxk-border-strong, -fxk-dp-hover;
+}
+.fxk-dp-clear:pressed,
+.fxk-dp-clear:armed {
+  -fx-background-color: -fxk-border-strong, -fxk-dp-hover;
+}
+.fxk-dp-clear:disabled,
+.fxk-dp-clear:disabled:hover {
+  -fx-background-color: -fxk-border-strong, -fxk-dp-bg;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxTooltip (dev.fxkit.core.components.tooltip.FxTooltip)
+ *
+ * Append this block to the END of components.css (and the matching block to colors.css).
+ *
+ * Structure only. The tooltip is a Popup, i.e. a separate window; FxTooltip copies the owner scene's
+ * stylesheets and the "dark" root class onto it, so the tokens below resolve as in the main scene.
+ * ".fxk-tooltip-<variant>" (colors.css) DEFINES three looked-up colors on the popup root:
+ *   -fxk-tooltip-bg      the box AND the arrow (they must always match)
+ *   -fxk-tooltip-fg      the text
+ *   -fxk-tooltip-border  the 1px outline (LIGHT and AUTO-in-light-theme only)
+ * Everything here just consumes them. The semantic fallbacks on .fxk-tooltip-popup only apply when
+ * colors.css is not loaded.
+ *
+ * Flowbite mapping (tooltip theme):
+ *   base      absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm
+ *             -> 8px radius, 12px/8px padding, 12px text, weight 500, -fxk-shadow-sm
+ *   arrow     h-2 w-2 rotate-45, placement -4px  -> 8px square; rotated and positioned in Java
+ *   style     light: border border-gray-200 bg-white text-gray-900
+ *             dark:  bg-gray-900 text-white dark:bg-gray-700
+ *             auto:  light, but dark:border-none dark:bg-gray-700 dark:text-white
+ *   target    w-fit  -> FxTooltip's max size is its pref size
+ *
+ * The 6px padding on .fxk-tooltip-popup is not decoration: the window is exactly as big as its
+ * content, so it has to include room for the shadow blur and for the arrow tip (about 5.7px) that
+ * sticks out of the box. FxTooltip reads the real value back from the node, so changing it here is safe.
+ * -------------------------------------------------------------------------- */
+
+.fxk-tooltip-popup {
+  -fxk-tooltip-bg: -fxk-surface;
+  -fxk-tooltip-fg: -fxk-text;
+  -fxk-tooltip-border: -fxk-border;
+
+  -fx-background-color: transparent;
+  -fx-padding: 6px;
+}
+
+.fxk-tooltip {
+  -fx-background-color: -fxk-tooltip-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-tooltip-border;
+  -fx-border-radius: 8px;
+  -fx-border-width: 1px;
+  -fx-padding: 8px 12px; /* py-2 px-3 */
+  -fx-effect: -fxk-shadow-sm; /* shadow-sm */
+}
+
+/* DARK has no border at all; AUTO drops it in the dark theme (dark:border-none). */
+.fxk-tooltip-dark .fxk-tooltip,
+.root.dark .fxk-tooltip-auto .fxk-tooltip {
+  -fx-border-width: 0;
+}
+
+.fxk-tooltip-content {
+  -fx-text-fill: -fxk-tooltip-fg;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+}
+
+/* Rotation and edge placement are set in FxTooltip.java; JavaFX CSS has no rotate property. */
+.fxk-tooltip-arrow {
+  -fx-background-color: -fxk-tooltip-bg;
+  -fx-min-width: 8px; /* h-2 w-2 */
+  -fx-min-height: 8px;
+  -fx-pref-width: 8px;
+  -fx-pref-height: 8px;
+  -fx-max-width: 8px;
+  -fx-max-height: 8px;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxTabs (dev.fxkit.core.components.tabs.FxTabs / FxTabItem)
+ *
+ * Append this block to components.css.
+ *
+ * Structure:  .fxk-tabs  >  .fxk-tabs-listwrap  >  (.fxk-tabs-divider + .fxk-tabs-list  >  .fxk-tab*)
+ *                        >  .fxk-tabs-panel
+ * FxTabs puts .fxk-tabs-<variant> on the root and .fxk-tab-<variant> / .fxk-tab-active on every
+ * tab button (JavaFX CSS has no :first-child or "active" state of its own), so nested FxTabs of
+ * different variants never affect each other. Layout parts of the strip are selected with child
+ * combinators for the same reason.
+ *
+ * Flowbite mapping (tabs theme):
+ *   base               flex flex-col gap-2                    -> VBox spacing 8px
+ *   tablist default    flex-wrap border-b border-gray-200     -> divider line under the strip
+ *   tablist underline  -mb-px flex-wrap border-b ...          -> same line, the active tab's 2px
+ *                                                                border is drawn OVER it (-mb-px)
+ *   tablist pills      flex-wrap space-x-2                    -> hgap 8px, no line
+ *   tablist fullWidth  grid grid-flow-col divide-x shadow     -> HBox, tabs grow, 1px gaps over a
+ *                                                                -fxk-border background, shadow-sm
+ *   tabitem base       p-4 text-sm font-medium rounded-t-lg   -> 16px total padding, 12px text,
+ *                                                                weight 500, 8px top radius
+ *   tabitem icon       mr-2 h-5 w-5                           -> graphic gap 8px, icon-size 20px
+ *   tabitem disabled   cursor-not-allowed text-gray-400       -> opacity 0.55 (as FxButton);
+ *                                                                JavaFX has no not-allowed cursor
+ *   tabpanel           py-3                                   -> padding 12px 0
+ *
+ * Each tab reads four local looked-up colors, and every variant/state rule below only redefines
+ * them (the same trick as FxBreadcrumb's -fxk-breadcrumb-fg):
+ *   -fxk-tab-fg    text and icon        -fxk-tab-bg    background
+ *   -fxk-tab-line  2px bottom line      -fxk-tab-ring  2px keyboard focus ring (all four sides)
+ *
+ * Every tab always has two borders: the bottom line (underline variant) and the focus ring.
+ * Together they reserve 2px on every side, so padding is 14px (16 - 2) and neither focusing nor
+ * selecting a tab ever shifts the layout.
+ *
+ * Flowbite picks different grays per theme for some states (e.g. active default tab: gray-100
+ * light, gray-800 dark). Those four pairs are defined once on .fxk-tabs below, from semantic
+ * tokens only, and swapped under .root.dark - components still never touch the raw scales.
+ * -------------------------------------------------------------------------- */
+
+.fxk-tabs {
+  -fxk-tabs-active-bg: -fxk-surface-alt;        /* default: on, pills: hover.  gray-100 / dark gray-800 */
+  -fxk-tabs-hover-bg: -fxk-background;          /* default: hover.             gray-50  / dark gray-800 */
+  -fxk-tabs-fw-hover-bg: -fxk-background;       /* fullWidth: hover.           gray-50  / dark gray-700 */
+  -fxk-tabs-underline-hover: -fxk-border-strong;/* underline: hover line.      gray-300 */
+
+  -fx-spacing: 8px; /* gap-2 */
+}
+.root.dark .fxk-tabs {
+  -fxk-tabs-active-bg: -fxk-surface;
+  -fxk-tabs-hover-bg: -fxk-surface;
+  -fxk-tabs-fw-hover-bg: -fxk-surface-alt;
+  -fxk-tabs-underline-hover: -fxk-text-muted;   /* gray-300 is brighter than any border token */
+}
+
+/* ---- Tab strip ------------------------------------------------------------------------- */
+
+.fxk-tabs-listwrap {
+  -fx-alignment: BOTTOM_LEFT;
+}
+
+/* The line under the strip, drawn behind the tabs (it is the first child of the StackPane). */
+.fxk-tabs-divider {
+  -fx-background-color: -fxk-border; /* border-gray-200 / dark gray-700 */
+}
+
+/* default: border-b sits BELOW the tabs, so the tabs get 1px of room above it.
+ * underline: -mb-px, the tabs sit ON the line (no padding), their 2px border covers it. */
+.fxk-tabs-default > .fxk-tabs-listwrap > .fxk-tabs-list {
+  -fx-padding: 0 0 1px 0;
+}
+
+.fxk-tabs-pills > .fxk-tabs-listwrap > .fxk-tabs-list {
+  -fx-hgap: 8px; /* space-x-2 */
+  -fx-vgap: 0;
+}
+
+/* divide-x: the HBox shows its own background through 1px gaps between the tabs. */
+.fxk-tabs-full-width > .fxk-tabs-listwrap > .fxk-tabs-list {
+  -fx-spacing: 1px;
+  -fx-background-color: -fxk-border;
+  -fx-effect: -fxk-shadow-sm; /* shadow */
+}
+
+.fxk-tabs-panel {
+  -fx-padding: 12px 0 12px 0; /* py-3 */
+  -fx-alignment: TOP_LEFT;
+}
+
+/* ---- Tab (base, shared by every variant) -------------------------------------------------- */
+
+.fxk-tab {
+  -fxk-tab-fg: -fxk-text-muted; /* text-gray-500 / dark gray-400 */
+  -fxk-tab-bg: transparent;
+  -fxk-tab-line: transparent;
+  -fxk-tab-ring: transparent;
+
+  -fx-background-color: -fxk-tab-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px 8px 0 0; /* rounded-t-lg */
+  -fx-border-color: transparent transparent -fxk-tab-line transparent, -fxk-tab-ring;
+  -fx-border-width: 0 0 2px 0, 2px;
+  -fx-border-insets: 0, 0;
+  -fx-border-radius: 8px 8px 0 0, 8px 8px 0 0;
+  -fx-padding: 14px; /* p-4 (16px) minus the 2px borders */
+  -fx-alignment: CENTER;
+  -fx-content-display: LEFT;
+  -fx-graphic-text-gap: 8px; /* icon's mr-2 */
+  -fx-text-fill: -fxk-tab-fg;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-cursor: hand;
+}
+
+.fxk-tab .ikonli-font-icon {
+  -fx-icon-color: -fxk-tab-fg;
+  -fx-icon-size: 20px; /* h-5 w-5 */
+}
+
+/* Visible keyboard focus ring, the same for every variant (as FxButton). The mouse focuses a
+ * clicked tab too; on JavaFX 19+ this selector can be changed to :focus-visible. */
+.fxk-tab:focused {
+  -fxk-tab-ring: -fxk-focus-ring;
+}
+
+/* ---- DEFAULT --------------------------------------------------------------------------------
+ * off: text-gray-500 hover:bg-gray-50 hover:text-gray-600   on: bg-gray-100 text-primary-600 */
+
+.fxk-tab-default:hover {
+  -fxk-tab-bg: -fxk-tabs-hover-bg;
+  -fxk-tab-fg: -fxk-text;
+}
+.fxk-tab-default.fxk-tab-active {
+  -fxk-tab-bg: -fxk-tabs-active-bg;
+  -fxk-tab-fg: -fxk-primary;
+}
+
+/* ---- UNDERLINE ------------------------------------------------------------------------------
+ * off: border-b-2 border-transparent hover:border-gray-300 hover:text-gray-600
+ * on:  border-b-2 border-primary-600 text-primary-600 */
+
+.fxk-tab-underline:hover {
+  -fxk-tab-line: -fxk-tabs-underline-hover;
+  -fxk-tab-fg: -fxk-text;
+}
+.fxk-tab-underline.fxk-tab-active {
+  -fxk-tab-line: -fxk-primary;
+  -fxk-tab-fg: -fxk-primary;
+}
+
+/* ---- PILLS ----------------------------------------------------------------------------------
+ * off: rounded-lg hover:bg-gray-100 hover:text-gray-900   on: rounded-lg bg-primary-600 text-white */
+
+.fxk-tab-pills {
+  -fx-background-radius: 8px; /* rounded-lg, all four corners */
+  -fx-border-radius: 8px, 8px;
+}
+.fxk-tab-pills:hover {
+  -fxk-tab-bg: -fxk-tabs-active-bg;
+  -fxk-tab-fg: -fxk-text;
+}
+.fxk-tab-pills.fxk-tab-active {
+  -fxk-tab-bg: -fxk-primary;
+  -fxk-tab-fg: -fxk-on-primary;
+}
+
+/* ---- FULL WIDTH -----------------------------------------------------------------------------
+ * off: rounded-none bg-white hover:bg-gray-50 hover:text-gray-700 (dark: bg-gray-800, hover gray-700)
+ * on:  rounded-none bg-gray-100 text-gray-900 (dark: bg-gray-700, text-white)
+ * Flowbite inherits the page's text color for the off state in light; -fxk-text-muted is used in
+ * both themes so the active tab stands out. */
+
+.fxk-tab-full-width {
+  -fxk-tab-bg: -fxk-surface;
+  -fx-background-radius: 0;
+  -fx-border-radius: 0, 0;
+}
+.fxk-tab-full-width:hover {
+  -fxk-tab-bg: -fxk-tabs-fw-hover-bg;
+  -fxk-tab-fg: -fxk-text;
+}
+.fxk-tab-full-width.fxk-tab-active {
+  -fxk-tab-bg: -fxk-surface-alt;
+  -fxk-tab-fg: -fxk-text;
+}
+
+/* ---- Disabled (last, so it wins over hover and active) ----------------------------------------
+ * The :disabled:hover forms are one pseudo-class more specific than the variants' :hover rules.
+ * JavaFX still tracks :hover on disabled nodes, so each variant pins its resting colors. */
+
+.fxk-tab:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+.fxk-tab-default:disabled,
+.fxk-tab-default:disabled:hover,
+.fxk-tab-underline:disabled,
+.fxk-tab-underline:disabled:hover,
+.fxk-tab-pills:disabled,
+.fxk-tab-pills:disabled:hover {
+  -fxk-tab-bg: transparent;
+  -fxk-tab-line: transparent;
+  -fxk-tab-fg: -fxk-text-muted;
+}
+.fxk-tab-full-width:disabled,
+.fxk-tab-full-width:disabled:hover {
+  -fxk-tab-bg: -fxk-surface;
+  -fxk-tab-fg: -fxk-text-muted;
+}
+

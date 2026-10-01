@@ -47,7 +47,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <!-- format for a modular app:  <module name>/<fully qualified main class> -->
-          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.TimelineTestApp</mainClass>
+          <mainClass>dev.fxkit.showcase/dev.fxkit.showcase.TabsTestApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
