@@ -1644,3 +1644,444 @@
   -fxk-tooltip-fg: -fxk-white;
   -fxk-tooltip-border: transparent;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxFooter bgDark (dev.fxkit.core.components.footer.FxFooter#setBgDark)
+ *
+ * Append this block to the END of colors.css (it uses the raw palette, which components.css must not).
+ *
+ * Flowbite's bgDark is "bg-gray-800" whatever the theme. It is rendered with Flowbite's DARK-theme
+ * text colors in both themes (white links/titles/brand, gray-400 copyright): Flowbite leaves the
+ * light-theme gray-500 text on it, which is only about 3.3 : 1 against gray-800.
+ *
+ * The second selector (four classes) is needed because components.css redefines two of these tokens
+ * under ".root.dark .fxk-footer" (three classes).
+ * -------------------------------------------------------------------------- */
+
+.fxk-footer.fxk-footer-bg-dark,
+.root.dark .fxk-footer.fxk-footer-bg-dark {
+  -fxk-footer-bg: -fxk-gray-800;
+  -fxk-footer-copyright-fg: -fxk-gray-400;
+  -fxk-footer-fg: -fxk-white;
+  -fxk-footer-icon-fg: -fxk-gray-400;
+  -fxk-footer-icon-hover: -fxk-white;
+  -fxk-footer-brand-fg: -fxk-white;
+  -fxk-footer-divider: -fxk-gray-700;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxSidebar colors (flowbite-react sidebar theme).
+ *
+ * Append this block to colors.css (it uses the raw palette, which components.css must not).
+ * Each rule only DEFINES looked-up colors; sidebar-components.css consumes them.
+ *
+ *   -fxk-sidebar-bg          root.inner         bg-gray-50  / dark:bg-gray-800
+ *   -fxk-sidebar-cta-fg      CTA text           text-cyan-900 / dark:text-gray-400
+ *   -fxk-sidebar-cta-fg-hover  CTA link hover   hover:text-cyan-800 / dark:hover:text-gray-300
+ *   -fxk-sidebar-cta-close-* CTA close button   bg-gray-100 hover:bg-gray-200 / dark:bg-gray-700 hover:bg-gray-600
+ *   -fxk-sidebar-cta-bg      cta.base + cta.color (below)
+ *
+ * Deviation: in the dark theme the CTA text is gray-300 (hover: white) instead of Flowbite's gray-400,
+ * which only reaches about 4 : 1 on the gray-700 tint.
+ *
+ * Flowbite's cta.color "dark" and "light" use bg-dark-50 / bg-light-50, shades that do not exist in
+ * Tailwind's palette, so they render nothing there. Here DARK is gray-300 (dark theme: gray-900) and
+ * LIGHT is white (dark theme: gray-600). "blue" is cyan, as in Flowbite.
+ * -------------------------------------------------------------------------- */
+
+.fxk-sidebar {
+  -fxk-sidebar-bg: -fxk-gray-50;
+}
+.root.dark .fxk-sidebar {
+  -fxk-sidebar-bg: -fxk-gray-800;
+}
+
+.fxk-sidebar-cta {
+  -fxk-sidebar-cta-fg: -fxk-cyan-900;
+  -fxk-sidebar-cta-fg-hover: -fxk-cyan-800;
+  -fxk-sidebar-cta-close-bg: -fxk-gray-100;
+  -fxk-sidebar-cta-close-bg-hover: -fxk-gray-200;
+  -fxk-sidebar-cta-close-fg: -fxk-cyan-900;
+}
+.root.dark .fxk-sidebar-cta {
+  -fxk-sidebar-cta-fg: -fxk-gray-300;
+  -fxk-sidebar-cta-fg-hover: -fxk-white;
+  -fxk-sidebar-cta-close-bg: -fxk-gray-700;
+  -fxk-sidebar-cta-close-bg-hover: -fxk-gray-600;
+  -fxk-sidebar-cta-close-fg: -fxk-gray-300;
+}
+
+/* ---- light ---- */
+
+.fxk-sidebar-cta-color-default {
+  -fxk-sidebar-cta-bg: -fxk-gray-100;
+}
+.fxk-sidebar-cta-color-blue {
+  -fxk-sidebar-cta-bg: -fxk-cyan-50;
+}
+.fxk-sidebar-cta-color-dark {
+  -fxk-sidebar-cta-bg: -fxk-gray-300;
+}
+.fxk-sidebar-cta-color-failure,
+.fxk-sidebar-cta-color-red {
+  -fxk-sidebar-cta-bg: -fxk-red-50;
+}
+.fxk-sidebar-cta-color-gray {
+  -fxk-sidebar-cta-bg: -fxk-gray-50;
+}
+.fxk-sidebar-cta-color-green,
+.fxk-sidebar-cta-color-success {
+  -fxk-sidebar-cta-bg: -fxk-green-50;
+}
+.fxk-sidebar-cta-color-light {
+  -fxk-sidebar-cta-bg: -fxk-white;
+}
+.fxk-sidebar-cta-color-purple {
+  -fxk-sidebar-cta-bg: -fxk-purple-50;
+}
+.fxk-sidebar-cta-color-yellow,
+.fxk-sidebar-cta-color-warning {
+  -fxk-sidebar-cta-bg: -fxk-yellow-50;
+}
+
+/* ---- dark theme ---- */
+
+.root.dark .fxk-sidebar-cta-color-default {
+  -fxk-sidebar-cta-bg: -fxk-gray-700;
+}
+.root.dark .fxk-sidebar-cta-color-blue {
+  -fxk-sidebar-cta-bg: -fxk-cyan-900;
+}
+.root.dark .fxk-sidebar-cta-color-dark {
+  -fxk-sidebar-cta-bg: -fxk-gray-900;
+}
+.root.dark .fxk-sidebar-cta-color-failure,
+.root.dark .fxk-sidebar-cta-color-red {
+  -fxk-sidebar-cta-bg: -fxk-red-900;
+}
+.root.dark .fxk-sidebar-cta-color-gray {
+  -fxk-sidebar-cta-bg: -fxk-gray-900;
+}
+.root.dark .fxk-sidebar-cta-color-green,
+.root.dark .fxk-sidebar-cta-color-success {
+  -fxk-sidebar-cta-bg: -fxk-green-900;
+}
+.root.dark .fxk-sidebar-cta-color-light {
+  -fxk-sidebar-cta-bg: -fxk-gray-600;
+}
+.root.dark .fxk-sidebar-cta-color-purple {
+  -fxk-sidebar-cta-bg: -fxk-purple-900;
+}
+.root.dark .fxk-sidebar-cta-color-yellow,
+.root.dark .fxk-sidebar-cta-color-warning {
+  -fxk-sidebar-cta-bg: -fxk-yellow-900;
+}
+
+/* -----------------------------------------------------------------------------
+ * Form component colors (flowbite-react form themes).
+ *
+ * Append this block to the END of colors.css. Every rule only DEFINES looked-up colors on the control;
+ * form-components.css consumes them. Raw scales are used here (and only here) as in the other color
+ * blocks, so the components themselves stay semantic.
+ *
+ * Deviations from Flowbite, all for contrast in the dark theme (where Flowbite's pick would be
+ * invisible against the dark surface):
+ *   - checkbox / radio "dark", "gray", "light" fills use a light gray in the dark theme
+ *   - toggle "dark" uses gray-400 in the dark theme (gray-700 is the unchecked track color)
+ *   - helper text "info" uses cyan-400 in the dark theme (Flowbite's cyan-800 is unreadable)
+ * The toggle's focus ring is the one semantic -fxk-focus-ring, not a per-color shade (as FxAlert's
+ * close button), so only the "on" fill is defined per toggle color.
+ * -------------------------------------------------------------------------- */
+
+/* ===== FxLabel: -fxk-label-fg ================================================ */
+
+.fxk-label-color-default {
+  -fxk-label-fg: -fxk-text;
+}
+.fxk-label-color-info {
+  -fxk-label-fg: -fxk-cyan-500;
+}
+.fxk-label-color-failure {
+  -fxk-label-fg: -fxk-red-700;
+}
+.fxk-label-color-warning {
+  -fxk-label-fg: -fxk-yellow-500;
+}
+.fxk-label-color-success {
+  -fxk-label-fg: -fxk-green-700;
+}
+
+.root.dark .fxk-label-color-info {
+  -fxk-label-fg: -fxk-cyan-600;
+}
+.root.dark .fxk-label-color-failure {
+  -fxk-label-fg: -fxk-red-500;
+}
+.root.dark .fxk-label-color-warning {
+  -fxk-label-fg: -fxk-yellow-600;
+}
+.root.dark .fxk-label-color-success {
+  -fxk-label-fg: -fxk-green-500;
+}
+
+/* ===== FxHelperText: -fxk-helper-fg ========================================== */
+
+.fxk-helper-text-color-default {
+  -fxk-helper-fg: -fxk-text-muted;
+}
+.fxk-helper-text-color-info {
+  -fxk-helper-fg: -fxk-cyan-700;
+}
+.fxk-helper-text-color-failure {
+  -fxk-helper-fg: -fxk-red-600;
+}
+.fxk-helper-text-color-warning {
+  -fxk-helper-fg: -fxk-yellow-500;
+}
+.fxk-helper-text-color-success {
+  -fxk-helper-fg: -fxk-green-600;
+}
+
+.root.dark .fxk-helper-text-color-info {
+  -fxk-helper-fg: -fxk-cyan-400;
+}
+.root.dark .fxk-helper-text-color-failure {
+  -fxk-helper-fg: -fxk-red-500;
+}
+.root.dark .fxk-helper-text-color-warning {
+  -fxk-helper-fg: -fxk-yellow-600;
+}
+.root.dark .fxk-helper-text-color-success {
+  -fxk-helper-fg: -fxk-green-500;
+}
+
+/* ===== Text-like fields (FxTextInput, FxTextArea, FxFileInput) ================
+ * -fxk-field-bg / -border / -fg / -placeholder / -ring
+ *
+ * gray follows the theme through semantic tokens (bg-gray-50 / dark:bg-gray-700, border-gray-300 /
+ * dark:border-gray-600). The four validation colors are Flowbite's: a 50-tinted background with 900
+ * text in BOTH themes (dark:bg-<c>-100), a 500 border (dark: 400) and a 500 focus border and ring. */
+
+.fxk-field-color-gray {
+  -fxk-field-bg: -fxk-background;
+  -fxk-field-border: -fxk-border-strong;
+  -fxk-field-fg: -fxk-text;
+  -fxk-field-placeholder: -fxk-text-muted;
+  -fxk-field-ring: -fxk-focus-ring;
+}
+.root.dark .fxk-field-color-gray {
+  -fxk-field-bg: -fxk-surface-alt;
+}
+
+.fxk-field-color-info {
+  -fxk-field-bg: -fxk-cyan-50;
+  -fxk-field-border: -fxk-cyan-500;
+  -fxk-field-fg: -fxk-cyan-900;
+  -fxk-field-placeholder: -fxk-cyan-700;
+  -fxk-field-ring: -fxk-cyan-500;
+}
+.root.dark .fxk-field-color-info {
+  -fxk-field-bg: -fxk-cyan-100;
+  -fxk-field-border: -fxk-cyan-400;
+}
+
+.fxk-field-color-failure {
+  -fxk-field-bg: -fxk-red-50;
+  -fxk-field-border: -fxk-red-500;
+  -fxk-field-fg: -fxk-red-900;
+  -fxk-field-placeholder: -fxk-red-700;
+  -fxk-field-ring: -fxk-red-500;
+}
+.root.dark .fxk-field-color-failure {
+  -fxk-field-bg: -fxk-red-100;
+  -fxk-field-border: -fxk-red-400;
+}
+
+.fxk-field-color-warning {
+  -fxk-field-bg: -fxk-yellow-50;
+  -fxk-field-border: -fxk-yellow-500;
+  -fxk-field-fg: -fxk-yellow-900;
+  -fxk-field-placeholder: -fxk-yellow-700;
+  -fxk-field-ring: -fxk-yellow-500;
+}
+.root.dark .fxk-field-color-warning {
+  -fxk-field-bg: -fxk-yellow-100;
+  -fxk-field-border: -fxk-yellow-400;
+}
+
+.fxk-field-color-success {
+  -fxk-field-bg: -fxk-green-50;
+  -fxk-field-border: -fxk-green-500;
+  -fxk-field-fg: -fxk-green-900;
+  -fxk-field-placeholder: -fxk-green-700;
+  -fxk-field-ring: -fxk-green-500;
+}
+.root.dark .fxk-field-color-success {
+  -fxk-field-bg: -fxk-green-100;
+  -fxk-field-border: -fxk-green-400;
+}
+
+/* ===== FxFileInput button part: -fxk-file-btn-bg / -bg-hover / -fg =============
+ * file:bg-gray-800 hover:file:bg-gray-700 file:text-white, dark: gray-600 / gray-500 */
+
+.fxk-file {
+  -fxk-file-btn-bg: -fxk-gray-800;
+  -fxk-file-btn-bg-hover: -fxk-gray-700;
+  -fxk-file-btn-fg: -fxk-white;
+}
+.root.dark .fxk-file {
+  -fxk-file-btn-bg: -fxk-gray-600;
+  -fxk-file-btn-bg-hover: -fxk-gray-500;
+}
+
+/* ===== FxCheckbox + FxRadio: -fxk-choice-fg (checked fill), -fxk-choice-on (mark / dot) =====
+ * Flowbite's "text-<color>" values, one-for-one. The mark is white, except on the two light fills. */
+
+.fxk-choice-color-default {
+  -fxk-choice-fg: -fxk-primary;
+  -fxk-choice-on: -fxk-on-primary;
+}
+.fxk-choice-color-dark {
+  -fxk-choice-fg: -fxk-gray-800;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-failure {
+  -fxk-choice-fg: -fxk-red-900;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-gray {
+  -fxk-choice-fg: -fxk-gray-900;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-info {
+  -fxk-choice-fg: -fxk-cyan-800;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-light {
+  -fxk-choice-fg: -fxk-gray-900;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-purple {
+  -fxk-choice-fg: -fxk-purple-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-success {
+  -fxk-choice-fg: -fxk-green-800;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-warning {
+  -fxk-choice-fg: -fxk-yellow-400;
+  -fxk-choice-on: -fxk-gray-900;
+}
+.fxk-choice-color-blue {
+  -fxk-choice-fg: -fxk-blue-700;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-cyan {
+  -fxk-choice-fg: -fxk-cyan-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-green {
+  -fxk-choice-fg: -fxk-green-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-indigo {
+  -fxk-choice-fg: -fxk-indigo-700;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-lime {
+  -fxk-choice-fg: -fxk-lime-700;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-pink {
+  -fxk-choice-fg: -fxk-pink-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-red {
+  -fxk-choice-fg: -fxk-red-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-teal {
+  -fxk-choice-fg: -fxk-teal-600;
+  -fxk-choice-on: -fxk-white;
+}
+.fxk-choice-color-yellow {
+  -fxk-choice-fg: -fxk-yellow-400;
+  -fxk-choice-on: -fxk-gray-900;
+}
+
+/* dark theme: the three near-black fills would vanish on the dark surface */
+.root.dark .fxk-choice-color-dark {
+  -fxk-choice-fg: -fxk-gray-300;
+  -fxk-choice-on: -fxk-gray-900;
+}
+.root.dark .fxk-choice-color-gray {
+  -fxk-choice-fg: -fxk-gray-400;
+  -fxk-choice-on: -fxk-gray-900;
+}
+.root.dark .fxk-choice-color-light {
+  -fxk-choice-fg: -fxk-gray-200;
+  -fxk-choice-on: -fxk-gray-900;
+}
+
+/* ===== FxToggleSwitch: -fxk-toggle-on (track fill while on) ===================
+ * Flowbite's toggle.checked.color values, one-for-one (the primary-700 default is -fxk-primary). */
+
+.fxk-toggle-color-default {
+  -fxk-toggle-on: -fxk-primary;
+}
+.fxk-toggle-color-blue {
+  -fxk-toggle-on: -fxk-blue-700;
+}
+.fxk-toggle-color-dark {
+  -fxk-toggle-on: -fxk-gray-700;
+}
+.fxk-toggle-color-failure {
+  -fxk-toggle-on: -fxk-red-700;
+}
+.fxk-toggle-color-gray {
+  -fxk-toggle-on: -fxk-gray-500;
+}
+.fxk-toggle-color-green {
+  -fxk-toggle-on: -fxk-green-600;
+}
+.fxk-toggle-color-light {
+  -fxk-toggle-on: -fxk-gray-300;
+}
+.fxk-toggle-color-red {
+  -fxk-toggle-on: -fxk-red-700;
+}
+.fxk-toggle-color-purple {
+  -fxk-toggle-on: -fxk-purple-700;
+}
+.fxk-toggle-color-success {
+  -fxk-toggle-on: -fxk-green-500;
+}
+.fxk-toggle-color-yellow {
+  -fxk-toggle-on: -fxk-yellow-400;
+}
+.fxk-toggle-color-warning {
+  -fxk-toggle-on: -fxk-yellow-600;
+}
+.fxk-toggle-color-cyan {
+  -fxk-toggle-on: -fxk-cyan-500;
+}
+.fxk-toggle-color-lime {
+  -fxk-toggle-on: -fxk-lime-400;
+}
+.fxk-toggle-color-indigo {
+  -fxk-toggle-on: -fxk-indigo-400;
+}
+.fxk-toggle-color-teal {
+  -fxk-toggle-on: -fxk-teal-400;
+}
+.fxk-toggle-color-info {
+  -fxk-toggle-on: -fxk-cyan-600;
+}
+.fxk-toggle-color-pink {
+  -fxk-toggle-on: -fxk-pink-600;
+}
+
+.root.dark .fxk-toggle-color-dark {
+  -fxk-toggle-on: -fxk-gray-400;
+}

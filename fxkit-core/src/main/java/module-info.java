@@ -33,11 +33,17 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.badge;
     exports dev.fxkit.core.components.breadcrumb;
     exports dev.fxkit.core.components.button;
+    exports dev.fxkit.core.components.carousel;
     exports dev.fxkit.core.components.dropdown;
     exports dev.fxkit.core.components.datepicker;
+    exports dev.fxkit.core.components.form;
+    exports dev.fxkit.core.components.footer;
+    exports dev.fxkit.core.components.navbar;
+    exports dev.fxkit.core.components.pagination;
     exports dev.fxkit.core.components.progress;
     exports dev.fxkit.core.components.rating;
     exports dev.fxkit.core.components.spinner;
+    exports dev.fxkit.core.components.sidebar;
     exports dev.fxkit.core.components.toast;
     exports dev.fxkit.core.components.timeline;
     exports dev.fxkit.core.components.tabs;

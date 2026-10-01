@@ -2532,3 +2532,1572 @@
   -fxk-tab-fg: -fxk-text-muted;
 }
 
+/* -----------------------------------------------------------------------------
+ * FxCarousel (dev.fxkit.core.components.FxCarousel)
+ *
+ * Append this block to the END of components.css. colors.css needs nothing: the carousel has no
+ * per-color variants.
+ *
+ * Structure only. Slide geometry (slide i at x = i * width, the 8px viewport clip, the dragging
+ * transform) is Java; this file sets sizes, how the parts are painted, and seven looked-up colors
+ * defined on the root and read by the parts (looked-up colors are inherited by children, so a caller
+ * can recolor one carousel by redefining them in its inline style):
+ *
+ *   token                           light                       dark                       Flowbite
+ *   -fxk-carousel-control-bg        white @ 30%                 gray-800 @ 30%             bg-white/30  dark:bg-gray-800/30
+ *   -fxk-carousel-control-bg-hover  white @ 50%                 gray-800 @ 60%             group-hover:bg-white/50  dark:...gray-800/60
+ *   -fxk-carousel-control-fg        white                       gray-800                   text-white  dark:text-gray-800
+ *   -fxk-carousel-control-ring      white                       gray-800 @ 70%             ring-white  dark:ring-gray-800/70
+ *   -fxk-carousel-dot               white @ 50%                 gray-800 @ 50%             bg-white/50  dark:bg-gray-800/50
+ *   -fxk-carousel-dot-hover         white                       gray-800                   hover:bg-white  dark:hover:bg-gray-800
+ *   -fxk-carousel-dot-active        white                       gray-800                   bg-white  dark:bg-gray-800
+ *
+ * These are the one place components use literal colors instead of semantic tokens: the controls and
+ * dots sit on top of the caller's slides (photos, usually), not on a themed surface, and a translucent
+ * overlay has no semantic equivalent - JavaFX CSS cannot apply an alpha to a looked-up color. The two
+ * literal sets are Flowbite's own, kept in one place so the dark theme still swaps them as a unit.
+ *
+ * Flowbite mapping (carousel theme):
+ *   root.base            relative h-full w-full                       -> StackPane; height from .fxk-carousel-size-*
+ *   scrollContainer      flex h-full overflow-x-scroll rounded-lg     -> viewport, clipped to 8px in Java
+ *   root.leftControl     absolute left-0 top-0 h-full px-4            -> .fxk-carousel-control, 16px side padding
+ *   control.base         h-8 w-8 rounded-full ... sm:h-10 sm:w-10     -> 40px circle (a desktop app has no sm: breakpoint)
+ *   control.icon         h-5 w-5 sm:h-6 sm:w-6                        -> 24px chevron
+ *   group-focus:ring-4   4px ring around the circle                   -> border drawn OUTSIDE via negative insets
+ *   indicators.wrapper   absolute bottom-5 left-1/2 space-x-3         -> 12px gap; bottom margin in Java
+ *   indicators.base      h-3 w-3 rounded-full                         -> 12px circle
+ *   item.wrapper cursor  cursor-grab                                  -> open-hand, closed-hand while dragging
+ *
+ * The carousel heights are the Flowbite example's responsive container (h-56 sm:h-64 xl:h-80 2xl:h-96)
+ * as four fixed steps; see FxCarousel.Size.
+ * -------------------------------------------------------------------------- */
+
+.fxk-carousel {
+  -fxk-carousel-control-bg: rgba(255, 255, 255, 0.3);
+  -fxk-carousel-control-bg-hover: rgba(255, 255, 255, 0.5);
+  -fxk-carousel-control-fg: white;
+  -fxk-carousel-control-ring: white;
+  -fxk-carousel-dot: rgba(255, 255, 255, 0.5);
+  -fxk-carousel-dot-hover: white;
+  -fxk-carousel-dot-active: white;
+}
+.root.dark .fxk-carousel {
+  -fxk-carousel-control-bg: rgba(31, 41, 55, 0.3);
+  -fxk-carousel-control-bg-hover: rgba(31, 41, 55, 0.6);
+  -fxk-carousel-control-fg: #1f2937;
+  -fxk-carousel-control-ring: rgba(31, 41, 55, 0.7);
+  -fxk-carousel-dot: rgba(31, 41, 55, 0.5);
+  -fxk-carousel-dot-hover: #1f2937;
+  -fxk-carousel-dot-active: #1f2937;
+}
+
+/* ---- Height ----
+ * Set only by these classes, never by the base rule, so FxCarousel.setSize(null) hands the height
+ * back to setPrefHeight(...) (a stylesheet value would otherwise beat a value set in code). */
+
+.fxk-carousel-size-sm {
+  -fx-pref-height: 224px; /* h-56 */
+}
+.fxk-carousel-size-md {
+  -fx-pref-height: 256px; /* h-64 */
+}
+.fxk-carousel-size-lg {
+  -fx-pref-height: 320px; /* h-80 (xl:) */
+}
+.fxk-carousel-size-xl {
+  -fx-pref-height: 384px; /* h-96 (2xl:) */
+}
+
+/* ---- Viewport ---- */
+
+.fxk-carousel-viewport {
+  -fx-cursor: open-hand; /* cursor-grab; a slide's own cursor (a button's hand, say) still wins */
+}
+.fxk-carousel-dragging .fxk-carousel-viewport {
+  -fx-cursor: closed-hand;
+}
+
+/* ---- Controls ----
+ * The button is the whole edge (full height, px-4); only its graphic is visible. Resets the Modena
+ * button look, and its focus layers, by setting every property they use. */
+
+.fxk-carousel-control {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-border-width: 0;
+  -fx-padding: 0 16px 0 16px; /* px-4 */
+  -fx-cursor: hand;
+}
+
+.fxk-carousel-control-circle {
+  -fx-alignment: CENTER;
+  -fx-min-width: 40px; /* sm:h-10 sm:w-10 */
+  -fx-pref-width: 40px;
+  -fx-max-width: 40px;
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+  -fx-background-color: -fxk-carousel-control-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 9999px;
+  /* group-focus:ring-4: a transparent 4px border outside the circle, colored when the button is focused */
+  -fx-border-color: transparent;
+  -fx-border-width: 4px;
+  -fx-border-insets: -4px;
+  -fx-border-radius: 9999px;
+}
+.fxk-carousel-control:hover .fxk-carousel-control-circle {
+  -fx-background-color: -fxk-carousel-control-bg-hover; /* group-hover */
+}
+.fxk-carousel-control:focused .fxk-carousel-control-circle {
+  -fx-border-color: -fxk-carousel-control-ring;
+}
+
+.fxk-carousel-control-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-carousel-control-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* Text controls (setLeftControlText) and any Label a caller puts in a custom control. */
+.fxk-carousel-control-text,
+.fxk-carousel-control .label {
+  -fx-text-fill: -fxk-carousel-control-fg;
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 600;
+}
+
+/* ---- Indicators ---- */
+
+.fxk-carousel-indicators {
+  -fx-alignment: CENTER;
+  -fx-spacing: 12px; /* space-x-3 */
+}
+
+.fxk-carousel-indicator {
+  -fx-min-width: 12px; /* h-3 w-3 */
+  -fx-pref-width: 12px;
+  -fx-max-width: 12px;
+  -fx-min-height: 12px;
+  -fx-pref-height: 12px;
+  -fx-max-height: 12px;
+  -fx-padding: 0;
+  -fx-background-color: -fxk-carousel-dot;
+  -fx-background-insets: 0;
+  -fx-background-radius: 9999px;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+.fxk-carousel-indicator:hover {
+  -fx-background-color: -fxk-carousel-dot-hover;
+}
+/* After :hover, same specificity: the selected dot stays solid whether or not it is hovered. */
+.fxk-carousel-indicator.fxk-carousel-indicator-active,
+.fxk-carousel-indicator.fxk-carousel-indicator-active:hover {
+  -fx-background-color: -fxk-carousel-dot-active;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxFooter (dev.fxkit.core.components.footer.FxFooter / FxFooterRow / FxFooterCopyright /
+ * FxFooterLinkGroup / FxFooterLink / FxFooterTitle / FxFooterDivider / FxFooterBrand / FxFooterIcon)
+ *
+ * Append this block to the END of components.css; append footer-colors.css to colors.css.
+ *
+ * Structure only. Layout (space-between rows, wrapping link groups) is in Java; JavaFX CSS cannot
+ * express it. .fxk-footer DEFINES six looked-up colors, redefined for the dark theme; every part reads
+ * them (looked-up colors are inherited by children), so the parts need no per-theme rules and must sit
+ * inside an FxFooter:
+ *
+ *   token                        light             dark              Flowbite
+ *   -fxk-footer-bg               -fxk-surface      -fxk-surface      bg-white / dark:bg-gray-800
+ *   -fxk-footer-copyright-fg     -fxk-text-muted   -fxk-text-muted   text-gray-500 / dark:text-gray-400
+ *   -fxk-footer-fg               -fxk-text-muted   -fxk-text         links, titles: gray-500 / dark:white
+ *   -fxk-footer-icon-fg          -fxk-text-muted   -fxk-text-muted   icon: text-gray-500
+ *   -fxk-footer-icon-hover       -fxk-text-muted   -fxk-text         dark:hover:text-white
+ *   -fxk-footer-brand-fg         -fxk-text         -fxk-text         text-gray-800 / dark:text-white
+ *   -fxk-footer-divider          -fxk-border       -fxk-border       border-gray-200 / dark:border-gray-700
+ *
+ * ".fxk-footer-bg-dark" (colors.css) redefines all of them for a dark footer in either theme.
+ *
+ * Flowbite mapping (footer theme):
+ *   root.base       w-full rounded-lg bg-white shadow   -> 8px radius, -fxk-shadow-md
+ *   root.container  w-full p-6                          -> .fxk-footer-container, 24px padding
+ *   groupLink.base  flex flex-wrap text-sm              -> 12px (link size); wrapping done in Java
+ *   title.base      mb-6 text-sm font-semibold uppercase -> 24px below, 12px, 600 (upper-cased in Java)
+ *   divider.base    my-6 w-full border-gray-200 lg:my-8 -> 65px region, 1px line in the middle
+ *   copyright.base  text-sm text-gray-500               -> 12px; link hover:underline
+ *   brand.img/span  mr-3 h-8 / text-2xl font-semibold   -> 12px gap, 32px logo, 24px, 600
+ *   icon            h-5 w-5 text-gray-500               -> 20px
+ * -------------------------------------------------------------------------- */
+
+.fxk-footer {
+  -fxk-footer-bg: -fxk-surface;
+  -fxk-footer-copyright-fg: -fxk-text-muted;
+  -fxk-footer-fg: -fxk-text-muted;
+  -fxk-footer-icon-fg: -fxk-text-muted;
+  -fxk-footer-icon-hover: -fxk-text-muted;
+  -fxk-footer-brand-fg: -fxk-text;
+  -fxk-footer-divider: -fxk-border;
+
+  -fx-background-color: -fxk-footer-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-insets: 0;
+  -fx-effect: -fxk-shadow-md; /* shadow */
+}
+.root.dark .fxk-footer {
+  -fxk-footer-fg: -fxk-text;
+  -fxk-footer-icon-hover: -fxk-text;
+}
+
+.fxk-footer-container {
+  -fx-padding: 24px; /* p-6 */
+}
+
+/* ---- Hyperlink-based parts: reset the Modena hyperlink look (padding, underline, dotted focus) ---- */
+
+.fxk-footer-link,
+.fxk-footer-copyright-link,
+.fxk-footer-brand,
+.fxk-footer-icon {
+  -fx-padding: 0;
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+
+/* Visible keyboard focus ring, the same as FxBreadcrumb: negative border-insets draw it outside the
+ * node's bounds, so focusing never shifts the layout. */
+.fxk-footer-link:focused,
+.fxk-footer-copyright-link:focused,
+.fxk-footer-brand:focused,
+.fxk-footer-icon:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+
+/* ---- Link ---- */
+
+.fxk-footer-link {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-footer-fg;
+}
+.fxk-footer-link:visited {
+  -fx-text-fill: -fxk-footer-fg; /* a hyperlink is never "visited" here */
+}
+.fxk-footer-link:hover {
+  -fx-underline: true; /* hover:underline */
+}
+
+/* ---- Title ---- */
+
+.fxk-footer-title {
+  -fx-padding: 0 0 24px 0; /* mb-6 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-footer-fg;
+}
+
+/* ---- Divider: 24px (my-6) -> 32px (lg:my-8) above and below, 1px line ---- */
+
+.fxk-footer-divider {
+  -fx-min-height: 65px;
+  -fx-pref-height: 65px;
+  -fx-max-height: 65px;
+  -fx-background-color: -fxk-footer-divider;
+  -fx-background-insets: 32px 0 32px 0;
+}
+
+/* ---- Copyright (alignment and the 4px gap are Java defaults, so setAlignment(...) works) ---- */
+
+.fxk-footer-copyright-text {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-footer-copyright-fg;
+}
+.fxk-footer-copyright-link {
+  -fx-font-size: 12px;
+  -fx-text-fill: -fxk-footer-copyright-fg;
+}
+.fxk-footer-copyright-link:visited {
+  -fx-text-fill: -fxk-footer-copyright-fg;
+}
+.fxk-footer-copyright-link:hover {
+  -fx-underline: true;
+}
+
+/* ---- Brand ---- */
+
+.fxk-footer-brand {
+  -fx-graphic-text-gap: 12px; /* img: mr-3 */
+  -fx-font-size: 24px; /* text-2xl */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-footer-brand-fg;
+}
+.fxk-footer-brand:visited {
+  -fx-text-fill: -fxk-footer-brand-fg;
+}
+/* A FontIcon logo (an ImageView logo needs nothing). */
+.fxk-footer-brand .ikonli-font-icon {
+  -fx-icon-color: -fxk-footer-brand-fg;
+  -fx-icon-size: 32px; /* h-8 w-8 */
+}
+
+/* ---- Icon: FontIcon ignores -fx-text-fill, so the color is set on it directly ---- */
+
+.fxk-footer-icon .ikonli-font-icon {
+  -fx-icon-color: -fxk-footer-icon-fg;
+  -fx-icon-size: 20px; /* h-5 w-5 */
+}
+.fxk-footer-icon:hover .ikonli-font-icon {
+  -fx-icon-color: -fxk-footer-icon-hover;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxPagination (dev.fxkit.core.components.pagination.FxPagination)
+ *
+ * Append this block to the END of components.css. colors.css needs nothing: Flowbite's pagination
+ * has no per-color variants.
+ *
+ * Structure:  .fxk-pagination  >  [.fxk-pagination-table (TextFlow, TABLE layout only)]
+ *                              >  .fxk-pagination-pages  >  .fxk-pagination-btn
+ *                                   (-prev | -page [+ -active] | -next)
+ * FxPagination puts .fxk-pagination-layout-<layout> on the root, and .fxk-pagination-active on the
+ * current page button (JavaFX CSS has no "selected" state of its own for a plain Button).
+ *
+ * Each button reads four looked-up colors; every state rule below only redefines them (the same trick
+ * as FxTabs):
+ *   -fxk-pagination-fg      text and chevron
+ *   -fxk-pagination-bg      background
+ *   -fxk-pagination-border  1px outline
+ *   -fxk-pagination-ring    2px keyboard focus ring (transparent until :focused)
+ * The border is the one color whose dark value is not the semantic one Flowbite would pick
+ * (gray-300 / dark gray-700), so it is defined on the root and swapped under .root.dark.
+ *
+ * Flowbite mapping (pagination theme):
+ *   pages.base            inline-flex items-center -space-x-px   -> HBox, spacing -1px (borders overlap)
+ *   previous / next.base  border bg-white px-3 py-2 leading-tight text-gray-500
+ *                         enabled:hover:bg-gray-100 enabled:hover:text-gray-700
+ *                                                                -> surface, text-muted; surface-alt, text
+ *   previous.base         rounded-l-lg      next.base  rounded-r-lg  -> 8px outer corners
+ *   icon                  h-5 w-5                                -> 20px box, 2px stroked chevron
+ *   selector.base         w-12 border py-2                       -> min-width 48px, no side padding
+ *   selector.disabled     cursor-not-allowed opacity-50          -> opacity 0.5 (JavaFX has no not-allowed)
+ *   layout.table.base     text-sm text-gray-700                  -> 12px, text-muted
+ *   layout.table.span     font-semibold text-gray-900            -> 600, text
+ *
+ * DEVIATION: Flowbite's active page is a light primary tint (bg-cyan-50 text-cyan-600). The token set
+ * has no tinted primary and JavaFX CSS cannot apply an alpha to a looked-up color, so the active page is
+ * a solid -fxk-primary fill with -fxk-on-primary text, like the selected day in FxDatePicker. Both themes
+ * keep their contrast ratios that way.
+ *
+ * Every button always has two borders (outline and ring), which together reserve 2px on every side, so
+ * padding is 1px smaller than Flowbite's px-3 py-2 and focusing never shifts the layout.
+ * -------------------------------------------------------------------------- */
+
+.fxk-pagination {
+  -fxk-pagination-border: -fxk-border-strong; /* border-gray-300 */
+  -fx-spacing: 8px; /* table text's mt-2 */
+  -fx-alignment: TOP_LEFT;
+}
+.root.dark .fxk-pagination {
+  -fxk-pagination-border: -fxk-border; /* dark:border-gray-700 */
+}
+
+.fxk-pagination-pages {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: -1px; /* -space-x-px */
+}
+
+/* ---- Table text ---- */
+
+.fxk-pagination-table-text {
+  -fx-fill: -fxk-text-muted;
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-pagination-table-strong {
+  -fx-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 600; /* font-semibold */
+}
+
+/* ---- Buttons (previous, next, page numbers) ---- */
+
+.fxk-pagination-btn {
+  -fxk-pagination-fg: -fxk-text-muted;
+  -fxk-pagination-bg: -fxk-surface;
+  -fxk-pagination-ring: transparent;
+
+  -fx-background-color: -fxk-pagination-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-border-color: -fxk-pagination-border, -fxk-pagination-ring;
+  -fx-border-width: 1px, 2px;
+  -fx-border-insets: 0, 0;
+  -fx-border-radius: 0, 0;
+  -fx-padding: 7px 11px 7px 11px; /* py-2 px-3, minus the 2px borders and 1px for the outline */
+  -fx-min-height: 38px; /* leading-tight line + py-2 + border */
+  -fx-pref-height: 38px;
+  -fx-alignment: CENTER;
+  -fx-graphic-text-gap: 4px;
+  -fx-text-fill: -fxk-pagination-fg;
+  -fx-font-size: 14px; /* inherited page size (text-base) */
+  -fx-font-weight: normal;
+  -fx-cursor: hand;
+}
+
+.fxk-pagination-btn:hover {
+  -fxk-pagination-bg: -fxk-surface-alt; /* hover:bg-gray-100 / dark:hover:bg-gray-700 */
+  -fxk-pagination-fg: -fxk-text; /* hover:text-gray-700 / dark:hover:text-white */
+}
+
+/* Visible keyboard focus ring, the same as every other component. */
+.fxk-pagination-btn:focused {
+  -fxk-pagination-ring: -fxk-focus-ring;
+}
+
+/* Outer corners: rounded-l-lg / rounded-r-lg. One radius per border layer (outline, ring). */
+.fxk-pagination-prev {
+  -fx-background-radius: 8px 0 0 8px;
+  -fx-border-radius: 8px 0 0 8px, 8px 0 0 8px;
+}
+.fxk-pagination-next {
+  -fx-background-radius: 0 8px 8px 0;
+  -fx-border-radius: 0 8px 8px 0, 0 8px 8px 0;
+}
+
+/* w-12 border py-2: a minimum width only, so a long number (e.g. 10000) grows the button. */
+.fxk-pagination-page {
+  -fx-min-width: 48px;
+  -fx-padding: 7px 0 7px 0;
+}
+
+/* Current page. Declared after :hover, same specificity, so its own hover wins on the active button. */
+.fxk-pagination-active {
+  -fxk-pagination-bg: -fxk-primary;
+  -fxk-pagination-fg: -fxk-on-primary;
+  -fxk-pagination-border: -fxk-primary;
+}
+.fxk-pagination-active:hover {
+  -fxk-pagination-bg: -fxk-primary-hover;
+  -fxk-pagination-fg: -fxk-on-primary;
+  -fxk-pagination-border: -fxk-primary-hover;
+}
+
+/* Disabled (previous on page 1, next on the last page, or the whole control). JavaFX still tracks
+ * :hover on disabled nodes, so the :disabled:hover forms pin the resting colors. */
+.fxk-pagination-btn:disabled,
+.fxk-pagination-btn:disabled:hover {
+  -fxk-pagination-bg: -fxk-surface;
+  -fxk-pagination-fg: -fxk-text-muted;
+  -fx-opacity: 0.5; /* opacity-50 */
+  -fx-cursor: default;
+}
+.fxk-pagination-btn.fxk-pagination-active:disabled,
+.fxk-pagination-btn.fxk-pagination-active:disabled:hover {
+  -fxk-pagination-bg: -fxk-primary;
+  -fxk-pagination-fg: -fxk-on-primary;
+  -fxk-pagination-border: -fxk-primary;
+}
+
+/* ---- Chevron icon: a stroked path, so it follows the button's text color in every state ---- */
+
+.fxk-pagination-icon-box {
+  -fx-alignment: CENTER;
+  -fx-min-width: 20px; /* h-5 w-5 */
+  -fx-pref-width: 20px;
+  -fx-max-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+}
+.fxk-pagination-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-pagination-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxSidebar (dev.fxkit.core.components.sidebar.FxSidebar / FxSidebarItemGroup / FxSidebarItem /
+ * FxSidebarCollapse / FxSidebarCta / FxSidebarLogo)
+ *
+ * Append this block to components.css; append sidebar-colors.css to colors.css.
+ *
+ * Structure only. colors.css DEFINES the looked-up colors -fxk-sidebar-bg and the -fxk-sidebar-cta-*
+ * set (Flowbite's sidebar is gray-50 in the light theme and gray-800 in the dark one, which no single
+ * semantic token covers). Everything else here uses semantic tokens, so it follows the theme.
+ *
+ * Flowbite mapping (sidebar theme):
+ *   root.base/collapsed   h-full, w-64 / w-16     -> fixed 256px / 64px (.fxk-sidebar-collapsed)
+ *   root.inner            rounded px-3 py-4 bg    -> 4px radius, 12px / 16px padding, -fxk-sidebar-bg
+ *   item.base             rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100
+ *                                                 -> 8px radius, 8px padding, 14px, -fxk-text, -fxk-surface-alt
+ *   item.active           bg-gray-100             -> -fxk-surface-alt
+ *   item.icon             h-6 w-6 text-gray-500 group-hover:text-gray-900
+ *                                                 -> 24px box (icon 20px), -fxk-text-muted, -fxk-text on hover
+ *   item.content          flex-1 px-3             -> label grows, 12px side padding
+ *   collapse.button       as item, label ml-3     -> same box; label 12px left padding
+ *   collapse.list         space-y-2 py-2          -> 8px spacing, 8px vertical padding
+ *   item inside collapse  pl-8                    -> 32px left padding
+ *   itemGroup             mt-4 space-y-2 border-t border-gray-200 pt-4 first:mt-0 ...
+ *                                                 -> 16px gap, 1px -fxk-border line, 16px padding
+ *   cta.base              mt-6 rounded-lg p-4     -> 24px gap, 8px radius, 16px padding
+ *   logo.base             mb-5 flex items-center pl-2.5; img mr-3 h-7; text text-xl semibold
+ *
+ * Three JavaFX workarounds worth knowing about:
+ *   - Margins do not exist in CSS, so "mt-*" is done by making the node taller and drawing the border /
+ *     background inset from the top (-fx-border-insets / -fx-background-insets). The gap is part of
+ *     the node's own bounds.
+ *   - Rows reserve their focus ring as a 2px transparent border (6px padding + 2px border = Flowbite's
+ *     8px), so focusing only recolors the border and never shifts the layout (same as FxAccordion).
+ *   - Icon and chevron colors use descendant selectors on the row's :hover / class, not a redefined
+ *     looked-up color, so they change reliably when the row's state changes.
+ * -------------------------------------------------------------------------- */
+
+.fxk-sidebar {
+  -fx-background-color: -fxk-sidebar-bg;
+  -fx-background-radius: 4px; /* rounded */
+  -fx-min-width: 256px; /* w-64 */
+  -fx-pref-width: 256px;
+  -fx-max-width: 256px;
+}
+.fxk-sidebar-collapsed {
+  -fx-min-width: 64px; /* w-16 */
+  -fx-pref-width: 64px;
+  -fx-max-width: 64px;
+}
+
+/* overflow-y-auto: a transparent ScrollPane so the sidebar's own background shows through */
+.fxk-sidebar-scroll,
+.fxk-sidebar-scroll:focused {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+.fxk-sidebar-scroll > .viewport {
+  -fx-background-color: transparent;
+}
+.fxk-sidebar-inner {
+  -fx-padding: 16px 12px 16px 12px; /* py-4 px-3 */
+}
+
+/* ---- Logo ---- */
+
+.fxk-sidebar-logo {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: 12px; /* mr-3 on the image */
+  -fx-padding: 0 0 20px 10px; /* mb-5 pl-2.5 */
+}
+.fxk-sidebar-logo-link {
+  -fx-cursor: hand;
+}
+.fxk-sidebar-logo-link:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-width: 2px;
+  -fx-border-radius: 4px;
+}
+.fxk-sidebar-logo-text {
+  -fx-font-size: 20px; /* text-xl */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text;
+}
+
+/* ---- Group: a divider line above every group except the first ---- */
+
+.fxk-sidebar-group {
+  -fx-spacing: 8px; /* space-y-2 */
+  -fx-border-color: -fxk-border transparent transparent transparent;
+  -fx-border-width: 1px 0 0 0; /* border-t */
+  -fx-border-insets: 16px 0 0 0; /* mt-4: the line starts 16px below the node's top edge */
+  -fx-padding: 33px 0 0 0; /* mt-4 (16) + border (1) + pt-4 (16) */
+}
+.fxk-sidebar-group-first {
+  -fx-border-width: 0;
+  -fx-border-insets: 0;
+  -fx-padding: 0;
+}
+
+/* ---- Shared: the 24px slot every icon sits in, so text lines up whatever the glyph's width ---- */
+
+.fxk-sidebar-icon-box {
+  -fx-alignment: CENTER;
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+}
+
+/* ---- Item and collapse header share one look ---- */
+
+.fxk-sidebar-item,
+.fxk-sidebar-collapse-button {
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 6px; /* p-2 (8px) minus the 2px focus border */
+  -fx-background-color: transparent;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 400; /* font-normal */
+  -fx-cursor: hand;
+}
+.fxk-sidebar-item:hover,
+.fxk-sidebar-collapse-button:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-sidebar-item:focused,
+.fxk-sidebar-collapse-button:focused {
+  -fx-border-color: -fxk-focus-ring;
+}
+.fxk-sidebar-item-active {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-sidebar-item:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+.fxk-sidebar-item:disabled:hover {
+  -fx-background-color: transparent;
+}
+.fxk-sidebar-item-active:disabled:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+
+.fxk-sidebar-item-text,
+.fxk-sidebar-collapse-label {
+  -fx-text-fill: -fxk-text;
+}
+.fxk-sidebar-item-text {
+  -fx-padding: 0 12px 0 12px; /* px-3 */
+}
+.fxk-sidebar-collapse-label {
+  -fx-padding: 0 0 0 12px; /* ml-3 */
+}
+
+.fxk-sidebar-item-icon,
+.fxk-sidebar-collapse-icon {
+  -fx-icon-size: 20px;
+  -fx-icon-color: -fxk-text-muted;
+}
+.fxk-sidebar-item:hover .fxk-sidebar-item-icon,
+.fxk-sidebar-item-active .fxk-sidebar-item-icon,
+.fxk-sidebar-collapse-button:hover .fxk-sidebar-collapse-icon,
+.fxk-sidebar-collapse-open > .fxk-sidebar-collapse-button .fxk-sidebar-collapse-icon {
+  -fx-icon-color: -fxk-text;
+}
+
+/* ---- Collapsed sidebar: icon rail. Rows centre their icon (or first letter) in the 40px track. ---- */
+
+.fxk-sidebar-item-collapsed,
+.fxk-sidebar-collapse-collapsed > .fxk-sidebar-collapse-button {
+  -fx-alignment: CENTER;
+}
+.fxk-sidebar-item-collapsed .fxk-sidebar-item-text,
+.fxk-sidebar-collapse-collapsed .fxk-sidebar-collapse-label {
+  -fx-padding: 0;
+  -fx-alignment: CENTER;
+}
+/* collapsed.noIcon: font-bold */
+.fxk-sidebar-item-initial .fxk-sidebar-item-text,
+.fxk-sidebar-collapse-initial .fxk-sidebar-collapse-label {
+  -fx-font-weight: 700;
+}
+
+/* ---- Collapse: nested list, chevron ---- */
+
+.fxk-sidebar-collapse-list {
+  -fx-spacing: 8px; /* space-y-2 */
+  -fx-padding: 8px 0 8px 0; /* py-2 */
+}
+.fxk-sidebar-collapse-list .fxk-sidebar-item {
+  -fx-padding: 6px 6px 6px 30px; /* pl-8 (32px) minus the 2px focus border */
+}
+.fxk-sidebar-collapsed .fxk-sidebar-collapse-list .fxk-sidebar-item {
+  -fx-padding: 6px; /* no room for an indent in the 64px rail */
+}
+
+.fxk-sidebar-chevron-box {
+  -fx-alignment: CENTER;
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+}
+.fxk-sidebar-collapse-open > .fxk-sidebar-collapse-button > .fxk-sidebar-chevron-rotating {
+  -fx-rotate: 180; /* rotate-180 */
+}
+.fxk-sidebar-chevron {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-text;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+/* font-glyph chevrons (chevronIcon / chevronFactory) fill their box, unlike the padded SVG one */
+.fxk-sidebar-chevron-box .ikonli-font-icon {
+  -fx-icon-size: 14px;
+  -fx-icon-color: -fxk-text;
+}
+
+/* ---- CTA ---- */
+
+.fxk-sidebar-cta {
+  -fx-background-color: -fxk-sidebar-cta-bg;
+  -fx-background-insets: 24px 0 0 0; /* mt-6: the tint starts 24px below the node's top edge */
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-padding: 40px 16px 16px 16px; /* mt-6 (24) + p-4 (16) on top, p-4 elsewhere */
+  -fx-spacing: 12px; /* mb-3 between header, text and link */
+}
+.fxk-sidebar-cta-header {
+  -fx-alignment: CENTER_LEFT;
+}
+.fxk-sidebar-cta-text {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-sidebar-cta-fg;
+  -fx-wrap-text: true;
+}
+.fxk-sidebar-cta-link,
+.fxk-sidebar-cta-link:visited {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-sidebar-cta-fg;
+  -fx-underline: true;
+  -fx-padding: 0;
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-radius: 2px;
+}
+.fxk-sidebar-cta-link:hover {
+  -fx-text-fill: -fxk-sidebar-cta-fg-hover;
+}
+.fxk-sidebar-cta-link:focused {
+  -fx-border-color: -fxk-focus-ring;
+}
+.fxk-sidebar-cta-close {
+  -fx-background-color: -fxk-sidebar-cta-close-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-text-fill: -fxk-sidebar-cta-close-fg;
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+  -fx-padding: 0;
+  -fx-font-size: 14px;
+  -fx-font-weight: 700;
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-cursor: hand;
+}
+.fxk-sidebar-cta-close:hover {
+  -fx-background-color: -fxk-sidebar-cta-close-bg-hover;
+}
+.fxk-sidebar-cta-close:focused {
+  -fx-border-color: -fxk-focus-ring;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxNavbar (dev.fxkit.core.components.navbar.FxNavbar / FxNavbarBrand / FxNavbarLink / FxNavbarToggle)
+ *
+ * Append this block to the END of components.css. colors.css needs nothing: the navbar has no
+ * per-color variants.
+ *
+ * Structure:  .fxk-navbar > .fxk-navbar-inner > .fxk-navbar-bar
+ *                 (brand | .fxk-navbar-links (wide) | .fxk-navbar-actions [+ .fxk-navbar-toggle])
+ *             and, while compact and expanded, .fxk-navbar-links-compact below the bar.
+ * Java puts .fxk-navbar-compact on the root below the "md" breakpoint (see FxNavbar: it measures its
+ * own width, there are no media queries), .fxk-navbar-narrow below "sm", and .fxk-navbar-rounded /
+ * -bordered from the flags. Link state is .fxk-navbar-link-active; the container max-width is Java.
+ *
+ * Every link reads local looked-up colors that this block redefines per theme and per layout (the same
+ * trick as FxTabs), so the wide and compact looks are one set of rules:
+ *   -fxk-navbar-link-fg / -hover-fg / -active-fg      text color: resting, hovered, current page
+ *   -fxk-navbar-link-hover-bg / -active-bg            row fill (compact only; wide links have none)
+ *   -fxk-navbar-link-sep                              1px line under a compact inactive link
+ *
+ * Flowbite mapping (navbar theme):
+ *   root.base          bg-white px-2 py-2.5 sm:px-4 dark:bg-gray-800  -> -fxk-surface, 10px / 16px (8px narrow)
+ *   rounded / bordered rounded / border                               -> 4px radius / 1px -fxk-border
+ *   inner.base         mx-auto flex flex-wrap items-center justify-between
+ *   brand.base         flex items-center                              -> text-xl (18px) font-semibold, 12px gap
+ *   collapse.list      md:flex-row md:space-x-8 md:text-sm md:font-medium  -> 32px gap, 12px, 500
+ *                      mt-4 flex flex-col (compact)                   -> 16px above the stacked links
+ *   link.base          block py-2 pl-3 pr-4 md:p-0                    -> 8/16/8/12 compact, 0 wide
+ *   link inactive      text-gray-700 hover:text-primary-700 / dark gray-400, white
+ *                      compact: border-b border-gray-100 hover:bg-gray-50 / dark gray-700
+ *   link active        bg-primary-700 text-white  md: bg-transparent text-primary-700 dark:text-white
+ *                      (primary-700 maps to -fxk-primary, as in FxDatePicker and FxTabs)
+ *   link disabled      text-gray-400 hover:cursor-not-allowed         -> muted text, opacity 0.55
+ *   toggle.base        inline-flex rounded-lg p-2 text-gray-500 hover:bg-gray-100 focus:ring-2
+ *   toggle.icon        h-6 w-6                                        -> 24px box, stroked bars
+ *
+ * Hyperlink-based parts (brand, link) reset the Modena hyperlink look: padding, underline and its
+ * dotted focus border (hence the explicit solid border style). The focus ring is drawn OUTSIDE the
+ * node by a negative border-inset, so focusing never shifts the layout.
+ * -------------------------------------------------------------------------- */
+
+/* ---- Root ---- */
+
+.fxk-navbar {
+  -fxk-navbar-link-fg: -fxk-text; /* text-gray-700 */
+  -fxk-navbar-link-hover-fg: -fxk-primary; /* md:hover:text-primary-700 */
+  -fxk-navbar-link-active-fg: -fxk-primary; /* md:text-primary-700 */
+  -fxk-navbar-link-hover-bg: transparent;
+  -fxk-navbar-link-active-bg: transparent; /* md:bg-transparent */
+  -fxk-navbar-link-sep: transparent;
+
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+  -fx-padding: 10px 16px 10px 16px; /* py-2.5 sm:px-4 */
+}
+.root.dark .fxk-navbar {
+  -fxk-navbar-link-fg: -fxk-text-muted; /* dark:text-gray-400 */
+  -fxk-navbar-link-hover-fg: -fxk-text; /* dark:hover:text-white */
+  -fxk-navbar-link-active-fg: -fxk-text; /* dark:text-white */
+}
+
+/* Compact: the links are stacked rows. Declared after the rules above (same node, same specificity). */
+.fxk-navbar-compact {
+  -fxk-navbar-link-hover-fg: -fxk-text;
+  -fxk-navbar-link-hover-bg: -fxk-background; /* hover:bg-gray-50 */
+  -fxk-navbar-link-active-fg: -fxk-on-primary; /* text-white */
+  -fxk-navbar-link-active-bg: -fxk-primary; /* bg-primary-700 */
+  -fxk-navbar-link-sep: -fxk-surface-alt; /* border-gray-100 / dark:border-gray-700 */
+}
+.root.dark .fxk-navbar-compact {
+  -fxk-navbar-link-hover-bg: -fxk-surface-alt; /* dark:hover:bg-gray-700 */
+  -fxk-navbar-link-active-fg: -fxk-on-primary;
+}
+
+.fxk-navbar-narrow {
+  -fx-padding: 10px 8px 10px 8px; /* px-2 */
+}
+.fxk-navbar-rounded {
+  -fx-background-radius: 4px; /* rounded */
+  -fx-border-radius: 4px;
+}
+.fxk-navbar-bordered {
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+}
+
+/* ---- Rows ---- */
+
+.fxk-navbar-actions {
+  -fx-alignment: CENTER;
+  -fx-spacing: 8px; /* Flowbite relies on the toggle's own padding; this keeps hover fills apart */
+}
+
+.fxk-navbar-links {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: 32px; /* md:space-x-8 */
+}
+
+.fxk-navbar-links-compact {
+  -fx-padding: 16px 0 0 0; /* mt-4 */
+}
+
+/* ---- Brand ---- */
+
+.fxk-navbar-brand {
+  -fx-padding: 0;
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+  -fx-graphic-text-gap: 12px; /* logo's mr-3 */
+  -fx-font-size: 18px; /* text-xl */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-text-fill: -fxk-text; /* dark:text-white */
+  -fx-cursor: hand;
+}
+.fxk-navbar-brand:visited {
+  -fx-text-fill: -fxk-text; /* a hyperlink is never "visited" here */
+}
+.fxk-navbar-brand:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+/* A FontIcon logo (an ImageView logo needs nothing). */
+.fxk-navbar-brand .ikonli-font-icon {
+  -fx-icon-color: -fxk-primary;
+  -fx-icon-size: 32px;
+}
+
+/* ---- Link ---- */
+
+.fxk-navbar-link {
+  -fxk-nl-fg: -fxk-navbar-link-fg;
+  -fxk-nl-bg: transparent;
+  -fxk-nl-sep: -fxk-navbar-link-sep;
+  -fxk-nl-ring: transparent;
+
+  -fx-text-fill: -fxk-nl-fg;
+  -fx-background-color: -fxk-nl-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  /* Two border layers: the compact separator (bottom only) and the focus ring, drawn 2px OUTSIDE.
+   * Both always exist, so neither hovering nor focusing changes the layout. */
+  -fx-border-color: transparent transparent -fxk-nl-sep transparent, -fxk-nl-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 0 0 1px 0, 2px;
+  -fx-border-insets: 0, -2px;
+  -fx-border-radius: 0, 4px;
+  -fx-padding: 0; /* md:p-0 */
+  -fx-alignment: CENTER_LEFT;
+  -fx-underline: false;
+  -fx-font-size: 12px; /* md:text-sm */
+  -fx-font-weight: 500; /* md:font-medium */
+  -fx-cursor: hand;
+}
+.fxk-navbar-link:visited {
+  -fx-text-fill: -fxk-nl-fg;
+}
+.fxk-navbar-link:hover {
+  -fxk-nl-fg: -fxk-navbar-link-hover-fg;
+  -fxk-nl-bg: -fxk-navbar-link-hover-bg;
+}
+.fxk-navbar-link:focused {
+  -fxk-nl-ring: -fxk-focus-ring;
+}
+
+/* Current page. Declared after :hover, same specificity, so it also wins while hovered. */
+.fxk-navbar-link-active,
+.fxk-navbar-link-active:hover {
+  -fxk-nl-fg: -fxk-navbar-link-active-fg;
+  -fxk-nl-bg: -fxk-navbar-link-active-bg;
+  -fxk-nl-sep: transparent; /* the active link has no border-b */
+}
+
+/* JavaFX still tracks :hover on disabled nodes, so the :disabled:hover form pins the resting look. */
+.fxk-navbar-link:disabled,
+.fxk-navbar-link:disabled:hover {
+  -fxk-nl-fg: -fxk-text-muted; /* text-gray-400 */
+  -fxk-nl-bg: transparent;
+  -fx-opacity: 0.55;
+  -fx-cursor: default; /* JavaFX has no not-allowed cursor */
+}
+
+/* Compact: full-width rows, base text size, regular weight. */
+.fxk-navbar-compact .fxk-navbar-link {
+  -fx-padding: 8px 16px 8px 12px; /* py-2 pr-4 pl-3 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: normal;
+}
+
+/* ---- Toggle (hamburger) ---- */
+
+.fxk-navbar-toggle {
+  -fxk-navbar-toggle-fg: -fxk-text-muted; /* text-gray-500 / dark:text-gray-400 */
+
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px; /* reserved, so the focus ring never shifts layout */
+  -fx-border-radius: 8px;
+  -fx-padding: 6px; /* p-2 (8px) minus the 2px border */
+  -fx-cursor: hand;
+}
+.fxk-navbar-toggle:hover {
+  -fx-background-color: -fxk-surface-alt; /* hover:bg-gray-100 / dark:hover:bg-gray-700 */
+}
+.fxk-navbar-toggle:focused {
+  -fx-border-color: -fxk-focus-ring; /* focus:ring-2 */
+}
+
+.fxk-navbar-toggle-icon-box {
+  -fx-alignment: CENTER;
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+}
+.fxk-navbar-toggle-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-navbar-toggle-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+}
+
+/* -----------------------------------------------------------------------------
+ * Form components (dev.fxkit.core.components.form: FxLabel, FxHelperText, FxTextInput, FxTextArea,
+ * FxFileInput, FxCheckbox, FxRadio, FxToggleSwitch, FxRangeSlider)
+ *
+ * Append this block to the END of components.css; append form-colors.css to colors.css.
+ *
+ * Structure only, from semantic tokens. The per-color values are DEFINED in colors.css as looked-up
+ * colors on the control, and consumed here:
+ *
+ *   text-like fields (input, textarea, file)   .fxk-field-color-*
+ *     -fxk-field-bg / -border / -fg / -placeholder / -ring
+ *   checkbox + radio                           .fxk-choice-color-*
+ *     -fxk-choice-fg (checked fill) / -fxk-choice-on (check mark, dot)
+ *   toggle switch                              .fxk-toggle-color-*
+ *     -fxk-toggle-on (track while on)
+ *
+ * The values on .fxk-field and .fxk-check/.fxk-radio/.fxk-toggle below are only fallbacks for when
+ * colors.css is not loaded.
+ *
+ * Two rules from the existing components apply here too:
+ *   - A looked-up color redefined by a PSEUDO-CLASS (:focused) is only read by the SAME node; children
+ *     use descendant selectors on the state instead (see FxSidebar).
+ *   - Focus rings are drawn OUTSIDE the control (a second border layer with a negative inset, or an
+ *     extra background layer), so focusing never shifts the layout.
+ *
+ * Flowbite mapping:
+ *   label        text-sm font-medium                          -> 12px, 500, disabled opacity 0.5
+ *   helper text  mt-2 text-sm                                 -> 8px above, 12px
+ *   text input   rounded-lg border p-2.5 text-sm              -> 8px radius, 1px border, 10px padding
+ *                sizes sm p-2 text-xs / lg p-4 text-base      -> 34 / 42 / 58px tall (padding + line + border)
+ *                icon: pl-10, svg h-5 w-5, wrapper pl-3       -> 40px padding, 20px icon 12px from the edge
+ *                addon: rounded-l-md border bg-gray-200 px-3  -> a box inside the border, 12px side padding
+ *                focus:ring-1                                 -> 1px ring outside the border
+ *   textarea     as text input, p-2.5 text-sm                 -> 10px content padding
+ *   file input   file:bg-gray-800 file:text-white ...         -> filled button part, then the file name
+ *   checkbox     h-4 w-4 rounded border, focus:ring-2 ring-offset-2   -> 16px box, 2px ring 2px away
+ *   radio        h-4 w-4 rounded-full                          -> 16px circle, 6px dot
+ *   toggle       h-6 w-11 (sm 5/9, lg 7/[52px])               -> track + knob, knob travels its own width
+ *   range slider h-1 / h-2 / h-3 rounded-lg bg-gray-200       -> 4 / 8 / 12px track; thumb 14 / 18 / 24px
+ * -------------------------------------------------------------------------- */
+
+/* ---- FxLabel ---- */
+
+.fxk-label {
+  -fxk-label-fg: -fxk-text;
+  -fx-text-fill: -fxk-label-fg;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+}
+.fxk-label:disabled {
+  -fx-opacity: 0.5;
+}
+
+/* ---- FxHelperText: a TextFlow, so the colors are applied to its Text children ---- */
+
+.fxk-helper-text {
+  -fxk-helper-fg: -fxk-text-muted;
+  -fx-padding: 8px 0 0 0; /* mt-2 */
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-helper-text .text {
+  -fx-fill: -fxk-helper-fg;
+}
+.fxk-helper-text-strong {
+  -fx-font-weight: 500; /* font-medium */
+}
+/* A Hyperlink inside the helper text (Flowbite: font-medium text-primary hover:underline). */
+.fxk-helper-text .hyperlink {
+  -fx-text-fill: -fxk-primary;
+  -fx-font-weight: 500;
+  -fx-underline: false;
+  -fx-padding: 0;
+  -fx-background-color: transparent;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+.fxk-helper-text .hyperlink:visited {
+  -fx-text-fill: -fxk-primary; /* a hyperlink is never "visited" here */
+}
+.fxk-helper-text .hyperlink:hover {
+  -fx-underline: true;
+}
+.fxk-helper-text .hyperlink:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+
+/* ---- Text-like fields: shared box (FxTextInput, FxTextArea, FxFileInput) ----
+ *
+ * Two border layers: the 1px outline, and a 1px halo drawn outside it that is transparent until the
+ * field is focused (Flowbite: focus:border-<c> focus:ring-1 focus:ring-<c>). -fxk-field-edge and
+ * -fxk-field-halo are redefined by :focused on the SAME node that reads them, which is why they work
+ * as looked-up colors here. -fx-control-inner-background makes Modena's own inner layers (selection,
+ * the textarea's content) use the field color, and the focus colors are zeroed so Modena draws no
+ * second ring. */
+
+.fxk-field {
+  -fxk-field-bg: -fxk-background;
+  -fxk-field-border: -fxk-border-strong;
+  -fxk-field-fg: -fxk-text;
+  -fxk-field-placeholder: -fxk-text-muted;
+  -fxk-field-ring: -fxk-focus-ring;
+
+  -fxk-field-edge: -fxk-field-border;
+  -fxk-field-halo: transparent;
+
+  -fx-control-inner-background: -fxk-field-bg;
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  -fx-text-box-border: transparent;
+
+  -fx-background-color: -fxk-field-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-field-edge, -fxk-field-halo;
+  -fx-border-width: 1px, 1px;
+  -fx-border-insets: 0, -1px;
+  -fx-border-radius: 8px, 9px;
+}
+.fxk-field:focused {
+  -fxk-field-edge: -fxk-field-ring;
+  -fxk-field-halo: -fxk-field-ring;
+}
+.fxk-field:disabled {
+  -fx-opacity: 0.5; /* disabled:opacity-50 */
+}
+/* shadow-sm */
+.fxk-field-shadow {
+  -fx-effect: -fxk-shadow-sm;
+}
+
+/* ---- FxTextInput ---- */
+
+.fxk-input {
+  -fx-text-fill: -fxk-field-fg;
+  -fx-prompt-text-fill: -fxk-field-placeholder;
+  -fx-highlight-fill: -fxk-primary;
+  -fx-highlight-text-fill: -fxk-on-primary;
+}
+
+.fxk-input-size-sm {
+  -fx-padding: 8px; /* p-2 */
+  -fx-font-size: 11px; /* text-xs */
+  -fx-min-height: 34px;
+  -fx-pref-height: 34px;
+}
+.fxk-input-size-md {
+  -fx-padding: 10px; /* p-2.5 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-min-height: 42px;
+  -fx-pref-height: 42px;
+}
+.fxk-input-size-lg {
+  -fx-padding: 16px; /* p-4 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-min-height: 58px;
+  -fx-pref-height: 58px;
+}
+
+/* Room for an icon: pl-10 / pr-10. FxTextInputSkin places a 40px strip in this padding. Two (or three)
+ * classes beat the one-class size rules above. */
+.fxk-input-icon-left.fxk-input-size-sm { -fx-padding: 8px 8px 8px 40px; }
+.fxk-input-icon-left.fxk-input-size-md { -fx-padding: 10px 10px 10px 40px; }
+.fxk-input-icon-left.fxk-input-size-lg { -fx-padding: 16px 16px 16px 40px; }
+.fxk-input-icon-right.fxk-input-size-sm { -fx-padding: 8px 40px 8px 8px; }
+.fxk-input-icon-right.fxk-input-size-md { -fx-padding: 10px 40px 10px 10px; }
+.fxk-input-icon-right.fxk-input-size-lg { -fx-padding: 16px 40px 16px 16px; }
+.fxk-input-icon-left.fxk-input-icon-right.fxk-input-size-sm { -fx-padding: 8px 40px 8px 40px; }
+.fxk-input-icon-left.fxk-input-icon-right.fxk-input-size-md { -fx-padding: 10px 40px 10px 40px; }
+.fxk-input-icon-left.fxk-input-icon-right.fxk-input-size-lg { -fx-padding: 16px 40px 16px 40px; }
+
+/* The strips are 40px wide; the icon sits 12px (pl-3) from the field's edge, 1px of which is the border. */
+.fxk-field-icon-pane-left {
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 0 0 0 11px;
+}
+.fxk-field-icon-pane-right {
+  -fx-alignment: CENTER_RIGHT;
+  -fx-padding: 0 11px 0 0;
+}
+.fxk-field-icon {
+  -fx-icon-size: 20px; /* h-5 w-5 */
+  -fx-icon-color: -fxk-text-muted; /* text-gray-500 dark:text-gray-400 */
+}
+
+/* Addon: a box inside the border; its right edge is a 1px divider. Light: bg-gray-200, dark: bg-gray-600. */
+.fxk-field-addon {
+  -fx-alignment: CENTER;
+  -fx-padding: 0 12px 0 12px; /* px-3 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-text;
+  -fx-background-color: -fxk-border;
+  -fx-background-insets: 0;
+  -fx-background-radius: 7px 0 0 7px; /* the field's 8px radius minus its 1px border */
+  -fx-border-color: transparent -fxk-border-strong transparent transparent;
+  -fx-border-width: 0 1px 0 0;
+}
+.root.dark .fxk-field-addon {
+  -fx-background-color: -fxk-border-strong;
+  -fx-text-fill: -fxk-text-muted;
+}
+
+/* ---- FxTextArea ----
+ * Modena paints the textarea through an inner ScrollPane and a "content" region, each with its own
+ * background; all of them are cleared so the field's own background and radius show. */
+
+.fxk-textarea {
+  -fx-padding: 0;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-field-fg;
+  -fx-prompt-text-fill: -fxk-field-placeholder;
+  -fx-highlight-fill: -fxk-primary;
+  -fx-highlight-text-fill: -fxk-on-primary;
+}
+.fxk-textarea > .scroll-pane {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+.fxk-textarea > .scroll-pane > .viewport {
+  -fx-background-color: transparent;
+}
+.fxk-textarea .content {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 10px; /* p-2.5 */
+}
+
+/* ---- FxFileInput: an HBox (button part | file name) inside the shared field box ---- */
+
+.fxk-file {
+  /* fallbacks; colors.css redefines them (Flowbite: gray-800 / gray-700 button, white text) */
+  -fxk-file-btn-bg: -fxk-primary;
+  -fxk-file-btn-bg-hover: -fxk-primary-hover;
+  -fxk-file-btn-fg: -fxk-on-primary;
+
+  -fx-alignment: CENTER_LEFT;
+  -fx-cursor: hand;
+}
+.fxk-file-size-sm {
+  -fx-font-size: 11px; /* text-xs */
+  -fx-min-height: 38px; /* file:py-2.5 around the line, plus the border */
+  -fx-pref-height: 38px;
+}
+.fxk-file-size-md {
+  -fx-font-size: 12px; /* text-sm */
+  -fx-min-height: 42px;
+  -fx-pref-height: 42px;
+}
+.fxk-file-size-lg {
+  -fx-font-size: 16px; /* text-lg */
+  -fx-min-height: 50px;
+  -fx-pref-height: 50px;
+}
+
+.fxk-file-button {
+  -fx-alignment: CENTER;
+  -fx-padding: 0 16px 0 16px; /* file:ps-8 file:-ms-4 file:pe-4 */
+  -fx-background-color: -fxk-file-btn-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 7px 0 0 7px; /* the field's 8px radius minus its 1px border */
+  -fx-text-fill: -fxk-file-btn-fg;
+  -fx-font-weight: 500; /* file:font-medium */
+}
+/* hover:file:bg-... : the whole field is hovered, the button part changes (descendant selector). */
+.fxk-file:hover .fxk-file-button {
+  -fx-background-color: -fxk-file-btn-bg-hover;
+}
+
+.fxk-file-name {
+  -fx-padding: 0 12px 0 16px; /* file:me-4 */
+  -fx-text-fill: -fxk-field-fg;
+}
+
+/* ---- FxCheckbox + FxRadio ----
+ * Stock substructure: .check-box > .box > .mark and .radio-button > .radio > .dot. The unchecked look
+ * is semantic (bg-gray-100 border-gray-300 / dark gray-700, gray-600); the checked fill comes from
+ * -fxk-choice-fg. The focus ring is two extra background layers (ring, then a 2px gap in the surface
+ * color), painted outside the box. */
+
+.fxk-check,
+.fxk-radio {
+  -fxk-choice-fg: -fxk-primary;
+  -fxk-choice-on: -fxk-on-primary;
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-label-padding: 0 0 0 8px; /* gap-2 */
+  -fx-cursor: hand;
+}
+.fxk-check:disabled,
+.fxk-radio:disabled {
+  -fx-opacity: 0.5;
+  -fx-cursor: default;
+}
+
+.fxk-check > .box {
+  -fx-padding: 3px; /* 16px box, 10px check mark */
+  -fx-min-width: 16px; /* h-4 w-4 */
+  -fx-pref-width: 16px;
+  -fx-max-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+  -fx-background-color: -fxk-surface-alt;
+  -fx-background-insets: 0;
+  -fx-background-radius: 4px; /* rounded */
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+}
+.fxk-check > .box > .mark {
+  -fx-background-color: transparent;
+}
+.fxk-check:selected > .box,
+.fxk-check:indeterminate > .box {
+  -fx-background-color: -fxk-choice-fg; /* checked:bg-current */
+  -fx-border-color: transparent;
+}
+.fxk-check:selected > .box > .mark,
+.fxk-check:indeterminate > .box > .mark {
+  -fx-background-color: -fxk-choice-on;
+}
+.fxk-check:focused > .box {
+  -fx-background-color: -fxk-choice-fg, -fxk-surface, -fxk-surface-alt; /* ring, ring-offset-2, box */
+  -fx-background-insets: -4px, -2px, 0;
+  -fx-background-radius: 8px, 6px, 4px;
+}
+.fxk-check:focused:selected > .box,
+.fxk-check:focused:indeterminate > .box {
+  -fx-background-color: -fxk-choice-fg, -fxk-surface, -fxk-choice-fg;
+}
+
+.fxk-radio > .radio {
+  -fx-padding: 5px; /* 16px circle around a 6px dot */
+  -fx-min-width: 16px; /* h-4 w-4 */
+  -fx-pref-width: 16px;
+  -fx-max-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+  -fx-background-color: -fxk-surface-alt;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-full */
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+}
+.fxk-radio > .radio > .dot {
+  -fx-padding: 3px;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 3px;
+}
+.fxk-radio:selected > .radio {
+  -fx-background-color: -fxk-choice-fg;
+  -fx-border-color: transparent;
+}
+.fxk-radio:selected > .radio > .dot {
+  -fx-background-color: -fxk-choice-on;
+}
+.fxk-radio:focused > .radio {
+  -fx-background-color: -fxk-choice-fg, -fxk-surface, -fxk-surface-alt;
+  -fx-background-insets: -4px, -2px, 0;
+  -fx-background-radius: 12px, 10px, 8px;
+}
+.fxk-radio:focused:selected > .radio {
+  -fx-background-color: -fxk-choice-fg, -fxk-surface, -fxk-choice-fg;
+}
+
+/* ---- FxToggleSwitch ----
+ * A ToggleButton whose graphic is the track (a StackPane) holding the knob (a Region). The button's own
+ * Modena look is reset. The track fill changes with :selected through a DESCENDANT selector, and the
+ * knob travels by -fx-translate-x (one knob width: translate-x-full); JavaFX CSS cannot animate it. */
+
+.fxk-toggle {
+  -fxk-toggle-on: -fxk-primary;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-border-width: 0;
+  -fx-padding: 0;
+  -fx-alignment: CENTER_LEFT;
+  -fx-graphic-text-gap: 12px; /* ms-3 */
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-cursor: hand;
+}
+.fxk-toggle:disabled {
+  -fx-opacity: 0.5;
+  -fx-cursor: default;
+}
+
+.fxk-toggle-track {
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 2px; /* after:left-0.5 after:top-0.5 */
+  -fx-background-color: -fxk-border; /* bg-gray-200 dark:bg-gray-700 */
+  -fx-background-insets: 0;
+  /* group-focus:ring: a transparent border outside the track, colored while focused */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+}
+.fxk-toggle:selected .fxk-toggle-track {
+  -fx-background-color: -fxk-toggle-on;
+}
+.fxk-toggle:focused .fxk-toggle-track {
+  -fx-border-color: -fxk-focus-ring;
+}
+
+/* The knob is white in both themes (Flowbite: after:bg-white), so it uses the raw white token on purpose,
+ * like FxCarousel's literal overlay colors. */
+.fxk-toggle-knob {
+  -fx-background-color: -fxk-border-strong, -fxk-white; /* a 1px gray-300 outline around the white knob */
+  -fx-background-insets: 0, 1px;
+}
+.fxk-toggle:selected .fxk-toggle-knob {
+  -fx-background-color: -fxk-white;
+  -fx-background-insets: 0;
+}
+
+.fxk-toggle-size-sm .fxk-toggle-track {
+  -fx-min-width: 36px; /* w-9 h-5 */
+  -fx-pref-width: 36px;
+  -fx-max-width: 36px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+  -fx-background-radius: 10px;
+  -fx-border-radius: 12px;
+}
+.fxk-toggle-size-sm .fxk-toggle-knob {
+  -fx-min-width: 16px; /* h-4 w-4 */
+  -fx-pref-width: 16px;
+  -fx-max-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+  -fx-background-radius: 8px;
+}
+.fxk-toggle-size-sm:selected .fxk-toggle-knob {
+  -fx-translate-x: 16px;
+}
+
+.fxk-toggle-size-md .fxk-toggle-track {
+  -fx-min-width: 44px; /* w-11 h-6 */
+  -fx-pref-width: 44px;
+  -fx-max-width: 44px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+  -fx-background-radius: 12px;
+  -fx-border-radius: 14px;
+}
+.fxk-toggle-size-md .fxk-toggle-knob {
+  -fx-min-width: 20px; /* h-5 w-5 */
+  -fx-pref-width: 20px;
+  -fx-max-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+  -fx-background-radius: 10px;
+}
+.fxk-toggle-size-md:selected .fxk-toggle-knob {
+  -fx-translate-x: 20px;
+}
+
+.fxk-toggle-size-lg .fxk-toggle-track {
+  -fx-min-width: 52px; /* w-[52px] h-7 */
+  -fx-pref-width: 52px;
+  -fx-max-width: 52px;
+  -fx-min-height: 28px;
+  -fx-pref-height: 28px;
+  -fx-max-height: 28px;
+  -fx-background-radius: 14px;
+  -fx-border-radius: 16px;
+}
+.fxk-toggle-size-lg .fxk-toggle-knob {
+  -fx-min-width: 24px; /* h-6 w-6 */
+  -fx-pref-width: 24px;
+  -fx-max-width: 24px;
+  -fx-min-height: 24px;
+  -fx-pref-height: 24px;
+  -fx-max-height: 24px;
+  -fx-background-radius: 12px;
+}
+.fxk-toggle-size-lg:selected .fxk-toggle-knob {
+  -fx-translate-x: 24px;
+}
+
+/* ---- FxRangeSlider ----
+ * Modena's slider: .slider > .track and .slider > .thumb. The skin reads the track's background radius
+ * to place the thumb, so the radius is a real half-height, not 9999px. The track is as tall as its
+ * vertical padding. Horizontal only. */
+
+.fxk-range {
+  -fx-cursor: hand;
+}
+.fxk-range:disabled {
+  -fx-opacity: 0.5;
+  -fx-cursor: default;
+}
+
+.fxk-range > .track {
+  -fx-background-color: -fxk-border; /* bg-gray-200 dark:bg-gray-700 */
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+}
+.fxk-range > .thumb {
+  -fx-background-color: -fxk-primary;
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+  -fx-effect: -fxk-shadow-sm;
+}
+.fxk-range > .thumb:hover {
+  -fx-background-color: -fxk-primary-hover;
+}
+.fxk-range > .thumb:pressed {
+  -fx-background-color: -fxk-primary-pressed;
+}
+.fxk-range:focused > .thumb {
+  -fx-background-color: -fxk-focus-ring, -fxk-primary; /* a ring layer outside the thumb */
+  -fx-background-insets: -3px, 0;
+}
+.fxk-range .axis {
+  -fx-tick-label-fill: -fxk-text-muted;
+  -fx-tick-label-font-size: 11px;
+  -fx-tick-mark-stroke: -fxk-border-strong;
+}
+
+.fxk-range-size-sm > .track {
+  -fx-padding: 2px 0 2px 0; /* h-1 */
+  -fx-background-radius: 2px;
+}
+.fxk-range-size-sm > .thumb {
+  -fx-padding: 7px; /* 14px */
+  -fx-background-radius: 7px;
+}
+.fxk-range-size-md > .track {
+  -fx-padding: 4px 0 4px 0; /* h-2 */
+  -fx-background-radius: 4px;
+}
+.fxk-range-size-md > .thumb {
+  -fx-padding: 9px; /* 18px */
+  -fx-background-radius: 9px;
+}
+.fxk-range-size-lg > .track {
+  -fx-padding: 6px 0 6px 0; /* h-3 */
+  -fx-background-radius: 6px;
+}
+.fxk-range-size-lg > .thumb {
+  -fx-padding: 12px; /* 24px */
+  -fx-background-radius: 12px;
+}
+.fxk-range-size-sm:focused > .thumb { -fx-background-radius: 10px, 7px; }
+.fxk-range-size-md:focused > .thumb { -fx-background-radius: 12px, 9px; }
+.fxk-range-size-lg:focused > .thumb { -fx-background-radius: 15px, 12px; }

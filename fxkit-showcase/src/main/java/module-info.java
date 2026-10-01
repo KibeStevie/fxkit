@@ -15,6 +15,7 @@ module dev.fxkit.showcase {
     // string (di-java) can only resolve at runtime if its module is actually present.
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.devicons;
+    requires org.kordamp.ikonli.fontawesome5;
 
     // JavaFX's launcher (in javafx.graphics) creates our Application subclass by
     // reflection, so this package must be visible to it.
