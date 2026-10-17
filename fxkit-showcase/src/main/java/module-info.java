@@ -5,6 +5,7 @@ module dev.fxkit.showcase {
     requires dev.fxkit.core;
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.logging;
 
     // Ikonli (#36, stretch): org.kordamp.ikonli.core comes to us transitively via dev.fxkit.core
     // ("requires transitive", since Ikon is part of FxButton's own public API), but org.kordamp.ikonli.

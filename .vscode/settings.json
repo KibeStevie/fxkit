@@ -1,3 +1,85 @@
 {
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "files.autoSave": "afterDelay",
+
+  "eslint.debug": true,
+  "eslint.lintTask.enable": true,
+  "eslint.run": "onSave",
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.rules": null,
+
+  "vs-code-prettier-eslint.prettierLast": true,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "editor.largeFileOptimizations": false,
+  "editor.fontLigatures": true,
+  "editor.accessibilitySupport": "off",
+
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+
+  "[xml]": {
+    "editor.defaultFormatter": "DotJoshJohnson.xml"
+  },
+
+  "[jsp]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "xml.format.splitAttributes": true,
+  "xml.format.spaceBeforeSelfClosingTag": true,
+
+  "tailwindCSS.emmetCompletions": true,
+
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "javascriptreact": "javascriptreact",
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+
+  "workbench.settings.applyToAllProfiles": [],
+
+  "git.autofetch": true,
+
+  "workbench.editorAssociations": {
+    "*.glb": "modelViewer.gltfPreview"
+  },
+
+  "remote.autoForwardPortsSource": "hybrid",
+
+  "python.defaultInterpreterPath": "c:\\Users\\kibes\\AppData\\Local\\Microsoft\\WindowsApps\\python3.12.exe",
+
+  "workbench.iconTheme": "vscode-icons",
+
+  "editor.unicodeHighlight.nonBasicASCII": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+
+  "dart.flutterSdkPath": "E:\\flutter\\bin",
+
+  "files.associations": {
+    "*.xml": "xml"
+  },
+
+  "jdk.telemetry.enabled": true
 }

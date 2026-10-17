@@ -3817,6 +3817,92 @@
   -fx-text-fill: -fxk-field-fg;
 }
 
+/* ---- FxFileInput while files are dragged over it: same look as focus ---- */
+
+.fxk-file:drag-over {
+  -fxk-field-edge: -fxk-field-ring;
+  -fxk-field-halo: -fxk-field-ring;
+}
+
+/* ---- FxFileDropzone: Flowbite's dropzone <FileInput> ----
+ *   Label  flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg
+ *          border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100
+ *          dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600
+ *   inner  pb-6 pt-5   icon h-8 w-8 mb-4   prompt mb-2 text-sm   hint text-xs
+ *
+ * The -fxk-dz-* values here are semantic fallbacks; colors.css defines the per-theme raw values.
+ * -fxk-dz-fill / -edge / -halo are the CURRENT colors: pseudo-classes redefine them on the SAME node
+ * that reads them (same trick as .fxk-field). Rule order matters: hover, focused, then drag-over. */
+
+.fxk-dropzone {
+  -fxk-dz-bg: -fxk-background;
+  -fxk-dz-bg-hover: -fxk-surface-alt;
+  -fxk-dz-border: -fxk-border-strong;
+  -fxk-dz-border-hover: -fxk-border-strong;
+  -fxk-dz-ring: -fxk-focus-ring;
+
+  -fxk-dz-fill: -fxk-dz-bg;
+  -fxk-dz-edge: -fxk-dz-border;
+  -fxk-dz-halo: transparent;
+
+  -fx-alignment: CENTER;
+  -fx-padding: 20px 0 24px 0; /* pt-5 pb-6 */
+  -fx-min-height: 256px; /* h-64 */
+  -fx-pref-height: 256px;
+  -fx-cursor: hand;
+
+  -fx-background-color: -fxk-dz-fill;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-dz-edge, -fxk-dz-halo;
+  -fx-border-style: dashed, solid;
+  -fx-border-width: 2px, 1px; /* border-2, plus the focus halo outside it */
+  -fx-border-insets: 0, -1px;
+  -fx-border-radius: 8px, 9px;
+}
+.fxk-dropzone:hover {
+  -fxk-dz-fill: -fxk-dz-bg-hover;
+  -fxk-dz-edge: -fxk-dz-border-hover;
+}
+.fxk-dropzone:focused {
+  -fxk-dz-edge: -fxk-dz-ring;
+  -fxk-dz-halo: -fxk-dz-ring;
+}
+.fxk-dropzone:drag-over {
+  -fxk-dz-fill: -fxk-dz-bg-hover;
+  -fxk-dz-edge: -fxk-primary;
+}
+.fxk-dropzone:disabled {
+  -fx-opacity: 0.5;
+  -fx-cursor: default;
+}
+
+/* Icon: stroke only, currentColor in Flowbite (text-gray-500 dark:text-gray-400). */
+.fxk-dropzone-icon {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-text-muted;
+  -fx-stroke-width: 2px; /* scaled with the icon, like the SVG's stroke-width */
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+.fxk-dropzone-prompt .text {
+  -fx-fill: -fxk-text-muted;
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-dropzone-action {
+  -fx-font-weight: 600; /* font-semibold */
+}
+.fxk-dropzone-hint {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 11px; /* text-xs */
+}
+.fxk-dropzone-selection {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 11px;
+  -fx-font-weight: 500;
+  -fx-padding: 8px 0 0 0;
+}
+
 /* ---- FxCheckbox + FxRadio ----
  * Stock substructure: .check-box > .box > .mark and .radio-button > .radio > .dot. The unchecked look
  * is semantic (bg-gray-100 border-gray-300 / dark gray-700, gray-600); the checked fill comes from
@@ -4101,3 +4187,1464 @@
 .fxk-range-size-sm:focused > .thumb { -fx-background-radius: 10px, 7px; }
 .fxk-range-size-md:focused > .thumb { -fx-background-radius: 12px, 9px; }
 .fxk-range-size-lg:focused > .thumb { -fx-background-radius: 15px, 12px; }
+
+/* -----------------------------------------------------------------------------
+ * FxModal (dev.fxkit.core.components.modal.FxModal / FxModalHeader / FxModalBody / FxModalFooter)
+ *
+ * Append this block to the END of components.css; append modal-colors.css to colors.css.
+ *
+ * Structure only; colors come from the looked-up colors colors.css defines on ".fxk-modal-layer".
+ * Size and position are laid out in Java (FxModal.ModalLayer), not here: JavaFX CSS has no max-width
+ * in a layout that centers or aligns.
+ * --------------------------------------------------------------------------- */
+
+/* The scene root of the modal window: only paints the backdrop. */
+.fxk-modal-layer {
+  -fx-background-color: -fxk-modal-backdrop;
+}
+
+/* Flowbite's inner surface: rounded-lg bg-white shadow. The p-4 outer gutter is FxModal's GUTTER. */
+.fxk-modal-card {
+  -fx-background-color: -fxk-modal-bg;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-insets: 0;
+  -fx-effect: -fxk-shadow-lg;
+}
+
+/* ---- Header ---- */
+
+.fxk-modal-header {
+  -fx-padding: 20px; /* p-5 */
+  -fx-border-color: transparent transparent -fxk-modal-divider transparent; /* border-b */
+  -fx-border-width: 0 0 1px 0;
+  -fx-background-radius: 8px 8px 0 0; /* rounded-t */
+}
+
+.fxk-modal-title {
+  -fx-text-fill: -fxk-modal-title-fg;
+  -fx-font-size: 20px; /* text-xl */
+  -fx-font-weight: 500; /* font-medium */
+}
+
+/* ---- Close button (X) ---- */
+
+.fxk-modal-close {
+  -fx-min-width: 32px; /* h-8 w-8 = p-1.5 around a 20px icon */
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+  -fx-padding: 6px; /* p-1.5 */
+  -fx-text-fill: -fxk-modal-close-fg;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px; /* reserved so the focus ring never shifts layout */
+  -fx-border-radius: 8px;
+  -fx-cursor: hand;
+}
+.fxk-modal-close:hover {
+  -fx-text-fill: -fxk-modal-close-fg-hover;
+  -fx-background-color: -fxk-modal-close-bg-hover;
+}
+.fxk-modal-close:focused {
+  -fx-border-color: -fxk-focus-ring; /* focus:ring-2 */
+}
+
+.fxk-modal-close-icon-box {
+  -fx-min-width: 20px; /* h-5 w-5 */
+  -fx-pref-width: 20px;
+  -fx-max-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-height: 20px;
+  -fx-max-height: 20px;
+}
+
+/* ---- Body ---- */
+
+.fxk-modal-scroll,
+.fxk-modal-scroll > .viewport {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+.fxk-modal-scroll:focused {
+  -fx-background-color: transparent;
+}
+
+.fxk-modal-body {
+  -fx-padding: 24px; /* p-6 */
+}
+
+/* ---- Footer ---- */
+
+.fxk-modal-footer {
+  -fx-spacing: 8px; /* gap-2 */
+  -fx-padding: 24px; /* p-6 */
+  -fx-border-color: transparent;
+  -fx-border-width: 0;
+  -fx-background-radius: 0 0 8px 8px; /* rounded-b */
+}
+
+/* ---- Pop-up variant (FxModal.popup) ---- */
+
+.fxk-modal-popup .fxk-modal-header {
+  -fx-padding: 8px; /* p-2 */
+  -fx-border-width: 0; /* border-b-0 */
+}
+.fxk-modal-popup .fxk-modal-body {
+  -fx-padding: 0 24px 24px 24px; /* p-6 pt-0 */
+}
+.fxk-modal-popup .fxk-modal-footer {
+  -fx-border-color: -fxk-modal-divider transparent transparent transparent; /* border-t */
+  -fx-border-width: 1px 0 0 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxHr (dev.fxkit.core.components.hr.FxHr / FxHrTrimmed / FxHrIcon / FxHrText)
+ *
+ * Append this block to the END of components.css.
+ *
+ * Flowbite hides the middle of its line behind an icon or text with a page-colored background.
+ * That trick needs to know the page color, so here the line is two bars with the icon/text laid
+ * out between them (HBox), which works on any surface in either theme.
+ *
+ * Colors, light -> dark, all from semantic tokens so the theme follows automatically:
+ *   line / bars      -fxk-border   (gray-200 -> gray-700, Flowbite: bg-gray-200 dark:bg-gray-700)
+ *   icon, text       -fxk-text     (gray-900 -> gray-100)
+ * FxHrTrimmed uses -fxk-border too: Flowbite's gray-100 would be nearly invisible on the
+ * gray-50 page background (use -fxk-surface-alt for the exact Flowbite color).
+ *
+ * Margins are padding on the wrapper (JavaFX has no CSS margin), so they are part of the node.
+ * -------------------------------------------------------------------------- */
+
+/* ---- FxHr: 65px tall region painted only in its middle 1px: my-8 (32px) + h-px (1px) + my-8 ---- */
+.fxk-hr {
+  -fx-min-height: 65px;
+  -fx-pref-height: 65px;
+  -fx-max-height: 65px;
+  -fx-background-color: -fxk-border;
+  -fx-background-insets: 32px 0 32px 0;
+}
+
+/* ---- FxHrTrimmed: w-48 (192px) h-1 (4px) rounded, my-10 ---- */
+.fxk-hr-trimmed {
+  -fx-padding: 40px 0 40px 0; /* md:my-10 */
+}
+.fxk-hr-trimmed-bar {
+  -fx-min-height: 4px;
+  -fx-pref-height: 4px;
+  -fx-max-height: 4px;
+  -fx-max-width: 192px;
+  -fx-background-color: -fxk-border;
+  -fx-background-radius: 4px; /* rounded */
+}
+
+/* ---- FxHrIcon: w-64 (256px), 4px rounded bars, icon with px-4 ---- */
+.fxk-hr-icon {
+  -fx-padding: 32px 0 32px 0; /* my-8 */
+}
+.fxk-hr-icon-content {
+  -fx-max-width: 256px;
+  -fx-alignment: center;
+}
+.fxk-hr-icon-bar {
+  -fx-min-height: 4px;
+  -fx-pref-height: 4px;
+  -fx-max-height: 4px;
+  -fx-background-color: -fxk-border;
+  -fx-background-radius: 4px; /* rounded */
+}
+.fxk-hr-icon-holder {
+  -fx-padding: 0 16px 0 16px; /* px-4 */
+}
+.fxk-hr-icon-quote {
+  -fx-fill: -fxk-text;
+}
+.fxk-hr-icon-holder .ikonli-font-icon {
+  -fx-icon-color: -fxk-text;
+  -fx-icon-size: 16px; /* h-4 w-4 */
+}
+
+/* ---- FxHrText: w-64 (256px), 1px bars, text-base medium with px-3 ---- */
+.fxk-hr-text {
+  -fx-padding: 32px 0 32px 0; /* my-8 */
+}
+.fxk-hr-text-content {
+  -fx-max-width: 256px;
+  -fx-alignment: center;
+}
+.fxk-hr-text-bar {
+  -fx-min-height: 1px;
+  -fx-pref-height: 1px;
+  -fx-max-height: 1px;
+  -fx-background-color: -fxk-border;
+}
+.fxk-hr-text-label {
+  -fx-padding: 0 12px 0 12px; /* px-3 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxBlockquote (dev.fxkit.core.components.blockquote.FxBlockquote / FxBlockquoteCaption)
+ *
+ * Append this block to the END of components.css. No colors.css entry is needed: a blockquote has
+ * no per-color variants.
+ *
+ * Structure: .fxk-blockquote (VBox) > [.fxk-blockquote-icon] + (.fxk-blockquote-text | custom node).
+ * The font (size, style, weight) is set on the ROOT, not on the text label: font properties are
+ * inherited, so a custom content node that sets no font of its own looks like the default text.
+ * Text COLOR is not inherited in JavaFX, so it is set on .fxk-blockquote-text.
+ *
+ * Flowbite mapping (blockquote theme: "text-xl font-semibold italic text-gray-900 dark:text-white"):
+ *   text-lg / text-xl / text-2xl      -> .fxk-blockquote-size-sm / -md / -lg  (16 / 18 / 24px)
+ *   font-semibold / font-medium       -> .fxk-blockquote-weight-semibold / -medium
+ *   italic                            -> always on
+ *   text-left / -center / -right      -> .fxk-blockquote-align-left / -center / -right
+ *   text-gray-900 dark:text-white     -> -fxk-text
+ *   mb-4 h-8 w-8 text-gray-400 dark:text-gray-600 (icon)
+ *                                     -> 16px gap, 32px glyph, -fxk-border-strong
+ *                                        (gray-300 light, gray-600 dark: one step lighter than
+ *                                        Flowbite in light, identical in dark)
+ *   solid: border-l-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800
+ *                                     -> 4px left border, 16px padding, -fxk-surface-alt background.
+ *                                        gray-50 / gray-800 would vanish on a white / gray-800 card,
+ *                                        so the background is the "alt" surface in both themes
+ *                                        (gray-100 light, gray-700 dark) and the dark border is the
+ *                                        muted text color so it stays visible on that background.
+ * "my-4" / "mb-3" margins are layout: set them from Java (VBox.setMargin) or the parent's spacing.
+ * -------------------------------------------------------------------------- */
+
+.fxk-blockquote {
+  -fx-alignment: TOP_LEFT;
+  -fx-spacing: 16px; /* icon's mb-4 */
+  /* Defaults, so a null size / weight still looks right. The size-* and weight-* classes below
+     come later with the same specificity, so they win. */
+  -fx-font-size: 18px; /* text-xl */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-font-style: italic;
+}
+
+/* ---- Size ---- */
+.fxk-blockquote-size-sm {
+  -fx-font-size: 16px; /* text-lg */
+}
+.fxk-blockquote-size-md {
+  -fx-font-size: 18px; /* text-xl */
+}
+.fxk-blockquote-size-lg {
+  -fx-font-size: 24px; /* text-2xl */
+}
+
+/* ---- Weight ---- */
+.fxk-blockquote-weight-medium {
+  -fx-font-weight: 500; /* font-medium */
+}
+.fxk-blockquote-weight-semibold {
+  -fx-font-weight: 600; /* font-semibold */
+}
+
+/* ---- Text ---- */
+.fxk-blockquote-text {
+  -fx-text-fill: -fxk-text;
+  -fx-text-alignment: left;
+  -fx-alignment: TOP_LEFT;
+}
+
+/* ---- Alignment: the box positions the icon / content, the label aligns its own lines ---- */
+.fxk-blockquote-align-left {
+  -fx-alignment: TOP_LEFT; /* text-left */
+}
+.fxk-blockquote-align-center {
+  -fx-alignment: TOP_CENTER; /* text-center */
+}
+.fxk-blockquote-align-right {
+  -fx-alignment: TOP_RIGHT; /* text-right */
+}
+.fxk-blockquote-align-left .fxk-blockquote-text {
+  -fx-text-alignment: left;
+  -fx-alignment: TOP_LEFT;
+}
+.fxk-blockquote-align-center .fxk-blockquote-text {
+  -fx-text-alignment: center;
+  -fx-alignment: TOP_CENTER;
+}
+.fxk-blockquote-align-right .fxk-blockquote-text {
+  -fx-text-alignment: right;
+  -fx-alignment: TOP_RIGHT;
+}
+
+/* ---- Solid background ---- */
+.fxk-blockquote-solid {
+  -fx-background-color: -fxk-surface-alt; /* bg-gray-50 / dark:bg-gray-800, see header */
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-border-strong; /* border-gray-300 */
+  -fx-border-width: 0 0 0 4px; /* border-l-4 */
+  -fx-padding: 16px; /* p-4 */
+}
+.root.dark .fxk-blockquote-solid {
+  -fx-border-color: -fxk-text-muted; /* dark:border-gray-500, see header */
+}
+
+/* ---- Quote glyph: Flowbite's 18x14 path, scaled to the square box and centered ---- */
+.fxk-blockquote-icon {
+  -fx-shape: "M6 0H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3H2a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2ZM16 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3h-1a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Z";
+  -fx-scale-shape: true;
+  -fx-preserve-ratio: true;
+  -fx-background-color: -fxk-border-strong; /* text-gray-400 dark:text-gray-600, see header */
+  -fx-background-insets: 0;
+}
+.fxk-blockquote-icon-md {
+  -fx-min-width: 32px; /* h-8 w-8 */
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+}
+.fxk-blockquote-icon-lg {
+  -fx-min-width: 40px; /* h-10 w-10 */
+  -fx-pref-width: 40px;
+  -fx-max-width: 40px;
+  -fx-min-height: 40px;
+  -fx-pref-height: 40px;
+  -fx-max-height: 40px;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxBlockquoteCaption
+ *
+ * One looked-up color is defined on the caption and read by the divider (looked-up colors are
+ * inherited by children), so a caller can recolor it by redefining it on the caption node:
+ *   -fxk-blockquote-divider   divide-gray-300 (light) / divide-gray-700 (dark)
+ * The strong variant is the testimonial example's divide-gray-500 in light.
+ * -------------------------------------------------------------------------- */
+
+.fxk-blockquote-caption {
+  -fxk-blockquote-divider: -fxk-border-strong;
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-spacing: 12px; /* space-x-3 */
+}
+.fxk-blockquote-caption-strong {
+  -fxk-blockquote-divider: -fxk-text-muted;
+}
+.root.dark .fxk-blockquote-caption,
+.root.dark .fxk-blockquote-caption-strong {
+  -fxk-blockquote-divider: -fxk-border; /* dark:divide-gray-700 */
+}
+.fxk-blockquote-caption-centered {
+  -fx-alignment: CENTER; /* justify-center */
+}
+
+.fxk-blockquote-cites {
+  -fx-alignment: CENTER_LEFT;
+}
+
+.fxk-blockquote-cite {
+  -fx-padding: 0 12px 0 0; /* pr-3 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-text;
+}
+.fxk-blockquote-cite-role {
+  -fx-padding: 0 0 0 12px; /* pl-3 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-text-muted;
+}
+
+/* divide-x-2: a 2px line between the two cites, as tall as the row */
+.fxk-blockquote-cite-divider {
+  -fx-min-width: 2px;
+  -fx-pref-width: 2px;
+  -fx-max-width: 2px;
+  -fx-background-color: -fxk-blockquote-divider;
+  -fx-background-insets: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxClipboard (dev.fxkit.core.components.clipboard.FxClipboard)
+ *
+ * Append this block to the END of components.css (and the matching block to colors.css).
+ *
+ * Base rules apply to every variant; ".fxk-clip-<variant>" sets only fill, padding and text.
+ * Flowbite mapping (clipboard theme):
+ *   button.base       rounded-lg bg-blue-700 px-5 py-3 hover:bg-blue-800 focus:ring-4
+ *                     -> DEFAULT: -fxk-primary fill, 12px/20px padding, semantic hover/pressed
+ *   button.label      text-sm font-medium text-white  -> 12px, weight 500, -fxk-on-primary
+ *   withIcon.base     rounded-lg p-2 text-gray-500 hover:bg-gray-100
+ *                     -> ICON: 8px padding, -fxk-text-muted, -fxk-surface-alt on hover
+ *   withIcon.icon     h-4 w-4, success: text-blue-700 -> 16px glyph (Java), success = -fxk-primary
+ *   withIconText.base rounded-lg border border-gray-200 bg-white px-2.5 py-2 text-gray-900
+ *                     -> ICON_TEXT: 1px -fxk-border, -fxk-surface, 10px/8px padding, -fxk-text
+ *   withIconText.icon h-3 w-3 me-1.5  -> 12px glyph (Java), 6px graphic-text gap
+ *   label             text-xs font-semibold, success text-blue-700 -> 11px, weight 600, -fxk-primary
+ *
+ * Success blue uses -fxk-primary (blue-600 light / blue-400 dark) instead of Flowbite's
+ * blue-700 / blue-500, so it follows the theme like every other semantic color.
+ *
+ * Focus ring: same two-layer border as .fxk-field (1px edge + 1px halo outside it, both recolored by
+ * :focused), so focusing never shifts the layout. The absolute positioning inside an input
+ * (end-2 top-1/2) is done by FxClipboard.overlay(...), not here.
+ *
+ * -fxk-clip-fg is the one local color the text AND the SVG glyphs read; JavaFX shapes ignore
+ * -fx-text-fill, same situation as FxButton's icons.
+ * -------------------------------------------------------------------------- */
+
+.fxk-clip {
+  -fxk-clip-fg: -fxk-text;
+  -fxk-clip-edge: transparent;
+  -fxk-clip-halo: transparent;
+
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-clip-edge, -fxk-clip-halo;
+  -fx-border-width: 1px, 1px;
+  -fx-border-insets: 0, -1px;
+  -fx-border-radius: 8px, 9px;
+  -fx-text-fill: -fxk-clip-fg;
+  -fx-alignment: CENTER;
+  -fx-cursor: hand;
+}
+.fxk-clip:focused {
+  -fxk-clip-edge: -fxk-focus-ring;
+  -fxk-clip-halo: -fxk-focus-ring;
+}
+.fxk-clip:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+
+/* ---- DEFAULT: solid, full width ---- */
+.fxk-clip-default {
+  -fxk-clip-fg: -fxk-on-primary;
+  -fx-background-color: -fxk-primary;
+  -fx-padding: 12px 20px; /* py-3 px-5 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+}
+.fxk-clip-default:hover {
+  -fx-background-color: -fxk-primary-hover;
+}
+.fxk-clip-default:pressed,
+.fxk-clip-default:armed {
+  -fx-background-color: -fxk-primary-pressed;
+}
+.fxk-clip-default:disabled {
+  -fx-background-color: -fxk-primary;
+}
+
+/* ---- ICON: icon only, for inside an input ---- */
+.fxk-clip-icon {
+  -fxk-clip-fg: -fxk-text-muted;
+  -fx-padding: 8px; /* p-2 */
+}
+.fxk-clip-icon:hover,
+.fxk-clip-icon:pressed,
+.fxk-clip-icon:armed {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-clip-icon:disabled {
+  -fx-background-color: transparent;
+}
+
+/* ---- ICON_TEXT: outlined icon + label, for inside an input ---- */
+.fxk-clip-icon-text {
+  -fxk-clip-fg: -fxk-text;
+  -fxk-clip-edge: -fxk-border;
+  -fx-background-color: -fxk-surface;
+  -fx-padding: 8px 10px; /* py-2 px-2.5 */
+  -fx-font-size: 11px; /* text-xs */
+  -fx-font-weight: 600; /* font-semibold */
+  -fx-graphic-text-gap: 6px; /* me-1.5 */
+}
+.fxk-clip-icon-text:hover,
+.fxk-clip-icon-text:pressed,
+.fxk-clip-icon-text:armed {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-clip-icon-text:disabled {
+  -fx-background-color: -fxk-surface;
+}
+/* label turns blue once copied; the glyph's own success color is set below */
+.fxk-clip-icon-text.fxk-clip-copied {
+  -fxk-clip-fg: -fxk-primary;
+}
+
+/* ---- Glyphs (SVGPath inside a scaled canvas, see FxClipboard.glyph) ---- */
+.fxk-clip-glyph-default {
+  -fx-fill: -fxk-clip-fg;
+  -fx-stroke: null;
+}
+.fxk-clip-glyph-success {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-primary;
+  -fx-stroke-width: 2; /* strokeWidth="2", in viewBox units */
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+
+/* ---- Tooltip of the ICON variant (a Popup; colors in colors.css) ----
+ * Same box as FxTooltip: rounded-lg, px-3 py-2, text-sm font-medium, shadow-sm. The popup's 6px
+ * padding leaves room for the shadow blur, since the window is exactly as big as its content. */
+.fxk-clip-tip-popup {
+  -fx-background-color: transparent;
+  -fx-padding: 6px;
+}
+.fxk-clip-tip {
+  -fx-background-color: -fxk-clip-tip-bg;
+  -fx-background-radius: 8px;
+  -fx-padding: 8px 12px;
+  -fx-effect: -fxk-shadow-sm;
+}
+.fxk-clip-tip-text {
+  -fx-text-fill: -fxk-clip-tip-fg;
+  -fx-font-size: 12px;
+  -fx-font-weight: 500;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxList (dev.fxkit.core.components.list.FxList / FxListItem)
+ *
+ * Append this block to the END of components.css. Nothing goes in colors.css: the list
+ * only reads semantic tokens, so it follows the light/dark theme on its own.
+ *
+ * Structure: .fxk-list (column) > .fxk-list-item (row) > marker + .fxk-list-item-body.
+ * Horizontal lists put a single .fxk-list-row (FlowPane) inside .fxk-list, and the items inside that.
+ * Position tags (.fxk-list-item-first / -last) come from FxList.java, since JavaFX CSS has no
+ * :first-child / :last-child.
+ *
+ * Flowbite mapping (list theme):
+ *   root.base          list-inside space-y-1 text-gray-500   -> 4px between items, -fxk-text-muted
+ *   root.horizontal    flex flex-wrap items-center justify-center space-x-4 space-y-0
+ *                                                            -> FlowPane, 16px hgap, 0 vgap, centered
+ *   root.nested        mt-2 ps-5                             -> 8px top, 20px left padding
+ *   item.icon          me-2 h-3.5 w-3.5 shrink-0             -> 8px item spacing, 14px icon
+ *   item.withIcon.on   flex items-center                     -> CENTER_LEFT
+ *   divide-y           divide-gray-200 dark:divide-gray-700  -> -fxk-border rule, 16px padding either side
+ * -------------------------------------------------------------------------- */
+
+.fxk-list {
+  -fx-spacing: 4px; /* space-y-1 */
+  -fx-font-size: 14px; /* text-base */
+}
+
+.fxk-list-row {
+  -fx-hgap: 16px; /* space-x-4 */
+  -fx-vgap: 0; /* space-y-0 */
+  -fx-alignment: CENTER; /* items-center justify-center */
+}
+
+.fxk-list-nested {
+  -fx-padding: 8px 0 0 20px; /* mt-2 ps-5 */
+}
+
+/* ---- Items ---- */
+
+.fxk-list-item {
+  -fx-alignment: TOP_LEFT; /* marker lines up with the first line of wrapped text */
+  -fx-spacing: 8px; /* me-2 */
+}
+
+.fxk-list-item-with-icon {
+  -fx-alignment: CENTER_LEFT; /* withIcon.on: flex items-center */
+}
+
+.fxk-list-item-text {
+  -fx-text-fill: -fxk-text-muted; /* text-gray-500 dark:text-gray-400 */
+}
+
+/* ---- Markers ---- */
+
+.fxk-list-marker {
+  -fx-text-fill: -fxk-text-muted;
+}
+
+.fxk-list-marker-bullet {
+  -fx-min-width: 8px;
+  -fx-alignment: TOP_CENTER;
+}
+
+/* Right-aligned so "9." and "10." end at the same x and the text column stays straight. */
+.fxk-list-marker-number {
+  -fx-min-width: 20px;
+  -fx-alignment: TOP_RIGHT;
+}
+
+.fxk-list-icon {
+  -fx-icon-size: 14px; /* h-3.5 w-3.5 */
+  -fx-icon-color: -fxk-text-muted;
+}
+
+/* ---- Divided (divide-y): rule under every item but the last; the first has no top padding and
+ * the last no bottom padding, so the divided block sits flush with its surroundings. The child
+ * combinator keeps a nested list's own items from picking these rules up. ---- */
+
+.fxk-list-divided > .fxk-list-item {
+  -fx-padding: 16px 0 16px 0;
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 0 0 1px 0;
+}
+.fxk-list-divided > .fxk-list-item-first {
+  -fx-padding: 0 0 16px 0;
+}
+.fxk-list-divided > .fxk-list-item-last {
+  -fx-padding: 16px 0 0 0;
+  -fx-border-width: 0;
+}
+.fxk-list-divided > .fxk-list-item-first.fxk-list-item-last {
+  -fx-padding: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxFloatingLabel (dev.fxkit.core.components.form.FxFloatingLabel)
+ *
+ * Append this block to the END of components.css; append floating-label-colors.css to colors.css.
+ *
+ * Structure: .fxk-floating (Pane) > .fxk-floating-input (TextField, owns background + border) and
+ * .fxk-floating-label (Label drawn over it). FxFloatingLabel.java does the floating itself (JavaFX
+ * CSS has no transitions or transforms): it scales the label to 0.75 about its top-left corner and
+ * lifts it over 300ms. This file sets the box, the sizes and the colors.
+ *
+ * Looked-up colors, DEFINED per color in colors.css (fallbacks here for when it is not loaded):
+ *   -fxk-floating-border / -border-focus / -label-fg / -label-focus
+ * -fxk-floating-bg (filled) and -fxk-floating-cutout (outlined label background) follow the theme.
+ * State is carried by style classes on the root (.fxk-floating-focused / .fxk-floating-floated),
+ * because a pseudo-class on the input would not reach the label, a sibling.
+ *
+ * Flowbite mapping (floatingLabel theme):
+ *   filled    rounded-t-lg border-b-2 bg-gray-50 px-2.5 pb-2.5 pt-5     -> 52px (sm 48px)
+ *   outlined  rounded-lg border px-2.5 pb-2.5 pt-4, label bg + px-2      -> 48px (sm 44px)
+ *   standard  border-b-2 px-0 py-2.5                                     -> 42px (sm 38px)
+ *   sizing    md text-sm (12px), sm text-xs (11px)
+ *   focus     focus:border-primary + label text-primary, no ring
+ *   disabled  50% opacity
+ * -------------------------------------------------------------------------- */
+
+.fxk-floating {
+  -fxk-floating-border: -fxk-border-strong;
+  -fxk-floating-border-focus: -fxk-primary;
+  -fxk-floating-label-fg: -fxk-text-muted;
+  -fxk-floating-label-focus: -fxk-primary;
+  -fxk-floating-bg: -fxk-background; /* bg-gray-50 */
+  -fxk-floating-cutout: -fxk-surface; /* outlined label background: bg-white / dark:bg-gray-900 */
+  -fx-cursor: text;
+}
+.root.dark .fxk-floating {
+  -fxk-floating-bg: -fxk-surface-alt; /* dark:bg-gray-700 */
+}
+.fxk-floating:disabled {
+  -fx-opacity: 0.5;
+  -fx-cursor: default;
+}
+
+/* ---- Input: Modena's box is replaced entirely ---- */
+
+.fxk-floating-input {
+  -fx-text-fill: -fxk-text;
+  -fx-highlight-fill: -fxk-primary;
+  -fx-highlight-text-fill: -fxk-on-primary;
+  -fx-control-inner-background: transparent;
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  -fx-text-box-border: transparent;
+  -fx-background-insets: 0;
+  -fx-border-style: solid;
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-floating-size-sm .fxk-floating-input {
+  -fx-font-size: 11px; /* text-xs */
+}
+
+/* filled */
+.fxk-floating-filled .fxk-floating-input {
+  -fx-background-color: -fxk-floating-bg;
+  -fx-background-radius: 8 8 0 0; /* rounded-t-lg */
+  -fx-border-color: transparent transparent -fxk-floating-border transparent;
+  -fx-border-width: 0 0 2 0; /* border-b-2 */
+  -fx-border-radius: 8 8 0 0;
+  -fx-padding: 20 10 10 10; /* pt-5 pb-2.5 px-2.5 */
+  -fx-min-height: 52px;
+  -fx-pref-height: 52px;
+}
+.fxk-floating-filled.fxk-floating-size-sm .fxk-floating-input {
+  -fx-min-height: 48px;
+  -fx-pref-height: 48px;
+}
+.fxk-floating-filled .fxk-floating-input:focused {
+  -fx-border-color: transparent transparent -fxk-floating-border-focus transparent;
+}
+
+/* outlined */
+.fxk-floating-outlined .fxk-floating-input {
+  -fx-background-color: transparent;
+  -fx-border-color: -fxk-floating-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px; /* rounded-lg */
+  -fx-padding: 16 10 10 10; /* pt-4 pb-2.5 px-2.5 */
+  -fx-min-height: 48px;
+  -fx-pref-height: 48px;
+}
+.fxk-floating-outlined.fxk-floating-size-sm .fxk-floating-input {
+  -fx-min-height: 44px;
+  -fx-pref-height: 44px;
+}
+.fxk-floating-outlined .fxk-floating-input:focused {
+  -fx-border-color: -fxk-floating-border-focus;
+}
+
+/* standard */
+.fxk-floating-standard .fxk-floating-input {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent transparent -fxk-floating-border transparent;
+  -fx-border-width: 0 0 2 0; /* border-b-2 */
+  -fx-padding: 10 0 10 0; /* py-2.5 px-0 */
+  -fx-min-height: 42px;
+  -fx-pref-height: 42px;
+}
+.fxk-floating-standard.fxk-floating-size-sm .fxk-floating-input {
+  -fx-min-height: 38px;
+  -fx-pref-height: 38px;
+}
+.fxk-floating-standard .fxk-floating-input:focused {
+  -fx-border-color: transparent transparent -fxk-floating-border-focus transparent;
+}
+
+/* ---- Label ---- */
+
+.fxk-floating-label {
+  -fx-text-fill: -fxk-floating-label-fg;
+  -fx-font-size: 12px;
+  -fx-background-color: transparent;
+}
+.fxk-floating-size-sm .fxk-floating-label {
+  -fx-font-size: 11px;
+}
+.fxk-floating-focused .fxk-floating-label {
+  -fx-text-fill: -fxk-floating-label-focus; /* peer-focus:text-primary */
+}
+.fxk-floating-outlined .fxk-floating-label {
+  -fx-padding: 0 8 0 8; /* px-2 */
+}
+/* The cutout only exists while floating, so a resting label never hides the field's text. */
+.fxk-floating-outlined.fxk-floating-floated .fxk-floating-label {
+  -fx-background-color: -fxk-floating-cutout;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxDrawer (dev.fxkit.core.components.drawer.FxDrawer / FxDrawerHeader / FxDrawerItems)
+ *
+ * Append this block to the END of components.css; append drawer-colors.css to colors.css.
+ *
+ * Structure only; colors come from the looked-up colors colors.css defines on ".fxk-drawer".
+ * Size, position and the slide animation are done in Java (FxDrawer): JavaFX CSS has no
+ * translate or fixed positioning.
+ *
+ * Flowbite mapping (drawer theme):
+ *   root.base      "fixed z-40 overflow-y-auto bg-white p-4"  -> .fxk-drawer-panel (a ScrollPane) + .fxk-drawer-padded
+ *   root.backdrop  "fixed inset-0 z-30 bg-gray-900/50"         -> .fxk-drawer-backdrop
+ *   header.inner   titleText / titleIcon / closeButton / closeIcon
+ *   items.base     ""                                          -> .fxk-drawer-items (nothing)
+ *
+ * No padding is set on .fxk-drawer-header or .fxk-drawer-items on purpose: a value set in
+ * author CSS would override padding that callers set from Java.
+ * -------------------------------------------------------------------------- */
+
+/* ---- Backdrop ---- */
+
+.fxk-drawer-backdrop {
+  -fx-background-color: -fxk-drawer-backdrop-bg;
+}
+
+/* ---- Panel: the drawer surface. A ScrollPane, so tall content scrolls (overflow-y-auto). ---- */
+
+.fxk-drawer-panel,
+.fxk-drawer-panel:focused {
+  -fx-background-color: -fxk-drawer-bg;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+.fxk-drawer-panel > .viewport {
+  -fx-background-color: transparent;
+}
+.fxk-drawer-panel > .corner {
+  -fx-background-color: transparent;
+}
+
+.fxk-drawer-content {
+  -fx-padding: 0;
+}
+.fxk-drawer-content.fxk-drawer-padded {
+  -fx-padding: 16px; /* p-4 */
+}
+
+/* ---- Header ---- */
+
+/* Pointer cursor and hover background once FxDrawerHeader.onClick is set. */
+.fxk-drawer-header-clickable {
+  -fx-cursor: hand;
+}
+.fxk-drawer-header-clickable:hover {
+  -fx-background-color: -fxk-drawer-header-bg-hover;
+}
+
+/* titleText: "mb-4 inline-flex items-center", the icon's me-2.5 is the row's gap. */
+.fxk-drawer-header-row {
+  -fx-alignment: CENTER_LEFT;
+  -fx-spacing: 10px; /* me-2.5 */
+  -fx-padding: 0 0 16px 0; /* mb-4 */
+}
+
+.fxk-drawer-title {
+  -fx-text-fill: -fxk-drawer-title-fg;
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 600; /* font-semibold */
+}
+
+.fxk-drawer-title-icon {
+  -fx-icon-color: -fxk-drawer-title-fg;
+  -fx-icon-size: 16px; /* h-4 w-4 */
+}
+
+/* ---- Close button: "h-8 w-8 rounded-lg bg-transparent hover:bg-gray-200 hover:text-gray-900" ---- */
+
+.fxk-drawer-close {
+  -fx-min-width: 32px; /* h-8 w-8 */
+  -fx-pref-width: 32px;
+  -fx-max-width: 32px;
+  -fx-min-height: 32px;
+  -fx-pref-height: 32px;
+  -fx-max-height: 32px;
+  -fx-padding: 0;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: transparent;
+  -fx-border-width: 2px; /* reserved so the focus ring never shifts layout */
+  -fx-border-radius: 8px;
+  -fx-cursor: hand;
+}
+.fxk-drawer-close:hover {
+  -fx-background-color: -fxk-drawer-close-bg-hover;
+}
+.fxk-drawer-close:focused {
+  -fx-border-color: -fxk-focus-ring;
+}
+
+.fxk-drawer-close-icon-box {
+  -fx-min-width: 16px; /* closeIcon: h-4 w-4 */
+  -fx-pref-width: 16px;
+  -fx-max-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-height: 16px;
+}
+
+/* The default X is a stroked path; an Ikon is a FontIcon. Both follow the same two colors. */
+.fxk-drawer-close-shape {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-drawer-close-fg;
+  -fx-stroke-width: 2px;
+  -fx-stroke-line-cap: round;
+}
+.fxk-drawer-close-icon {
+  -fx-icon-color: -fxk-drawer-close-fg;
+  -fx-icon-size: 16px;
+}
+.fxk-drawer-close:hover .fxk-drawer-close-shape {
+  -fx-stroke: -fxk-drawer-close-fg-hover;
+}
+.fxk-drawer-close:hover .fxk-drawer-close-icon {
+  -fx-icon-color: -fxk-drawer-close-fg-hover;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxListGroup (dev.fxkit.core.components.listgroup.FxListGroup / FxListGroupItem)
+ *
+ * Append this block to the END of components.css. Nothing goes in colors.css: the list group has no
+ * color property, it only reads semantic tokens, so it follows the light/dark theme on its own.
+ *
+ * Structure: .fxk-list-group (VBox) > .fxk-list-group-item (Button) [> graphic: .fxk-list-group-icon].
+ * Position tags (.fxk-list-group-item-first / -last) come from FxListGroup.java, since JavaFX CSS has
+ * no :first-child / :last-child.
+ *
+ * Flowbite mapping (listGroup theme):
+ *   root.base          rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900
+ *                      dark:border-gray-600 dark:bg-gray-700   -> 8px radius, 1px -fxk-border, -fxk-surface
+ *   item.base          first:rounded-t-lg last:rounded-b-lg last:border-b-0
+ *                                                              -> 7px outer corners (8px minus the 1px border)
+ *   link.base          flex w-full items-center border-b border-gray-200 px-4 py-2
+ *                                                              -> CENTER_LEFT, 8px 16px, 1px divider
+ *   active.off hover   hover:bg-gray-100 hover:text-cyan-700   -> -fxk-surface-alt, -fxk-primary
+ *   active.off focus   focus:text-cyan-700 focus:ring-2        -> -fxk-primary text, 2px -fxk-focus-ring
+ *   active.on          bg-cyan-700 text-white                  -> -fxk-primary, -fxk-on-primary
+ *   disabled.on        cursor-not-allowed bg-gray-100 text-gray-900 (hover/focus unchanged)
+ *                                                              -> -fxk-surface-alt, -fxk-text, no hover
+ *   icon               mr-2 h-4 w-4 fill-current               -> 8px graphic gap, 16px, follows text color
+ *
+ * Each item defines two local colors, -fxk-list-group-bg and -fxk-list-group-fg; the state rules only
+ * redefine those, and the background layers, the text and the icon all read them (FontIcon ignores
+ * -fx-text-fill, same situation as FxButton and FxBreadcrumb).
+ *
+ * Why background layers instead of borders: the 1px divider and the 2px focus ring are both drawn as
+ * a full-size layer under an inset fill layer. Backgrounds do not take part in layout, so focusing an
+ * item never shifts its text, and the divider needs no per-corner border-radius juggling.
+ *   resting   layers: [-fxk-border, bg]     insets: [0, 0 0 1 0]   (fill stops 1px short -> divider)
+ *   last row  layers: [-fxk-border, bg]     insets: [0, 0]         (no divider)
+ *   focused   layers: [ring, bg]            insets: [0, 2]         (2px ring all round)
+ * Modena's .button rules are user-agent origin, so these author rules win without extra specificity.
+ * -------------------------------------------------------------------------- */
+
+.fxk-list-group {
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+}
+
+/* ---- Items ---- */
+
+.fxk-list-group-item {
+  -fxk-list-group-bg: -fxk-surface;
+  -fxk-list-group-fg: -fxk-text;
+  -fxk-list-group-ring: -fxk-focus-ring;
+  -fx-alignment: CENTER_LEFT; /* items-center */
+  -fx-padding: 8px 16px 8px 16px; /* py-2 px-4 */
+  -fx-graphic-text-gap: 8px; /* icon's mr-2 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-list-group-fg;
+  -fx-background-color: -fxk-border, -fxk-list-group-bg;
+  -fx-background-insets: 0, 0 0 1 0;
+  -fx-background-radius: 0, 0;
+  -fx-border-width: 0;
+  -fx-cursor: hand;
+}
+
+/* ---- Position (first:rounded-t-lg, last:rounded-b-lg + last:border-b-0) ---- */
+
+.fxk-list-group-item-first {
+  -fx-background-radius: 7px 7px 0 0, 7px 7px 0 0;
+}
+.fxk-list-group-item-last {
+  -fx-background-insets: 0, 0; /* last:border-b-0 */
+  -fx-background-radius: 0 0 7px 7px, 0 0 7px 7px;
+}
+.fxk-list-group-item-first.fxk-list-group-item-last {
+  -fx-background-radius: 7px, 7px;
+}
+
+/* ---- Hover / focus (active.off) ---- */
+
+.fxk-list-group-item:hover {
+  -fxk-list-group-bg: -fxk-surface-alt;
+  -fxk-list-group-fg: -fxk-primary;
+}
+
+/* focus:ring-2. The ring is the outer layer; the fill is inset 2px, so its corner radius is the
+ * outer radius minus 2 (7px -> 5px) to stay concentric with the ring. */
+.fxk-list-group-item:focused {
+  -fxk-list-group-fg: -fxk-primary;
+  -fx-background-color: -fxk-list-group-ring, -fxk-list-group-bg;
+  -fx-background-insets: 0, 2;
+  -fx-background-radius: 0, 0;
+}
+.fxk-list-group-item-first:focused {
+  -fx-background-radius: 7px 7px 0 0, 5px 5px 0 0;
+}
+.fxk-list-group-item-last:focused {
+  -fx-background-radius: 0 0 7px 7px, 0 0 5px 5px;
+}
+.fxk-list-group-item-first.fxk-list-group-item-last:focused {
+  -fx-background-radius: 7px, 5px;
+}
+
+/* ---- Active (active.on): solid primary; hover and focus keep it, only the ring changes ----
+ * The default ring (-fxk-focus-ring) is nearly the fill color on a primary background in both
+ * themes, so an active item rings in -fxk-text instead. */
+
+.fxk-list-group-item-active,
+.fxk-list-group-item-active:hover,
+.fxk-list-group-item-active:focused {
+  -fxk-list-group-bg: -fxk-primary;
+  -fxk-list-group-fg: -fxk-on-primary;
+}
+.fxk-list-group-item-active:focused {
+  -fxk-list-group-ring: -fxk-text;
+}
+
+/* ---- Disabled (disabled.on). Last, with :hover listed, so neither Modena's dimming nor a stray
+ * :hover (JavaFX still tracks it on disabled nodes) can leak through. Flowbite does not dim the
+ * text, it only grays the row, so opacity is reset to 1 here. A disabled item can't be focused. ---- */
+
+.fxk-list-group-item:disabled,
+.fxk-list-group-item:disabled:hover,
+.fxk-list-group-item-active:disabled,
+.fxk-list-group-item-active:disabled:hover {
+  -fxk-list-group-bg: -fxk-surface-alt;
+  -fxk-list-group-fg: -fxk-text;
+  -fx-opacity: 1;
+  -fx-cursor: default;
+}
+
+/* ---- Icon (Ikonli FontIcon set by FxListGroupItem.setIcon) ---- */
+
+.fxk-list-group-item .ikonli-font-icon {
+  -fx-icon-color: -fxk-list-group-fg;
+  -fx-icon-size: 16px; /* h-4 w-4 */
+}
+
+/* -----------------------------------------------------------------------------
+ * FxPopover (dev.fxkit.core.components.popover.FxPopover / FxPopoverPanel)
+ *
+ * Append this block to the END of components.css. No colors.css block is needed: the popover has a
+ * single look and uses semantic tokens only, so the dark theme restyles it automatically.
+ *
+ * The panel is a Popup, i.e. a separate window; FxPopover copies the owner scene's stylesheets and
+ * the "dark" root class onto it, so the tokens below resolve exactly as in the main scene.
+ *
+ * Structure:  .fxk-popover-popup  >  .fxk-popover  >  .fxk-popover-content  >  <your content>
+ *                                 >  arrow (.fxk-popover-arrow-fill + .fxk-popover-arrow-line)
+ * The arrow's geometry (size, rotation, which edge) is set in FxPopover.java; JavaFX CSS has no
+ * rotate property. Only its colors live here.
+ *
+ * Flowbite mapping (popover theme):
+ *   base     absolute z-20 inline-block w-max max-w-[100vw] rounded-lg border border-gray-200 bg-white
+ *            shadow-sm outline-none dark:border-gray-600 dark:bg-gray-800
+ *            -> 8px radius, 1px -fxk-border (-fxk-border-strong in dark), -fxk-surface, -fxk-shadow-sm
+ *   content  z-10 overflow-hidden rounded-[7px]  -> clipped to a 7px rounded rect in FxPopover.java
+ *   arrow    h-2 w-2 rotate-45 border border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800
+ *            -> same fill and border colors as the box, so the arrow is always seamless with it
+ *
+ * The 8px padding on .fxk-popover-popup is not decoration: the window is exactly as big as its
+ * content, so it has to include room for the shadow blur and for the arrow tip (about 5.7px) that
+ * sticks out of the box. FxPopover reads the real value back from the node, so changing it is safe.
+ *
+ * FxPopoverPanel (the optional title + body layout) mirrors the markup of Flowbite's examples:
+ *   title bar  border-b border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-600 dark:bg-gray-700
+ *   title      font-semibold text-gray-900 dark:text-white
+ *   body       px-3 py-2, text-sm text-gray-500 dark:text-gray-400
+ * -------------------------------------------------------------------------- */
+
+.fxk-popover-popup {
+  -fx-background-color: transparent;
+  -fx-padding: 8px;
+}
+
+.fxk-popover {
+  -fx-background-color: -fxk-surface;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-effect: -fxk-shadow-sm; /* shadow-sm */
+}
+.root.dark .fxk-popover {
+  -fx-border-color: -fxk-border-strong; /* dark:border-gray-600 */
+}
+
+.fxk-popover-content {
+  -fx-background-color: transparent;
+}
+
+/* The filled triangle also hides the box border where the arrow joins it. */
+.fxk-popover-arrow-fill {
+  -fx-fill: -fxk-surface;
+  -fx-stroke: transparent;
+}
+.fxk-popover-arrow-line {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-border;
+  -fx-stroke-width: 1px;
+  -fx-stroke-line-join: miter;
+}
+.root.dark .fxk-popover-arrow-line {
+  -fx-stroke: -fxk-border-strong;
+}
+
+/* ---- FxPopoverPanel ---- */
+
+.fxk-popover-panel-header {
+  -fx-background-color: -fxk-surface-alt; /* bg-gray-100 / dark:bg-gray-700 */
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 0 0 1px 0; /* border-b */
+  -fx-padding: 8px 12px 8px 12px; /* py-2 px-3 */
+}
+.root.dark .fxk-popover-panel-header {
+  -fx-border-color: -fxk-border-strong;
+}
+
+.fxk-popover-panel-title {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px; /* text-sm */
+  -fx-font-weight: 600; /* font-semibold */
+}
+
+.fxk-popover-panel-body {
+  -fx-padding: 8px 12px 8px 12px; /* py-2 px-3 */
+}
+
+.fxk-popover-panel-text {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 12px; /* text-sm */
+}
+
+/* -----------------------------------------------------------------------------
+ * FxMegaMenu (dev.fxkit.core.components.megamenu.FxMegaMenu / FxMegaMenuDropdown /
+ *             FxMegaMenuDropdownToggle / FxMegaMenuLink / FxMegaMenuItem / FxMegaMenuColumn /
+ *             FxMegaMenuGrid / FxMegaMenuCta / FxMegaMenuImageCard)
+ *
+ * Append this block to the END of components.css (after the FxNavbar block: the toggle reads the
+ * -fxk-navbar-link-* looked-up colors that .fxk-navbar defines). colors.css needs nothing: the mega
+ * menu has no per-color variants.
+ *
+ * FxMegaMenu itself is an FxNavbar (.fxk-navbar .fxk-megamenu), so the bar, brand, links and hamburger
+ * are styled by the FxNavbar block. This block only adds:
+ *
+ *   in the navbar     .fxk-megamenu-toggle     the "Company v" entry (an HBox: label, chevron)
+ *   in the popup      .fxk-megamenu-popup-host > .fxk-megamenu-panel > .fxk-megamenu-panel-content > content
+ *   content parts     column, grid, link, item, cta, image card
+ *
+ * The panel is a Popup, which is a separate window: FxMegaMenuDropdown copies the owner scene's
+ * stylesheets onto it and puts the "root" (and, in the dark theme, "dark") style classes on the popup
+ * host, so the tokens in tokens.css resolve there exactly as in the main scene.
+ *
+ * Flowbite mapping (megaMenu = navbar theme + dropdown theme):
+ *   dropdownToggle.base   py-2 pl-3 pr-4 md:p-0, flex w-full items-center justify-between, border-b
+ *                         -> .fxk-megamenu-toggle (same colors as .fxk-navbar-link); the chevron's
+ *                            ml-2 is a margin set in Java; it turns over while :open
+ *   floating.base         rounded shadow border bg-white dark:bg-gray-700, mt-2
+ *                         -> .fxk-megamenu-panel-floating: 4px radius, -fxk-shadow-md, 1px -fxk-border
+ *   full width panel      border-y border-gray-200 bg-white shadow-sm px-2 py-5, max-w-screen-xl
+ *                         -> .fxk-megamenu-panel-full: 1px border above and below, -fxk-shadow-sm;
+ *                            Java centers the content in 1280px
+ *   column                space-y-4 p-4                       -> 16px spacing, 16px padding
+ *   link                  text-gray-500 hover:text-primary-600 (hover:underline in "full width")
+ *   link icon             me-2 h-3 w-3 text-gray-400 group-hover:text-primary-600
+ *   item                  block rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-700
+ *                         title font-semibold, description text-sm text-gray-500
+ *   cta                   h2 font-semibold, p text-gray-500, a text-sm font-medium text-primary-600
+ *   image card            rounded-lg bg-gray-500 bg-cover p-8, bg-blend-multiply hover:soft-light
+ *                         -> a gray overlay (no blend modes in JavaFX CSS) that fades on hover
+ *
+ * Focus rings use a negative border-inset (as FxNavbar does): drawn outside the node, so focusing
+ * never shifts the layout.
+ * -------------------------------------------------------------------------- */
+
+/* ---- Toggle (in the navbar) ---- */
+
+.fxk-megamenu-toggle {
+  -fxk-mt-fg: -fxk-navbar-link-fg;
+  -fxk-mt-bg: transparent;
+  -fxk-mt-sep: -fxk-navbar-link-sep;
+  -fxk-mt-ring: transparent;
+
+  -fx-alignment: CENTER_LEFT;
+  -fx-background-color: -fxk-mt-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  /* Two border layers, as on .fxk-navbar-link: the compact separator and the focus ring. */
+  -fx-border-color: transparent transparent -fxk-mt-sep transparent, -fxk-mt-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 0 0 1px 0, 2px;
+  -fx-border-insets: 0, -2px;
+  -fx-border-radius: 0, 4px;
+  -fx-padding: 0; /* md:p-0 */
+  -fx-font-size: 12px; /* md:text-sm */
+  -fx-font-weight: 500; /* md:font-medium */
+  -fx-cursor: hand;
+}
+.fxk-megamenu-toggle:hover,
+.fxk-megamenu-toggle:open {
+  -fxk-mt-fg: -fxk-navbar-link-hover-fg;
+  -fxk-mt-bg: -fxk-navbar-link-hover-bg;
+}
+.fxk-megamenu-toggle:focused {
+  -fxk-mt-ring: -fxk-focus-ring;
+}
+.fxk-megamenu-toggle:disabled,
+.fxk-megamenu-toggle:disabled:hover {
+  -fxk-mt-fg: -fxk-text-muted;
+  -fxk-mt-bg: transparent;
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+
+/* Compact: a full-width stacked row with the chevron at the far end. */
+.fxk-navbar-compact .fxk-megamenu-toggle {
+  -fx-padding: 8px 16px 8px 12px; /* py-2 pr-4 pl-3 */
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: normal;
+}
+
+.fxk-megamenu-toggle-label {
+  -fx-text-fill: -fxk-mt-fg;
+}
+
+.fxk-megamenu-chevron-box,
+.fxk-megamenu-arrow-box {
+  -fx-min-width: 16px;
+  -fx-min-height: 16px;
+  -fx-pref-width: 16px;
+  -fx-pref-height: 16px;
+  -fx-max-width: 16px;
+  -fx-max-height: 16px;
+}
+.fxk-megamenu-chevron,
+.fxk-megamenu-arrow {
+  -fx-fill: transparent;
+  -fx-stroke-width: 1.5px;
+  -fx-stroke-line-cap: round;
+  -fx-stroke-line-join: round;
+}
+.fxk-megamenu-chevron {
+  -fx-stroke: -fxk-mt-fg;
+}
+.fxk-megamenu-toggle:open .fxk-megamenu-chevron-box {
+  -fx-rotate: 180;
+}
+
+/* ---- Popup window and panel ---- */
+
+.fxk-megamenu-popup-host {
+  -fx-background-color: transparent;
+}
+/* Floating: transparent room all round, so the card's shadow is not clipped by the window. */
+.fxk-megamenu-popup-host-floating {
+  -fx-padding: 16px; /* FxMegaMenuDropdown.SHADOW_PAD */
+}
+/* Full width: flush under the navbar; room only below for the shadow. */
+.fxk-megamenu-popup-host-full {
+  -fx-padding: 0 0 8px 0;
+}
+
+.fxk-megamenu-panel {
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+}
+
+.fxk-megamenu-panel-floating {
+  -fx-background-radius: 4px; /* rounded */
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+  -fx-effect: -fxk-shadow-md; /* shadow */
+}
+.root.dark .fxk-megamenu-panel-floating {
+  -fx-background-color: -fxk-surface-alt; /* dark:bg-gray-700 */
+}
+
+.fxk-megamenu-panel-full {
+  -fx-border-color: -fxk-border transparent -fxk-border transparent; /* border-y */
+  -fx-border-width: 1px 0 1px 0;
+  -fx-effect: -fxk-shadow-sm; /* shadow-sm */
+}
+
+/* The centered max-width container: Java sets the 1280px max width in full width mode. */
+.fxk-megamenu-panel-content {
+  -fx-padding: 0;
+}
+.fxk-megamenu-panel-full .fxk-megamenu-panel-content {
+  -fx-padding: 20px 16px 20px 16px; /* py-5 px-4 */
+}
+
+/* ---- Column and grid ---- */
+
+.fxk-megamenu-column {
+  -fx-spacing: 16px; /* space-y-4 */
+  -fx-padding: 16px; /* p-4 */
+}
+.fxk-megamenu-column-flush {
+  -fx-padding: 0;
+}
+
+/* ---- Link ---- */
+
+.fxk-megamenu-link {
+  -fxk-ml-ring: transparent;
+
+  -fx-padding: 0;
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-border-color: -fxk-ml-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+  -fx-graphic-text-gap: 8px; /* icon's me-2 */
+  -fx-font-size: 12px; /* text-sm */
+  -fx-text-fill: -fxk-text-muted; /* text-gray-500 dark:text-gray-400 */
+  -fx-cursor: hand;
+}
+.fxk-megamenu-link:visited {
+  -fx-text-fill: -fxk-text-muted; /* a hyperlink is never "visited" here */
+}
+.fxk-megamenu-link:hover,
+.fxk-megamenu-link:visited:hover {
+  -fx-text-fill: -fxk-primary; /* hover:text-primary-600 */
+}
+.fxk-megamenu-link:focused {
+  -fxk-ml-ring: -fxk-focus-ring;
+}
+.fxk-megamenu-link-underline:hover {
+  -fx-underline: true; /* hover:underline */
+}
+.fxk-megamenu-link:disabled,
+.fxk-megamenu-link:disabled:hover {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+
+.fxk-megamenu-icon {
+  -fx-fill: -fxk-text-muted; /* text-gray-400 dark:text-gray-500 */
+}
+.fxk-megamenu-link:hover .fxk-megamenu-icon {
+  -fx-fill: -fxk-primary; /* group-hover:text-primary-600 */
+}
+
+/* ---- Item (title + description) ---- */
+
+.fxk-megamenu-item {
+  -fxk-mi-bg: transparent;
+  -fxk-mi-ring: transparent;
+
+  -fx-background-color: -fxk-mi-bg;
+  -fx-background-insets: 0;
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-border-color: -fxk-mi-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 8px;
+  -fx-padding: 12px; /* p-3 */
+  -fx-cursor: hand;
+}
+.fxk-megamenu-item:hover {
+  -fxk-mi-bg: -fxk-background; /* hover:bg-gray-50 */
+}
+.root.dark .fxk-megamenu-item:hover {
+  -fxk-mi-bg: -fxk-surface-alt; /* dark:hover:bg-gray-700 */
+}
+.root.dark .fxk-megamenu-panel-floating .fxk-megamenu-item:hover {
+  -fxk-mi-bg: -fxk-border-strong; /* the floating card is gray-700 in dark, so hover is gray-600 */
+}
+.fxk-megamenu-item:focused {
+  -fxk-mi-ring: -fxk-focus-ring;
+}
+.fxk-megamenu-item:disabled {
+  -fx-opacity: 0.55;
+  -fx-cursor: default;
+}
+.fxk-megamenu-item-title {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 14px; /* text-base */
+  -fx-font-weight: 600; /* font-semibold */
+}
+.fxk-megamenu-item-description {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 12px; /* text-sm */
+}
+
+/* ---- CTA (text) ---- */
+
+.fxk-megamenu-cta {
+  -fx-spacing: 8px; /* mb-2 */
+}
+.fxk-megamenu-cta-title {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 14px;
+  -fx-font-weight: 600; /* font-semibold */
+}
+.fxk-megamenu-cta-text {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 12px; /* text-sm */
+}
+.fxk-megamenu-cta-link {
+  -fx-padding: 0;
+  -fx-underline: false;
+  -fx-background-color: transparent;
+  -fx-border-width: 0;
+  -fx-graphic-text-gap: 8px; /* ml-2 */
+  -fx-font-size: 12px;
+  -fx-font-weight: 500; /* font-medium */
+  -fx-text-fill: -fxk-primary;
+  -fx-cursor: hand;
+}
+.fxk-megamenu-cta-link:visited {
+  -fx-text-fill: -fxk-primary;
+}
+.fxk-megamenu-cta-link:hover,
+.fxk-megamenu-cta-link:visited:hover {
+  -fx-text-fill: -fxk-primary-hover;
+}
+.fxk-megamenu-cta-link:focused {
+  -fx-border-color: -fxk-focus-ring;
+  -fx-border-style: solid;
+  -fx-border-width: 2px;
+  -fx-border-insets: -2px;
+  -fx-border-radius: 4px;
+}
+.fxk-megamenu-cta-link .fxk-megamenu-arrow {
+  -fx-stroke: -fxk-primary;
+}
+.fxk-megamenu-cta-link:hover .fxk-megamenu-arrow {
+  -fx-stroke: -fxk-primary-hover;
+}
+
+/* ---- Image card ---- */
+
+/* Fixed colors on purpose (white text over a picture does not follow the theme), so these use the raw
+ * palette tokens, unlike the rest of this block. FxMegaMenuImageCard.setImageUrl() adds the
+ * -fx-background-image inline. */
+.fxk-megamenu-image-card {
+  -fx-background-color: -fxk-gray-500; /* bg-gray-500 */
+  -fx-background-radius: 8px; /* rounded-lg */
+  -fx-background-size: cover;
+  -fx-background-position: center center;
+  -fx-background-repeat: no-repeat;
+  -fx-padding: 32px; /* p-8 */
+  -fx-cursor: hand;
+}
+.fxk-megamenu-image-card-overlay {
+  -fx-background-color: -fxk-gray-500;
+  -fx-opacity: 0.6; /* bg-blend-multiply */
+}
+.fxk-megamenu-image-card:hover .fxk-megamenu-image-card-overlay,
+.fxk-megamenu-image-card:focused .fxk-megamenu-image-card-overlay {
+  -fx-opacity: 0.3; /* hover:bg-blend-soft-light */
+}
+.fxk-megamenu-image-card-text {
+  -fx-text-fill: -fxk-white;
+  -fx-font-size: 14px;
+  -fx-font-weight: 800; /* font-extrabold */
+}
+.fxk-megamenu-image-card-button {
+  -fx-text-fill: -fxk-white;
+  -fx-font-size: 11px; /* text-xs */
+  -fx-font-weight: 500;
+  -fx-graphic-text-gap: 8px;
+  -fx-padding: 6px 10px 6px 10px; /* px-2.5 py-1.5 */
+  -fx-border-color: -fxk-white;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-background-color: transparent;
+  -fx-background-radius: 8px;
+}
+.fxk-megamenu-image-card:hover .fxk-megamenu-image-card-button {
+  -fx-background-color: -fxk-white; /* hover:bg-white hover:text-gray-900 */
+  -fx-text-fill: -fxk-gray-900;
+}
+.fxk-megamenu-image-card-button .fxk-megamenu-arrow {
+  -fx-stroke: -fxk-white;
+}
+.fxk-megamenu-image-card:hover .fxk-megamenu-image-card-button .fxk-megamenu-arrow {
+  -fx-stroke: -fxk-gray-900;
+}

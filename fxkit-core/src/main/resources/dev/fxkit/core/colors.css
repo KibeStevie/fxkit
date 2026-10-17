@@ -1934,6 +1934,23 @@
   -fxk-file-btn-bg-hover: -fxk-gray-500;
 }
 
+/* ===== FxFileDropzone: -fxk-dz-bg / -bg-hover / -border / -border-hover =============
+ * bg-gray-50 hover:bg-gray-100 border-gray-300; dark: bg-gray-700 hover:bg-gray-600 border-gray-600
+ * hover:border-gray-500 */
+
+.fxk-dropzone {
+  -fxk-dz-bg: -fxk-gray-50;
+  -fxk-dz-bg-hover: -fxk-gray-100;
+  -fxk-dz-border: -fxk-gray-300;
+  -fxk-dz-border-hover: -fxk-gray-300;
+}
+.root.dark .fxk-dropzone {
+  -fxk-dz-bg: -fxk-gray-700;
+  -fxk-dz-bg-hover: -fxk-gray-600;
+  -fxk-dz-border: -fxk-gray-600;
+  -fxk-dz-border-hover: -fxk-gray-500;
+}
+
 /* ===== FxCheckbox + FxRadio: -fxk-choice-fg (checked fill), -fxk-choice-on (mark / dot) =====
  * Flowbite's "text-<color>" values, one-for-one. The mark is white, except on the two light fills. */
 
@@ -2084,4 +2101,133 @@
 
 .root.dark .fxk-toggle-color-dark {
   -fxk-toggle-on: -fxk-gray-400;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxModal colors (dev.fxkit.core.components.modal)
+ *
+ * Append this block to the END of colors.css; append modal.css to components.css.
+ *
+ * DEFINES the looked-up colors on ".fxk-modal-layer" (the scene root of the modal window, which also
+ * carries "root" and, in dark mode, "dark"); components.css only consumes them. Flowbite's dark card is
+ * gray-700 (one step lighter than the page surface), which is -fxk-surface-alt in dark.
+ *
+ * The backdrop is gray-900 at 50% (dark: 80%). JavaFX CSS cannot apply alpha to a looked-up color,
+ * so the two translucent values are literals, kept together here so the dark theme swaps them as a unit
+ * (same precedent as the FxCarousel controls).
+ * --------------------------------------------------------------------------- */
+
+.fxk-modal-layer {
+  -fxk-modal-backdrop: rgba(17, 24, 39, 0.5); /* bg-gray-900/50 */
+  -fxk-modal-bg: -fxk-surface; /* bg-white */
+  -fxk-modal-divider: -fxk-border; /* border-gray-200 */
+  -fxk-modal-title-fg: -fxk-text; /* text-gray-900 */
+  -fxk-modal-close-fg: -fxk-text-muted; /* text-gray-400 (light: gray-500, nearest semantic) */
+  -fxk-modal-close-fg-hover: -fxk-text; /* hover:text-gray-900 */
+  -fxk-modal-close-bg-hover: -fxk-border; /* hover:bg-gray-200 */
+}
+
+.root.dark.fxk-modal-layer,
+.root.dark .fxk-modal-layer {
+  -fxk-modal-backdrop: rgba(17, 24, 39, 0.8); /* dark:bg-gray-900/80 */
+  -fxk-modal-bg: -fxk-surface-alt; /* dark:bg-gray-700 */
+  -fxk-modal-divider: -fxk-border-strong; /* dark:border-gray-600 */
+  -fxk-modal-title-fg: -fxk-text; /* dark:text-white */
+  -fxk-modal-close-bg-hover: -fxk-border-strong; /* dark:hover:bg-gray-600 */
+}
+
+/* -----------------------------------------------------------------------------
+ * FxClipboard tooltip colors (append to the END of colors.css).
+ *
+ * Flowbite's "dark" tooltip style: bg-gray-900 text-white, dark:bg-gray-700. Raw palette values are
+ * allowed in this file; components.css only reads the two looked-up colors defined here.
+ * FxClipboard puts the "dark" class on the popup's own root when the owner scene is dark, so
+ * ".fxk-clip-tip-popup.dark" matches on that same node.
+ * -------------------------------------------------------------------------- */
+
+.fxk-clip-tip-popup {
+  -fxk-clip-tip-bg: -fxk-gray-900;
+  -fxk-clip-tip-fg: -fxk-white;
+}
+.fxk-clip-tip-popup.dark {
+  -fxk-clip-tip-bg: -fxk-gray-700;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxFloatingLabel colors. Append to the END of colors.css. Each rule only DEFINES the four
+ * looked-up colors components.css consumes. Default follows the theme through semantic tokens;
+ * success and error are Flowbite's green-600 / red-600 (dark: 500) for the border, the label and
+ * the focus state alike (the validation colors do not change on focus).
+ * -------------------------------------------------------------------------- */
+
+.fxk-floating-color-default {
+  -fxk-floating-border: -fxk-border-strong;
+  -fxk-floating-border-focus: -fxk-primary;
+  -fxk-floating-label-fg: -fxk-text-muted;
+  -fxk-floating-label-focus: -fxk-primary;
+}
+
+.fxk-floating-color-success {
+  -fxk-floating-border: -fxk-green-600;
+  -fxk-floating-border-focus: -fxk-green-600;
+  -fxk-floating-label-fg: -fxk-green-600;
+  -fxk-floating-label-focus: -fxk-green-600;
+}
+.root.dark .fxk-floating-color-success {
+  -fxk-floating-border: -fxk-green-500;
+  -fxk-floating-border-focus: -fxk-green-500;
+  -fxk-floating-label-fg: -fxk-green-500;
+  -fxk-floating-label-focus: -fxk-green-500;
+}
+
+.fxk-floating-color-error {
+  -fxk-floating-border: -fxk-red-600;
+  -fxk-floating-border-focus: -fxk-red-600;
+  -fxk-floating-label-fg: -fxk-red-600;
+  -fxk-floating-label-focus: -fxk-red-600;
+}
+.root.dark .fxk-floating-color-error {
+  -fxk-floating-border: -fxk-red-500;
+  -fxk-floating-border-focus: -fxk-red-500;
+  -fxk-floating-label-fg: -fxk-red-500;
+  -fxk-floating-label-focus: -fxk-red-500;
+}
+
+/* -----------------------------------------------------------------------------
+ * FxDrawer colors (dev.fxkit.core.components.drawer)
+ *
+ * Append this block to the END of colors.css; append drawer-components.css to components.css.
+ *
+ * DEFINES the looked-up colors on ".fxk-drawer" (the overlay layer, parent of the backdrop and the
+ * panel); components.css only consumes them. The selectors also cover a drawer used directly as the
+ * scene root, which then carries "root" and, in dark mode, "dark" itself.
+ *
+ * Flowbite's dark panel is gray-800, which is -fxk-surface in dark, so the panel needs no dark rule.
+ * The backdrop is gray-900 at 50% (dark: 80%). JavaFX CSS cannot apply alpha to a looked-up color, so
+ * the two translucent values are literals kept together here (same precedent as FxModal).
+ *
+ *   -fxk-drawer-bg               root.base       bg-white / dark:bg-gray-800
+ *   -fxk-drawer-backdrop-bg      root.backdrop   bg-gray-900/50 / dark:bg-gray-900/80
+ *   -fxk-drawer-title-fg         titleText       text-gray-500 / dark:text-gray-400
+ *   -fxk-drawer-close-fg(-hover) closeButton     text-gray-400 hover:text-gray-900 (dark hover: white)
+ *   -fxk-drawer-close-bg-hover   closeButton     hover:bg-gray-200 / dark:hover:bg-gray-600
+ *   -fxk-drawer-header-bg-hover  clickable header hover:bg-gray-50 / dark:hover:bg-gray-700
+ *                                (the swipeable-edge example's header className)
+ * --------------------------------------------------------------------------- */
+
+.fxk-drawer {
+  -fxk-drawer-bg: -fxk-surface;
+  -fxk-drawer-backdrop-bg: rgba(17, 24, 39, 0.5); /* bg-gray-900/50 */
+  -fxk-drawer-title-fg: -fxk-text-muted; /* text-gray-500 */
+  -fxk-drawer-close-fg: -fxk-text-muted; /* text-gray-400 (light: gray-500, nearest semantic) */
+  -fxk-drawer-close-fg-hover: -fxk-text; /* hover:text-gray-900 */
+  -fxk-drawer-close-bg-hover: -fxk-border; /* hover:bg-gray-200 */
+  -fxk-drawer-header-bg-hover: -fxk-gray-50; /* hover:bg-gray-50 */
+}
+
+.root.dark.fxk-drawer,
+.root.dark .fxk-drawer {
+  -fxk-drawer-backdrop-bg: rgba(17, 24, 39, 0.8); /* dark:bg-gray-900/80 */
+  -fxk-drawer-close-bg-hover: -fxk-border-strong; /* dark:hover:bg-gray-600 */
+  -fxk-drawer-header-bg-hover: -fxk-gray-700; /* dark:hover:bg-gray-700 */
 }

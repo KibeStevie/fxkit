@@ -3,6 +3,7 @@ package dev.fxkit.core.components.form;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import dev.fxkit.core.internal.EnumStyleClassSync;
@@ -18,6 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -46,6 +48,15 @@ import javafx.stage.Window;
  * reset. Cancelling the dialog keeps the previous selection. {@link #getExtensionFilters()} filters
  * both the dialog and dropped files.
  *
+ * <h2>Dropzone</h2>
+ * Flowbite's dropzone variant (a big dashed click-or-drop area) is {@link FxFileDropzone}; it wraps one
+ * of these and exposes the same value API.
+ *
+ * <h2>Programmatic selection and rejection</h2>
+ * {@link #pick(List)} sets the selection as if the files had been dropped (filters, single-file limit).
+ * Dropped or picked files that fail the extension filters, or are directories, are reported to
+ * {@link #setOnRejected(Consumer)}.
+ *
  * <h2>Size and Color</h2>
  * {@link Size} and {@link Color} behave exactly as on {@link FxTextInput}.
  *
@@ -72,6 +83,7 @@ public class FxFileInput extends HBox {
     private static final String SIZE_STYLE_CLASS_PREFIX = "fxk-file-size-";
     private static final String COLOR_STYLE_CLASS_PREFIX = "fxk-field-color-";
     private static final String SHADOW_STYLE_CLASS = "fxk-field-shadow";
+    private static final PseudoClass DRAG_OVER = PseudoClass.getPseudoClass("drag-over");
 
     public static final Size DEFAULT_SIZE = Size.MD;
     public static final Color DEFAULT_COLOR = Color.GRAY;
@@ -102,6 +114,7 @@ public class FxFileInput extends HBox {
     private final ObservableList<File> readOnlyFiles = FXCollections.unmodifiableObservableList(files);
     private final ReadOnlyObjectWrapper<File> file = new ReadOnlyObjectWrapper<>(this, "file");
     private final ObservableList<FileChooser.ExtensionFilter> extensionFilters = FXCollections.observableArrayList();
+    private final ObjectProperty<Consumer<List<File>>> onRejected = new SimpleObjectProperty<>(this, "onRejected");
 
     private final Label button = new Label();
     private final Label name = new Label();
@@ -127,6 +140,12 @@ public class FxFileInput extends HBox {
         button.textProperty().bind(buttonText);
         name.textProperty().bind(Bindings.createStringBinding(this::describe, files, placeholder));
         files.addListener((ListChangeListener<File>) change -> file.set(files.isEmpty() ? null : files.get(0)));
+        // Turning multiple off keeps only the first file, so getFiles() never contradicts the flag.
+        multiple.addListener((observable, was, is) -> {
+            if (!is && files.size() > 1) {
+                files.setAll(files.get(0));
+            }
+        });
 
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
@@ -140,6 +159,12 @@ public class FxFileInput extends HBox {
                 event.consume();
             }
         });
+        setOnDragEntered(event -> {
+            if (!isDisabled() && event.getDragboard().hasFiles()) {
+                pseudoClassStateChanged(DRAG_OVER, true);
+            }
+        });
+        setOnDragExited(event -> pseudoClassStateChanged(DRAG_OVER, false));
         setOnDragOver(event -> {
             if (!isDisabled() && event.getDragboard().hasFiles()) {
                 event.acceptTransferModes(TransferMode.COPY);
@@ -147,14 +172,7 @@ public class FxFileInput extends HBox {
             event.consume();
         });
         setOnDragDropped(event -> {
-            boolean accepted = false;
-            if (!isDisabled() && event.getDragboard().hasFiles()) {
-                List<File> dropped = event.getDragboard().getFiles().stream().filter(this::accepts).toList();
-                if (!dropped.isEmpty()) {
-                    files.setAll(isMultiple() ? dropped : dropped.subList(0, 1));
-                    accepted = true;
-                }
-            }
+            boolean accepted = !isDisabled() && event.getDragboard().hasFiles() && pick(event.getDragboard().getFiles());
             event.setDropCompleted(accepted);
             event.consume();
         });
@@ -205,6 +223,31 @@ public class FxFileInput extends HBox {
         }
     }
 
+    /**
+     * Sets the selection as if these files had been dropped: directories and files rejected by
+     * {@link #getExtensionFilters()} are skipped (and reported to {@link #getOnRejected()}), and only the
+     * first accepted file is kept unless {@link #isMultiple()}. The previous selection is replaced only
+     * when at least one file is accepted. Does nothing while disabled.
+     *
+     * @param candidates the files to offer; may be {@code null}
+     * @return whether at least one file was accepted
+     */
+    public boolean pick(List<File> candidates) {
+        if (isDisabled() || candidates == null || candidates.isEmpty()) {
+            return false;
+        }
+        List<File> usable = candidates.stream().filter(f -> f.isFile() && accepts(f)).toList();
+        List<File> rejected = candidates.stream().filter(f -> !usable.contains(f)).toList();
+        if (!usable.isEmpty()) {
+            files.setAll(isMultiple() ? usable : usable.subList(0, 1));
+        }
+        Consumer<List<File>> handler = getOnRejected();
+        if (!rejected.isEmpty() && handler != null) {
+            handler.accept(rejected);
+        }
+        return !usable.isEmpty();
+    }
+
     /** Forgets the picked file(s). */
     public void clear() {
         files.clear();
@@ -230,6 +273,20 @@ public class FxFileInput extends HBox {
     /** The filters offered by the dialog and enforced on dropped files. */
     public ObservableList<FileChooser.ExtensionFilter> getExtensionFilters() {
         return extensionFilters;
+    }
+
+    /** @return the callback for rejected files, or {@code null} */
+    public Consumer<List<File>> getOnRejected() {
+        return onRejected.get();
+    }
+
+    /** Called with the files that {@link #pick(List)} (so: a drop) refused; never called with an empty list. */
+    public void setOnRejected(Consumer<List<File>> onRejected) {
+        this.onRejected.set(onRejected);
+    }
+
+    public ObjectProperty<Consumer<List<File>>> onRejectedProperty() {
+        return onRejected;
     }
 
     // ---- properties

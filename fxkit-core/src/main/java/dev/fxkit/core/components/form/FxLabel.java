@@ -16,7 +16,7 @@ import javafx.scene.input.MouseEvent;
  * <p>{@code FxLabel} is a plain subclass of {@code Label}: every standard {@code Label} API keeps
  * working. {@link Label#setLabelFor(Node)} is Flowbite's {@code htmlFor}: besides JavaFX's mnemonic
  * handling, a primary-button click on the label focuses the target, and also activates it when it is
- * a {@link ButtonBase} (checkbox, radio, toggle) or an {@link FxFileInput}.
+ * a {@link ButtonBase} (checkbox, radio, toggle), an {@link FxFileInput} or an {@link FxFileDropzone}.
  *
  * <h2>Color</h2>
  * {@link Color#DEFAULT} follows the theme's text color; the other colors are Flowbite's validation
@@ -86,6 +86,8 @@ public class FxLabel extends Label {
             button.fire();
         } else if (target instanceof FxFileInput fileInput) {
             fileInput.choose();
+        } else if (target instanceof FxFileDropzone dropzone) {
+            dropzone.choose();
         }
     }
 
