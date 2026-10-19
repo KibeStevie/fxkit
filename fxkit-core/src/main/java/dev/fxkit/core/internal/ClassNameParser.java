@@ -88,9 +88,10 @@ final class ClassNameParser {
 
         Map<Scope, String> directionByScope = new EnumMap<>(Scope.class);
         Map<Scope, List<String>> plainByScope = new EnumMap<>(Scope.class);
-        String fromStop = null;
-        String toStop = null;
-        List<String> viaStops = new ArrayList<>();
+        // Stops are collected per scope so that "hover:from-red-500" changes the hover gradient only.
+        Map<Scope, String> fromByScope = new EnumMap<>(Scope.class);
+        Map<Scope, String> toByScope = new EnumMap<>(Scope.class);
+        Map<Scope, List<String>> viaByScope = new EnumMap<>(Scope.class);
 
         // ---- pass 1: split off scope prefixes and gradient tokens ---------------------------
         for (String raw : className.trim().split("\\s+")) {
@@ -107,15 +108,18 @@ final class ClassNameParser {
             } else if (token.startsWith("from-")) {
                 String stop = stop(token.substring(5), raw, vocabulary, warn);
                 if (stop != null) {
-                    fromStop = stop;
+                    fromByScope.put(scope, stop);
                 }
             } else if (token.startsWith("via-")) {
                 String stop = stop(token.substring(4), raw, vocabulary, warn);
                 if (stop != null) {
-                    viaStops.add(stop);
+                    viaByScope.computeIfAbsent(scope, s -> new ArrayList<>()).add(stop);
                 }
             } else if (token.startsWith("to-") && vocabulary.isColor(token.substring(3))) {
-                toStop = stop(token.substring(3), raw, vocabulary, warn);
+                String stop = stop(token.substring(3), raw, vocabulary, warn);
+                if (stop != null) {
+                    toByScope.put(scope, stop);
+                }
             } else {
                 plainByScope.computeIfAbsent(scope, s -> new ArrayList<>()).add(token);
             }
@@ -130,24 +134,38 @@ final class ClassNameParser {
             }
         }
 
-        List<String> stops = new ArrayList<>();
-        if (fromStop != null) {
-            stops.add(fromStop);
+        // A scope gets a gradient if it names a direction, or if it only overrides stops and the base
+        // state has a direction (Tailwind: "hover:from-red-500" re-colors the gradient the base declared).
+        Set<Scope> gradientScopes = new LinkedHashSet<>(directionByScope.keySet());
+        if (directionByScope.containsKey(Scope.NONE)) {
+            gradientScopes.addAll(fromByScope.keySet());
+            gradientScopes.addAll(viaByScope.keySet());
+            gradientScopes.addAll(toByScope.keySet());
         }
-        stops.addAll(viaStops);
-        if (toStop != null) {
-            stops.add(toStop);
-        }
-        for (var entry : directionByScope.entrySet()) {
-            String direction = entry.getValue();
+        for (Scope scope : gradientScopes) {
+            String direction = directionByScope.getOrDefault(scope, directionByScope.get(Scope.NONE));
             String coords = GRADIENT_COORDS.get(direction);
+            List<String> stops = new ArrayList<>();
+            String from = fromByScope.getOrDefault(scope, fromByScope.get(Scope.NONE));
+            if (from != null) {
+                stops.add(from);
+            }
+            stops.addAll(viaByScope.containsKey(scope) ? viaByScope.get(scope)
+                    : viaByScope.getOrDefault(Scope.NONE, List.of()));
+            String to = toByScope.getOrDefault(scope, toByScope.get(Scope.NONE));
+            if (to != null) {
+                stops.add(to);
+            }
             if (coords == null) {
                 warn.accept("Unknown gradient direction: " + GRADIENT_PREFIX + direction);
             } else if (stops.size() < 2) {
-                warn.accept(GRADIENT_PREFIX + direction
-                        + " needs at least a from-* and a to-* stop in the className string");
+                // only complain where the string actually asked for a gradient
+                if (directionByScope.containsKey(scope)) {
+                    warn.accept(GRADIENT_PREFIX + direction
+                            + " needs at least a from-* and a to-* stop in the className string");
+                }
             } else {
-                declarations.computeIfAbsent(entry.getKey(), s -> new ArrayList<>())
+                declarations.computeIfAbsent(scope, s -> new ArrayList<>())
                         .add(new Declaration("-fx-background-color", gradientCss(coords, stops)));
             }
         }

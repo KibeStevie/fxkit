@@ -35,7 +35,9 @@ import java.util.regex.Pattern;
  *       {@code file:////server/share/a.png}, backslash and percent-encoded variants). On Windows
  *       these make the OS open a network share and can leak the user's credentials to that server;</li>
  *   <li>a {@code jar:} URL whose inner URL is itself not allowed
- *       ({@code jar:http://...!/a.png} needs {@code http} to be allowed).</li>
+ *       ({@code jar:http://...!/a.png} needs {@code http} to be allowed);</li>
+ *   <li>a scheme-less value that is a UNC path ({@code \\server\share\a.png}, {@code //server/a.png});</li>
+ *   <li>a {@code data:} URI that is not {@code data:image/...} or is longer than 2,000,000 characters.</li>
  * </ul>
  *
  * <p>The policy is process-wide and thread-safe. It limits <em>where</em> images come from; it does
@@ -49,6 +51,12 @@ public final class FxImagePolicy {
     private static final Pattern SCHEME = Pattern.compile("^([A-Za-z][A-Za-z0-9+.\\-]+):");
 
     private static final int MAX_JAR_NESTING = 4;
+
+    /**
+     * Longest {@code data:} URI accepted, in characters (about 1.5 MB of decoded image). A data URI
+     * is held fully in memory as a String before any decode limit applies, so it needs its own cap.
+     */
+    private static final int MAX_DATA_URI_LENGTH = 2_000_000;
 
     private static volatile Set<String> allowedSchemes = DEFAULT_SCHEMES;
 
@@ -96,7 +104,10 @@ public final class FxImagePolicy {
         }
         Matcher matcher = SCHEME.matcher(url);
         if (!matcher.find()) {
-            return true; // classpath resource or relative name
+            // A classpath resource or relative name - but never a UNC path ("\\\\server\\share\\a.png" or
+            // "//server/share/a.png"), which Windows resolves as a network share.
+            String normalized = url.replace('\\', '/');
+            return !normalized.startsWith("//");
         }
         String scheme = matcher.group(1).toLowerCase(Locale.ROOT);
         if (!allowedSchemes.contains(scheme)) {
@@ -105,6 +116,8 @@ public final class FxImagePolicy {
         String rest = url.substring(matcher.end());
         return switch (scheme) {
             case "file" -> isLocalFile(rest);
+            case "data" -> url.length() <= MAX_DATA_URI_LENGTH
+                    && rest.regionMatches(true, 0, "image/", 0, "image/".length());
             case "jar" -> {
                 int bang = rest.indexOf("!/");
                 yield isAllowed(bang < 0 ? rest : rest.substring(0, bang), depth + 1);

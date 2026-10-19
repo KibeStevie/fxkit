@@ -1,10 +1,13 @@
 package dev.fxkit.core.internal;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * The one place that decides which files a file field accepts, so every way of getting a file into
@@ -50,6 +53,19 @@ public final class FileSelection {
      * @throws NullPointerException if {@code candidates} or {@code patterns} is {@code null}
      */
     public static Result select(List<File> candidates, List<String> patterns, boolean multiple) {
+        return select(candidates, patterns, multiple, 0);
+    }
+
+    /**
+     * Same as {@link #select(List, List, boolean)}, plus a size limit and a symlink check.
+     *
+     * <p>A symbolic link is judged by its <em>target</em> as well as by its own name: a link called
+     * {@code photo.png} that points at {@code /etc/passwd} (or at a {@code .exe}) is rejected, because
+     * the name filter would otherwise be satisfied by a name the attacker chose.
+     *
+     * @param maxBytes largest accepted file size in bytes; {@code 0} or negative means no limit
+     */
+    public static Result select(List<File> candidates, List<String> patterns, boolean multiple, long maxBytes) {
         Objects.requireNonNull(candidates, "candidates");
         Objects.requireNonNull(patterns, "patterns");
 
@@ -59,7 +75,8 @@ public final class FileSelection {
             if (candidate == null) {
                 continue;
             }
-            if (candidate.isFile() && matches(candidate, patterns)) {
+            if (candidate.isFile() && matches(candidate, patterns) && linkTargetMatches(candidate, patterns)
+                    && (maxBytes <= 0 || candidate.length() <= maxBytes)) {
                 usable.add(candidate);
             } else {
                 rejected.add(candidate);
@@ -74,16 +91,49 @@ public final class FileSelection {
         if (patterns.isEmpty()) {
             return true;
         }
-        String fileName = file.getName().toLowerCase(Locale.ROOT);
+        String fileName = file.getName();
         for (String pattern : patterns) {
             if (pattern == null) {
                 continue;
             }
-            String p = pattern.toLowerCase(Locale.ROOT);
-            if (p.equals("*") || p.equals("*.*") || fileName.endsWith(p.startsWith("*") ? p.substring(1) : p)) {
+            String p = pattern.strip();
+            if (p.equals("*") || p.equals("*.*") || globToRegex(p).matcher(fileName).matches()) {
                 return true;
             }
         }
         return false;
+    }
+
+    /** For a symlink, the real target must match the patterns too; for anything else this is true. */
+    private static boolean linkTargetMatches(File candidate, List<String> patterns) {
+        try {
+            if (patterns.isEmpty() || !Files.isSymbolicLink(candidate.toPath())) {
+                return true;
+            }
+            return matches(candidate.toPath().toRealPath().toFile(), patterns);
+        } catch (IOException | SecurityException unreadable) {
+            return false;
+        }
+    }
+
+    /** {@code *} and {@code ?} wildcards, everything else literal, whole name, case-insensitive. */
+    private static Pattern globToRegex(String glob) {
+        StringBuilder regex = new StringBuilder();
+        StringBuilder literal = new StringBuilder();
+        for (char c : glob.toCharArray()) {
+            if (c == '*' || c == '?') {
+                if (literal.length() > 0) {
+                    regex.append(Pattern.quote(literal.toString()));
+                    literal.setLength(0);
+                }
+                regex.append(c == '*' ? ".*" : ".");
+            } else {
+                literal.append(c);
+            }
+        }
+        if (literal.length() > 0) {
+            regex.append(Pattern.quote(literal.toString()));
+        }
+        return Pattern.compile(regex.toString(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     }
 }
