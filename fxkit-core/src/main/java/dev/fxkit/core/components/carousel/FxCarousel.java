@@ -5,6 +5,7 @@ import java.util.function.IntConsumer;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import dev.fxkit.core.internal.EnumStyleClassSync;
+import dev.fxkit.core.internal.ImageSources;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -264,13 +265,39 @@ public class FxCarousel extends StackPane {
      * An {@link ImageView} for {@code url}, loaded in the background, ready to be
      * used as a slide.
      *
+     * <p>
+     * The URL must be allowed by {@link dev.fxkit.core.FxImagePolicy}, and the picture is decoded at no
+     * more than 2560 x 1440 px however large the file is (use
+     * {@link #image(String, double, double)} to choose another limit). A URL that is refused,
+     * malformed or names a missing resource does not throw: the returned view is simply empty and a
+     * warning is logged (host only, never the full URL).
+     *
      * @param url an image URL, for example {@code "file:img/one.png"} or a
      *            classpath resource's
      *            {@code toExternalForm()}
      * @return the image view
+     * @throws NullPointerException if {@code url} is {@code null}
      */
     public static ImageView image(String url) {
-        return image(new Image(Objects.requireNonNull(url, "url"), true));
+        return image(url, ImageSources.SLIDE_MAX_WIDTH, ImageSources.SLIDE_MAX_HEIGHT);
+    }
+
+    /**
+     * Like {@link #image(String)}, with your own limit on how large the picture is decoded. The image
+     * is scaled to fit inside {@code maxWidth x maxHeight} (aspect ratio kept), which caps its memory
+     * use whatever the size of the file; choose about twice the size it is shown at, for high-DPI
+     * screens.
+     *
+     * @param url       an image URL
+     * @param maxWidth  decode limit in pixels, greater than 0
+     * @param maxHeight decode limit in pixels, greater than 0
+     * @return the image view
+     * @throws NullPointerException     if {@code url} is {@code null}
+     * @throws IllegalArgumentException if a limit is not positive
+     */
+    public static ImageView image(String url, double maxWidth, double maxHeight) {
+        Objects.requireNonNull(url, "url");
+        return new ImageView(ImageSources.load(url, maxWidth, maxHeight));
     }
 
     /**

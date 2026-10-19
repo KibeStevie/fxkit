@@ -28,12 +28,17 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Isolated test harness for {@link FxBadge}: every Color (light and dark), both Sizes, text /
- * icon / icon-only modes, dismissible chips, programmatic dismiss, hug-content sizing, and a live
+ * Isolated test harness for {@link FxBadge}: every Color (light and dark), both
+ * Sizes, text /
+ * icon / icon-only modes, dismissible chips, programmatic dismiss, hug-content
+ * sizing, and a live
  * playground where every property can be flipped at runtime.
  *
- * <p>Swap this in for {@code ShowcaseApp} as the run configuration's main class while iterating.
- * Use the header's theme toggle: badges should switch to Flowbite's {@code dark:} shades, and
+ * <p>
+ * Swap this in for {@code ShowcaseApp} as the run configuration's main class
+ * while iterating.
+ * Use the header's theme toggle: badges should switch to Flowbite's
+ * {@code dark:} shades, and
  * hovering any badge should darken its background one step.
  */
 public class BadgeTestApp extends Application {
@@ -120,7 +125,8 @@ public class BadgeTestApp extends Application {
         stage.show();
     }
 
-    // ---- header / theme toggle --------------------------------------------------------------
+    // ---- header / theme toggle
+    // --------------------------------------------------------------
 
     private HBox header() {
         Label title = new Label("FxBadge test harness");
@@ -143,7 +149,8 @@ public class BadgeTestApp extends Application {
         return current == Theme.LIGHT ? "Switch to dark theme" : "Switch to light theme";
     }
 
-    // ---- playground -------------------------------------------------------------------------
+    // ---- playground
+    // -------------------------------------------------------------------------
 
     private VBox playground() {
         FxBadge badge = new FxBadge("Playground");
@@ -168,8 +175,8 @@ public class BadgeTestApp extends Application {
         iconCheck.selectedProperty().addListener((o, was, is) -> badge.setIcon(is ? ICON : null));
 
         CheckBox dismissCheck = new CheckBox("Dismissible");
-        dismissCheck.selectedProperty().addListener((o, was, is) ->
-                badge.setOnDismiss(is ? () -> log("playground: onDismiss fired") : null));
+        dismissCheck.selectedProperty()
+                .addListener((o, was, is) -> badge.setOnDismiss(is ? () -> log("playground: onDismiss fired") : null));
 
         Button restore = new Button("Restore badge");
         restore.setOnAction(e -> {
@@ -190,7 +197,8 @@ public class BadgeTestApp extends Application {
         return box;
     }
 
-    // ---- default badges -----------------------------------------------------------------------
+    // ---- default badges
+    // -----------------------------------------------------------------------
 
     private static FlowPane defaultBadges() {
         FlowPane flow = new FlowPane(8, 8);
@@ -200,7 +208,8 @@ public class BadgeTestApp extends Application {
         return card(flow);
     }
 
-    // ---- all colors ---------------------------------------------------------------------------
+    // ---- all colors
+    // ---------------------------------------------------------------------------
 
     private static FlowPane allColors() {
         FlowPane flow = new FlowPane(12, 12);
@@ -210,7 +219,8 @@ public class BadgeTestApp extends Application {
         return flow;
     }
 
-    // ---- icon ---------------------------------------------------------------------------------
+    // ---- icon
+    // ---------------------------------------------------------------------------------
 
     private static FlowPane iconBadges() {
         FlowPane flow = new FlowPane(8, 8);
@@ -238,7 +248,8 @@ public class BadgeTestApp extends Application {
         return card(flow);
     }
 
-    // ---- icon only ------------------------------------------------------------------------------
+    // ---- icon only
+    // ------------------------------------------------------------------------------
 
     private static FlowPane iconOnlyBadges() {
         FlowPane flow = new FlowPane(8, 8);
@@ -262,7 +273,8 @@ public class BadgeTestApp extends Application {
         return badge;
     }
 
-    // ---- sizes ----------------------------------------------------------------------------------
+    // ---- sizes
+    // ----------------------------------------------------------------------------------
 
     private static VBox sizeRows() {
         VBox rows = new VBox(12);
@@ -278,7 +290,8 @@ public class BadgeTestApp extends Application {
         return rows;
     }
 
-    // ---- dismissible chips ----------------------------------------------------------------------
+    // ---- dismissible chips
+    // ----------------------------------------------------------------------
 
     private VBox dismissSection() {
         FlowPane holder = new FlowPane(8, 8);
@@ -324,7 +337,8 @@ public class BadgeTestApp extends Application {
         return box;
     }
 
-    // ---- programmatic dismiss ---------------------------------------------------------------
+    // ---- programmatic dismiss
+    // ---------------------------------------------------------------
 
     private VBox programmaticSection() {
         FlowPane holder = new FlowPane(8, 8);
@@ -357,12 +371,14 @@ public class BadgeTestApp extends Application {
         return box;
     }
 
-    // ---- edge cases ------------------------------------------------------------------------------
+    // ---- edge cases
+    // ------------------------------------------------------------------------------
 
     private FlowPane edgeCases() {
         FlowPane flow = new FlowPane(12, 12);
 
-        // A badge dropped in a VBox must hug its content, not stretch to the column width.
+        // A badge dropped in a VBox must hug its content, not stretch to the column
+        // width.
         VBox stretchTest = new VBox(6, new FxBadge("Hugs content", FxBadge.Color.SUCCESS),
                 new FxBadge("Also hugs", FxBadge.Color.WARNING));
         stretchTest.setPrefWidth(260);
@@ -397,7 +413,7 @@ public class BadgeTestApp extends Application {
 
         FxBadge rapid = new FxBadge("Rapid updates");
         Button cycle = new Button("Cycle color + size + text");
-        int[] n = {0};
+        int[] n = { 0 };
         cycle.setOnAction(e -> {
             FxBadge.Color[] all = FxBadge.Color.values();
             n[0]++;
@@ -410,7 +426,8 @@ public class BadgeTestApp extends Application {
         return flow;
     }
 
-    // ---- helpers ----------------------------------------------------------------------------------
+    // ---- helpers
+    // ----------------------------------------------------------------------------------
 
     private void log(String line) {
         log.appendText(line + System.lineSeparator());

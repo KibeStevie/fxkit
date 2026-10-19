@@ -48,6 +48,14 @@
          ikonli-core/ikonli-javafx (the Ikon type and FontIcon); an actual icon PACK is each
          consumer's own choice, never a fxkit-core dependency - see fxkit-core/pom.xml. -->
     <ikonli.version>12.4.0</ikonli.version>
+
+    <!-- Build guards (added by the review). Bump to the newest releases on Maven Central. -->
+    <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+    <dependency-check-maven.version>12.1.0</dependency-check-maven.version>
+
+    <!-- Reproducible builds: jars/zips get this fixed timestamp instead of "now", so the same
+         source always produces byte-identical artifacts. Bump it when you cut a release. -->
+    <project.build.outputTimestamp>2026-10-17T00:00:00Z</project.build.outputTimestamp>
   </properties>
 
   <!-- dependencyManagement = "if a module uses this, use THIS version".
@@ -103,6 +111,19 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven-compiler-plugin.version}</version>
           <!-- the Java level comes from the maven.compiler.release property above -->
+          <configuration>
+            <compilerArgs>
+              <!-- all lint warnings on except this-escape (JavaFX components call overridable methods in constructors by design); add <arg>-Werror</arg> once the current ones are fixed -->
+              <arg>-Xlint:all,-this-escape</arg>
+              <!-- keep parameter names for reflection (FXML, property binding, debugging) -->
+              <arg>-parameters</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${maven-enforcer-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.openjfx</groupId>
@@ -123,13 +144,42 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
+      <!-- Fails the build early on a wrong JDK/Maven or on dependency drift. If dependencyConvergence
+           reports a conflict, pin the winner in <dependencyManagement> above. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-build-rules</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.9.0,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[${maven.compiler.release},)</version>
+                </requireJavaVersion>
+                <banDuplicatePomDependencyVersions/>
+                <dependencyConvergence/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <!-- JavaFX loads native libraries; without this every test run prints a
-               "restricted method in java.lang.System has been called" warning. -->
-          <argLine>--enable-native-access=javafx.graphics</argLine>
+               "restricted method in java.lang.System has been called" warning.
+               Tests run on the classpath (useModulePath=false below), where JavaFX is not a named
+               module, so "javafx.graphics" would be reported as an unknown module: use ALL-UNNAMED. -->
+          <argLine>--enable-native-access=ALL-UNNAMED</argLine>
 
           <!-- fxkit-core has a module-info.java, but only for src/main/java. Test classes live
                in a separate source root (src/test/java) that is patched into the module at test
@@ -146,4 +196,35 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Vulnerability scan of every dependency: mvn verify -Psecurity
+         Needs an NVD API key (free, https://nvd.nist.gov/developers/request-an-api-key), passed as
+         -Dnvd.api.key=... or the NVD_API_KEY environment variable. Kept out of the default build
+         because the first run downloads the whole CVE database. -->
+    <profile>
+      <id>security</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependency-check-maven.version}</version>
+            <configuration>
+              <!-- fail on High/Critical (CVSS 7.0 and above) -->
+              <failBuildOnCVSS>7</failBuildOnCVSS>
+              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

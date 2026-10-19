@@ -1,12 +1,13 @@
 package dev.fxkit.core.components.form;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import dev.fxkit.core.internal.EnumStyleClassSync;
+import dev.fxkit.core.internal.FileSelection;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -53,9 +54,11 @@ import javafx.stage.Window;
  * of these and exposes the same value API.
  *
  * <h2>Programmatic selection and rejection</h2>
- * {@link #pick(List)} sets the selection as if the files had been dropped (filters, single-file limit).
- * Dropped or picked files that fail the extension filters, or are directories, are reported to
- * {@link #setOnRejected(Consumer)}.
+ * Every way of getting a file in goes through {@link #pick(List)}: a drop, a choice in the dialog, or
+ * your own code. All three apply the same rules (extension filters, single-file limit). Files that
+ * fail the extension filters, or are directories, are reported to {@link #setOnRejected(Consumer)};
+ * if you set no handler they are skipped silently, so set one when the user should be told.
+ * The check is name-based: validate the content (real type, size) before using a file.
  *
  * <h2>Size and Color</h2>
  * {@link Size} and {@link Color} behave exactly as on {@link FxTextInput}.
@@ -185,49 +188,53 @@ public class FxFileInput extends HBox {
         return files.size() == 1 ? files.get(0).getName() : files.size() + " files";
     }
 
-    /** Matches a file against the extension filters ({@code "*.png"}, {@code "*.*"}); no filters accept everything. */
-    private boolean accepts(File candidate) {
-        if (extensionFilters.isEmpty()) {
-            return true;
-        }
-        String fileName = candidate.getName().toLowerCase(Locale.ROOT);
+    /** The patterns of every extension filter ({@code "*.png"}, {@code "*.*"}); none means any file is accepted. */
+    private List<String> filterPatterns() {
+        List<String> patterns = new ArrayList<>();
         for (FileChooser.ExtensionFilter filter : extensionFilters) {
-            for (String pattern : filter.getExtensions()) {
-                String p = pattern.toLowerCase(Locale.ROOT);
-                if (p.equals("*") || p.equals("*.*") || fileName.endsWith(p.startsWith("*") ? p.substring(1) : p)) {
-                    return true;
-                }
-            }
+            patterns.addAll(filter.getExtensions());
         }
-        return false;
+        return patterns;
     }
 
-    /** Opens the file dialog, exactly as clicking the field does. Does nothing while disabled. */
+    /**
+     * Opens the file dialog, exactly as clicking the field does. Does nothing while disabled.
+     *
+     * <p>What the user chooses goes through {@link #pick(List)}, like a drop: files that the dialog let
+     * through but the {@linkplain #getExtensionFilters() extension filters} refuse (some platforms let
+     * the user type any name, or pick "All files") are rejected and reported to
+     * {@link #getOnRejected()}. Cancelling the dialog keeps the previous selection.
+     */
     public void choose() {
         if (isDisabled()) {
             return;
         }
+        pick(showDialog());
+    }
+
+    /**
+     * Shows the native dialog. Package-private so tests can replace it, since a real dialog blocks.
+     *
+     * @return the chosen files, or {@code null} if the dialog was cancelled
+     */
+    List<File> showDialog() {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().setAll(extensionFilters);
         Window owner = getScene() == null ? null : getScene().getWindow();
 
-        List<File> picked;
         if (isMultiple()) {
-            picked = chooser.showOpenMultipleDialog(owner);
-        } else {
-            File single = chooser.showOpenDialog(owner);
-            picked = single == null ? null : List.of(single);
+            return chooser.showOpenMultipleDialog(owner);
         }
-        if (picked != null && !picked.isEmpty()) {
-            files.setAll(picked);
-        }
+        File single = chooser.showOpenDialog(owner);
+        return single == null ? null : List.of(single);
     }
 
     /**
      * Sets the selection as if these files had been dropped: directories and files rejected by
      * {@link #getExtensionFilters()} are skipped (and reported to {@link #getOnRejected()}), and only the
      * first accepted file is kept unless {@link #isMultiple()}. The previous selection is replaced only
-     * when at least one file is accepted. Does nothing while disabled.
+     * when at least one file is accepted. Does nothing while disabled. This is also what
+     * {@link #choose()} calls with the files picked in the dialog.
      *
      * @param candidates the files to offer; may be {@code null}
      * @return whether at least one file was accepted
@@ -236,16 +243,15 @@ public class FxFileInput extends HBox {
         if (isDisabled() || candidates == null || candidates.isEmpty()) {
             return false;
         }
-        List<File> usable = candidates.stream().filter(f -> f.isFile() && accepts(f)).toList();
-        List<File> rejected = candidates.stream().filter(f -> !usable.contains(f)).toList();
-        if (!usable.isEmpty()) {
-            files.setAll(isMultiple() ? usable : usable.subList(0, 1));
+        FileSelection.Result result = FileSelection.select(candidates, filterPatterns(), isMultiple());
+        if (!result.accepted().isEmpty()) {
+            files.setAll(result.accepted());
         }
         Consumer<List<File>> handler = getOnRejected();
-        if (!rejected.isEmpty() && handler != null) {
-            handler.accept(rejected);
+        if (!result.rejected().isEmpty() && handler != null) {
+            handler.accept(result.rejected());
         }
-        return !usable.isEmpty();
+        return !result.accepted().isEmpty();
     }
 
     /** Forgets the picked file(s). */
@@ -270,7 +276,7 @@ public class FxFileInput extends HBox {
         return readOnlyFiles;
     }
 
-    /** The filters offered by the dialog and enforced on dropped files. */
+    /** The filters offered by the dialog and enforced on every picked or dropped file. */
     public ObservableList<FileChooser.ExtensionFilter> getExtensionFilters() {
         return extensionFilters;
     }
@@ -280,7 +286,7 @@ public class FxFileInput extends HBox {
         return onRejected.get();
     }
 
-    /** Called with the files that {@link #pick(List)} (so: a drop) refused; never called with an empty list. */
+    /** Called with the files that {@link #pick(List)} (so: a drop or a dialog choice) refused; never called with an empty list. */
     public void setOnRejected(Consumer<List<File>> onRejected) {
         this.onRejected.set(onRejected);
     }

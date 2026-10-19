@@ -2,6 +2,7 @@ package dev.fxkit.core.components.avatar;
 
 import dev.fxkit.core.internal.BooleanStyleClassSync;
 import dev.fxkit.core.internal.EnumStyleClassSync;
+import dev.fxkit.core.internal.ImageSources;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -326,9 +327,16 @@ public class FxAvatar extends HBox {
         setContent(box);
     }
 
-    /** Loads {@code url} in the background and shows it; {@code null} clears the image. */
+    /**
+     * Loads {@code url} in the background and shows it; {@code null} or blank clears the image.
+     *
+     * <p>The URL must be allowed by {@link dev.fxkit.core.FxImagePolicy}, and the picture is decoded at
+     * no more than 288 x 288 px however large the file is. A URL that is refused, malformed or names a
+     * missing resource does not throw: the avatar shows its placeholder and a warning is logged (host
+     * only, never the full URL).
+     */
     public final void setImage(String url) {
-        setImage(url == null || url.isBlank() ? null : new Image(url, true));
+        setImage(ImageSources.load(url, ImageSources.AVATAR_MAX_PX, ImageSources.AVATAR_MAX_PX));
     }
 
     // ---- properties -----------------------------------------------------------------------

@@ -1,6 +1,8 @@
 package dev.fxkit.core.components.megamenu;
 
 import dev.fxkit.core.internal.ActionSupport;
+import dev.fxkit.core.internal.ImageSources;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,8 +11,11 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -21,7 +26,10 @@ import javafx.scene.shape.Rectangle;
  * background picture, a bold line of text and an outlined "Get started" button.
  *
  * <p>The whole card is one click target, like Flowbite's wrapping {@code <a>}; the button is only
- * its visual. Flowbite's {@code bg-blend-multiply} (and {@code hover:bg-blend-soft-light}) is
+ * its visual. The picture is an {@link ImageView} cropped to cover the card, not a CSS background, so
+ * setting it never touches the node's inline style and no URL is ever written into CSS. The URL must
+ * be allowed by {@link dev.fxkit.core.FxImagePolicy}; one that is refused, malformed or names a missing
+ * resource leaves the plain gray card and logs a warning. Flowbite's {@code bg-blend-multiply} (and {@code hover:bg-blend-soft-light}) is
  * approximated with a gray overlay over the picture that fades on hover, because JavaFX CSS has no
  * blend modes. Without an image the card is the plain gray of Flowbite's {@code bg-gray-500}.
  *
@@ -57,6 +65,8 @@ public class FxMegaMenuImageCard extends StackPane {
 
     private final Label textLabel = new Label();
     private final Label actionLabel = new Label();
+    private final ImageView picture = new ImageView();
+    private final InvalidationListener pictureListener = observable -> updateCover();
 
     public FxMegaMenuImageCard() {
         this(null, null);
@@ -87,7 +97,15 @@ public class FxMegaMenuImageCard extends StackPane {
         body.setAlignment(Pos.TOP_LEFT);
         body.setPickOnBounds(false);
         body.setMouseTransparent(true);
-        getChildren().addAll(overlay, body);
+        // The picture sits under the overlay, outside layout (so its size never sizes the card) and
+        // out of the pointer's way (the whole card is the click target).
+        picture.setManaged(false);
+        picture.setMouseTransparent(true);
+        picture.setVisible(false);
+        picture.setPreserveRatio(false); // the viewport already has the card's aspect ratio
+        widthProperty().addListener(pictureListener);
+        heightProperty().addListener(pictureListener);
+        getChildren().addAll(picture, overlay, body);
 
         // background-image is not clipped by JavaFX's background radius, so round the whole card.
         Rectangle clip = new Rectangle();
@@ -111,11 +129,37 @@ public class FxMegaMenuImageCard extends StackPane {
     }
 
     private void applyImage(String url) {
-        if (url == null || url.isBlank()) {
-            setStyle(null);
-        } else {
-            setStyle("-fx-background-image: url('" + url.replace("'", "%27") + "');");
+        Image previous = picture.getImage();
+        if (previous != null) {
+            previous.widthProperty().removeListener(pictureListener);
+            previous.heightProperty().removeListener(pictureListener);
+            previous.errorProperty().removeListener(pictureListener);
         }
+        Image image = ImageSources.load(url, ImageSources.BACKDROP_MAX_WIDTH, ImageSources.BACKDROP_MAX_HEIGHT);
+        picture.setImage(image);
+        if (image != null) {
+            image.widthProperty().addListener(pictureListener);
+            image.heightProperty().addListener(pictureListener);
+            image.errorProperty().addListener(pictureListener);
+        }
+        updateCover();
+    }
+
+    /** Crops the picture to cover the card (CSS {@code background-size: cover}) once both sizes are known. */
+    private void updateCover() {
+        Image image = picture.getImage();
+        ImageSources.Crop crop = image == null || image.isError()
+                ? null
+                : ImageSources.coverCrop(image.getWidth(), image.getHeight(), getWidth(), getHeight());
+        if (crop == null) {
+            picture.setVisible(false);
+            picture.setViewport(null);
+            return;
+        }
+        picture.setViewport(new Rectangle2D(crop.x(), crop.y(), crop.width(), crop.height()));
+        picture.setFitWidth(getWidth());
+        picture.setFitHeight(getHeight());
+        picture.setVisible(true);
     }
 
     /** Fires the action, as a click does. */

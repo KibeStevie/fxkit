@@ -39,5 +39,12 @@
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-javafx</artifactId>
     </dependency>
+
+    <!-- Tests (src/test/java). Version comes from the junit-bom imported in the parent. -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

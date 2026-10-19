@@ -8,9 +8,6 @@ module dev.fxkit.core {
     // automatically gets javafx.controls (and javafx.graphics/base) too.
     requires transitive javafx.controls;
 
-    // Needed once components load FXML or ship FXML files.
-    requires javafx.fxml;
-
     // Ikonli (#36, stretch: icon support on FxButton). "transitive" because
     // FxButton.Ikon-typed API
     // (setIcon(Ikon), iconProperty()) puts org.kordamp.ikonli.Ikon in our own
@@ -26,7 +23,6 @@ module dev.fxkit.core {
     // Packages other modules are allowed to use.
     exports dev.fxkit.core;
     exports dev.fxkit.core.theme;
-    exports dev.fxkit.core.components;
     exports dev.fxkit.core.components.accordion;
     exports dev.fxkit.core.components.avatar;
     exports dev.fxkit.core.components.alert;
@@ -58,13 +54,4 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.tabs;
     exports dev.fxkit.core.components.table;
     exports dev.fxkit.core.components.tooltip;
-
-    // Lets FXMLLoader create FxButton (and later components) by reflection from
-    // FXML.
-    opens dev.fxkit.core.components to javafx.fxml;
-
-    // dev.fxkit.core.internal (EnumStyleClassSync, ...) is intentionally not
-    // exported or
-    // opened: it is shared only between packages inside this module, never public
-    // API.
 }

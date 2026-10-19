@@ -27,12 +27,17 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Isolated test harness for {@link FxAlert}: every Color, title/message combinations, icon,
- * border accent, dismissing (button, programmatic, auto-timeout, restore), custom content, edge
+ * Isolated test harness for {@link FxAlert}: every Color, title/message
+ * combinations, icon,
+ * border accent, dismissing (button, programmatic, auto-timeout, restore),
+ * custom content, edge
  * cases, and a live playground where every property can be flipped at runtime.
  *
- * <p>Swap this in for {@code ShowcaseApp} as the run configuration's main class while iterating.
- * Use the header's theme toggle to check that alerts restyle correctly in light and dark.
+ * <p>
+ * Swap this in for {@code ShowcaseApp} as the run configuration's main class
+ * while iterating.
+ * Use the header's theme toggle to check that alerts restyle correctly in light
+ * and dark.
  */
 public class AlertTestApp extends Application {
 
@@ -114,7 +119,8 @@ public class AlertTestApp extends Application {
         stage.show();
     }
 
-    // ---- header / theme toggle --------------------------------------------------------------
+    // ---- header / theme toggle
+    // --------------------------------------------------------------
 
     private HBox header() {
         Label title = new Label("FxAlert test harness");
@@ -137,7 +143,8 @@ public class AlertTestApp extends Application {
         return current == Theme.LIGHT ? "Switch to dark theme" : "Switch to light theme";
     }
 
-    // ---- playground -------------------------------------------------------------------------
+    // ---- playground
+    // -------------------------------------------------------------------------
 
     private VBox playground() {
         FxAlert alert = new FxAlert();
@@ -163,8 +170,8 @@ public class AlertTestApp extends Application {
         alert.borderAccentProperty().bind(accentCheck.selectedProperty());
 
         CheckBox dismissCheck = new CheckBox("Dismissible");
-        dismissCheck.selectedProperty().addListener((o, was, is) ->
-                alert.setOnDismiss(is ? () -> log("playground: onDismiss fired") : null));
+        dismissCheck.selectedProperty()
+                .addListener((o, was, is) -> alert.setOnDismiss(is ? () -> log("playground: onDismiss fired") : null));
 
         CheckBox customCheck = new CheckBox("Custom content");
         customCheck.selectedProperty().addListener((o, was, is) -> {
@@ -196,7 +203,8 @@ public class AlertTestApp extends Application {
         return box;
     }
 
-    // ---- colors -----------------------------------------------------------------------------
+    // ---- colors
+    // -----------------------------------------------------------------------------
 
     private static FlowPane colorGrid() {
         FlowPane flow = new FlowPane(12, 12);
@@ -209,7 +217,8 @@ public class AlertTestApp extends Application {
         return flow;
     }
 
-    // ---- body combinations --------------------------------------------------------------------
+    // ---- body combinations
+    // --------------------------------------------------------------------
 
     private static FlowPane bodyGrid() {
         FlowPane flow = new FlowPane(12, 12);
@@ -226,7 +235,8 @@ public class AlertTestApp extends Application {
         return flow;
     }
 
-    // ---- icon -----------------------------------------------------------------------------------
+    // ---- icon
+    // -----------------------------------------------------------------------------------
 
     private static FlowPane iconGrid() {
         FlowPane flow = new FlowPane(12, 12);
@@ -247,7 +257,8 @@ public class AlertTestApp extends Application {
         return flow;
     }
 
-    // ---- border accent -----------------------------------------------------------------------
+    // ---- border accent
+    // -----------------------------------------------------------------------
 
     private static FlowPane accentGrid() {
         FlowPane flow = new FlowPane(12, 12);
@@ -264,7 +275,8 @@ public class AlertTestApp extends Application {
         combo.setColor(FxAlert.Color.TEAL);
         combo.setIcon(ICON);
         combo.setBorderAccent(true);
-        combo.setOnDismiss(() -> {});
+        combo.setOnDismiss(() -> {
+        });
         flow.getChildren().add(labeled("icon + accent + dismiss", sized(combo)));
 
         FxAlert toggling = new FxAlert("Accent toggles", "Click the button to flip the flag.");
@@ -275,7 +287,8 @@ public class AlertTestApp extends Application {
         return flow;
     }
 
-    // ---- dismissing -------------------------------------------------------------------------------
+    // ---- dismissing
+    // -------------------------------------------------------------------------------
 
     private VBox dismissSection() {
         VBox holder = new VBox(10);
@@ -315,7 +328,8 @@ public class AlertTestApp extends Application {
         return box;
     }
 
-    // ---- programmatic dismiss ---------------------------------------------------------------
+    // ---- programmatic dismiss
+    // ---------------------------------------------------------------
 
     private VBox programmaticSection() {
         VBox holder = new VBox(10);
@@ -349,7 +363,8 @@ public class AlertTestApp extends Application {
         return box;
     }
 
-    // ---- custom content ---------------------------------------------------------------------------
+    // ---- custom content
+    // ---------------------------------------------------------------------------
 
     private VBox customContentSection() {
         FxAlert alert = new FxAlert("Default body", "Click 'Set custom content' to replace me.");
@@ -379,7 +394,8 @@ public class AlertTestApp extends Application {
         return box;
     }
 
-    // ---- edge cases ------------------------------------------------------------------------------
+    // ---- edge cases
+    // ------------------------------------------------------------------------------
 
     private FlowPane edgeCases() {
         FlowPane flow = new FlowPane(12, 12);
@@ -391,7 +407,8 @@ public class AlertTestApp extends Application {
         longText.setColor(FxAlert.Color.WARNING);
         longText.setIcon(ICON);
         longText.setBorderAccent(true);
-        longText.setOnDismiss(() -> {});
+        longText.setOnDismiss(() -> {
+        });
         longText.setPrefWidth(420);
         flow.getChildren().add(labeled("long text wraps, close pinned right", longText));
 
@@ -407,7 +424,7 @@ public class AlertTestApp extends Application {
 
         FxAlert rapid = new FxAlert("Rapid updates", "Color, title and message change every click.");
         Button cycle = new Button("Cycle color + text");
-        int[] n = {0};
+        int[] n = { 0 };
         cycle.setOnAction(e -> {
             FxAlert.Color[] all = FxAlert.Color.values();
             n[0]++;
@@ -419,7 +436,8 @@ public class AlertTestApp extends Application {
         return flow;
     }
 
-    // ---- helpers ----------------------------------------------------------------------------------
+    // ---- helpers
+    // ----------------------------------------------------------------------------------
 
     private void log(String line) {
         log.appendText(line + System.lineSeparator());

@@ -1,10 +1,11 @@
 package dev.fxkit.showcase;
 
+import java.util.List;
+import java.util.Objects;
+
 import dev.fxkit.core.FxKit;
 import dev.fxkit.core.theme.Theme;
 import dev.fxkit.core.theme.ThemeManager;
-import java.util.List;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,19 +21,28 @@ import javafx.stage.Stage;
 /**
  * The FXKit showcase window.
  *
- * <p>JavaFX lifecycle in short: {@code main} calls {@link #launch(String...)},
+ * <p>
+ * JavaFX lifecycle in short: {@code main} calls {@link #launch(String...)},
  * JavaFX starts its UI thread and then calls {@link #start(Stage)} with the
  * primary {@link Stage} (the window). A Stage shows one {@link Scene}, and the
  * Scene holds a tree of nodes.
  *
- * <p>Styling comes from FXKit itself: {@link ThemeManager#apply} installs the token and
- * utility stylesheets and picks the theme, and the nodes below carry utility classes.
+ * <p>
+ * Styling comes from FXKit itself: {@link ThemeManager#apply} installs the
+ * token and
+ * utility stylesheets and picks the theme, and the nodes below carry utility
+ * classes.
  * {@code showcase.css} only holds the few rules utilities cannot express.
  *
- * <p>Below the header sits {@link ShowcaseShell} (#39): a sidebar lists every page - the color palette,
- * then a page per component ({@code FxButton}'s is {@link ButtonPage}, {@code FxCard}'s is
- * {@link CardPage}), then {@link FxmlDemoPage} proving both work from FXML - and the content area shows
- * one of them at a time (#40). This class only owns the {@link #pages()} registry and the header; the
+ * <p>
+ * Below the header sits {@link ShowcaseShell} (#39): a sidebar lists every page
+ * - the color palette,
+ * then a page per component ({@code FxButton}'s is {@link ButtonPage},
+ * {@code FxCard}'s is
+ * {@link CardPage}), then {@link FxmlDemoPage} proving both work from FXML -
+ * and the content area shows
+ * one of them at a time (#40). This class only owns the {@link #pages()}
+ * registry and the header; the
  * shell owns navigation.
  */
 public class ShowcaseApp extends Application {
@@ -63,7 +73,7 @@ public class ShowcaseApp extends Application {
         root.getStyleClass().add("bg-background");
 
         Scene scene = new Scene(root, 960, 720);
-        ThemeManager.apply(scene, Theme.LIGHT);          // installs tokens.css + utilities.css
+        ThemeManager.apply(scene, Theme.LIGHT); // installs tokens.css + utilities.css
         scene.getStylesheets().add(stylesheet("showcase.css"));
 
         themeToggle.setText(toggleCaption(ThemeManager.current(scene)));
@@ -75,16 +85,17 @@ public class ShowcaseApp extends Application {
     }
 
     /**
-     * The showcase's page registry (#40): one {@link ShowcasePage} per existing page, in sidebar order.
-     * {@code Colors} (from Phase 1) comes first as the default page {@link ShowcaseShell} shows on
-     * launch; {@code Button} and {@code Card} (Phase 2) follow, then {@code FXML} (#33) last.
+     * The showcase's page registry (#40): one {@link ShowcasePage} per existing
+     * page, in sidebar order.
+     * {@code Colors} (from Phase 1) comes first as the default page
+     * {@link ShowcaseShell} shows on
+     * launch; {@code Button} and {@code Card} (Phase 2) follow, then {@code FXML}
+     * (#33) last.
      */
     private static List<ShowcasePage> pages() {
         return List.of(
                 new ShowcasePage("Colors", PalettePage::create),
-                new ShowcasePage("Button", ButtonPage::create),
-                new ShowcasePage("Card", CardPage::create),
-                new ShowcasePage("FXML", FxmlDemoPage::create));
+                new ShowcasePage("Button", ButtonPage::create));
     }
 
     /** The button offers the theme you would switch TO. */

@@ -4,7 +4,6 @@
 module dev.fxkit.showcase {
     requires dev.fxkit.core;
     requires javafx.controls;
-    requires javafx.fxml;
     requires java.logging;
 
     // Ikonli (#36, stretch): org.kordamp.ikonli.core comes to us transitively via dev.fxkit.core
@@ -21,7 +20,4 @@ module dev.fxkit.showcase {
     // JavaFX's launcher (in javafx.graphics) creates our Application subclass by
     // reflection, so this package must be visible to it.
     exports dev.fxkit.showcase to javafx.graphics;
-
-    // FXMLLoader (javafx.fxml) needs reflective access to controllers in this package.
-    opens dev.fxkit.showcase to javafx.fxml;
 }
