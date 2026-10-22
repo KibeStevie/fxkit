@@ -16,7 +16,7 @@
        change it to a namespace you can verify, e.g. io.github.<your-github-username> -->
   <groupId>dev.fxkit</groupId>
   <artifactId>fxkit-parent</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>  <!-- a parent/aggregator produces no jar, only a pom -->
 
   <name>FXKit</name>
@@ -85,7 +85,7 @@
 
     <!-- Reproducible builds: jars/zips get this fixed timestamp instead of "now", so the same
          source always produces byte-identical artifacts. Bump it when you cut a release. -->
-    <project.build.outputTimestamp>2026-10-22T19:48:42Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2026-10-22T19:57:49Z</project.build.outputTimestamp>
 
     <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
