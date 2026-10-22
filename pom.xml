@@ -16,11 +16,41 @@
        change it to a namespace you can verify, e.g. io.github.<your-github-username> -->
   <groupId>dev.fxkit</groupId>
   <artifactId>fxkit-parent</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>  <!-- a parent/aggregator produces no jar, only a pom -->
 
   <name>FXKit</name>
   <description>Tailwind-inspired UI component library for JavaFX desktop apps</description>
+
+  <url>https://github.com/KibeStevie/fxkit</url>
+
+  <licenses>
+    <license>
+      <!-- Match whatever your LICENSE file says; MIT assumed here -->
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/KibeStevie/fxkit</url>
+    <connection>scm:git:https://github.com/KibeStevie/fxkit.git</connection>
+    <developerConnection>scm:git:https://github.com/KibeStevie/fxkit.git</developerConnection>
+  </scm>
+
+  <!-- Where "mvn deploy" uploads to. The <id> must match <server><id> in your settings.xml -->
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages - FXKit</name>
+      <url>https://maven.pkg.github.com/KibeStevie/fxkit</url>
+    </repository>
+    <snapshotRepository>
+      <id>github</id>
+      <name>GitHub Packages - FXKit</name>
+      <url>https://maven.pkg.github.com/KibeStevie/fxkit</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <modules>
     <module>fxkit-core</module>
@@ -55,7 +85,11 @@
 
     <!-- Reproducible builds: jars/zips get this fixed timestamp instead of "now", so the same
          source always produces byte-identical artifacts. Bump it when you cut a release. -->
-    <project.build.outputTimestamp>2026-10-17T00:00:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2026-10-22T19:48:42Z</project.build.outputTimestamp>
+
+    <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
   </properties>
 
   <!-- dependencyManagement = "if a module uses this, use THIS version".
@@ -135,6 +169,21 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${maven-deploy-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven-javadoc-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -199,8 +248,7 @@
 
   <profiles>
     <!-- Vulnerability scan of every dependency: mvn verify -Psecurity
-         Needs an NVD API key (free, https://nvd.nist.gov/developers/request-an-api-key), passed as
-         -Dnvd.api.key=... or the NVD_API_KEY environment variable. Kept out of the default build
+         Needs an NVD API key (free, https://nvd.nist.gov/developers/request-an-api-key), passed as -Dnvd.api.key=... or the NVD_API_KEY environment variable. Kept out of the default build
          because the first run downloads the whole CVE database. -->
     <profile>
       <id>security</id>

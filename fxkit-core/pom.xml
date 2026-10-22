@@ -11,7 +11,7 @@
   <parent>
     <groupId>dev.fxkit</groupId>
     <artifactId>fxkit-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <artifactId>fxkit-core</artifactId>
@@ -29,8 +29,7 @@
       <artifactId>javafx-fxml</artifactId>
     </dependency>
 
-    <!-- Ikonli (#36, stretch): only the Ikon type and FontIcon - no icon pack. A pack (the actual
-         glyphs) is each consumer's own choice, added in their own project alongside fxkit-core. -->
+    <!-- Ikonli: only the Ikon type and FontIcon - no icon pack. A pack is each consumer's choice. -->
     <dependency>
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-core</artifactId>
@@ -47,4 +46,42 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Publishes fxkit-core-<version>-sources.jar next to the main jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Publishes fxkit-core-<version>-javadoc.jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+          <!-- Don't let strict doclint rules (missing @param etc.) block a deploy -->
+          <doclint>none</doclint>
+          <quiet>true</quiet>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
