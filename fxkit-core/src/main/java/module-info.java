@@ -30,6 +30,7 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.blockquote;
     exports dev.fxkit.core.components.breadcrumb;
     exports dev.fxkit.core.components.button;
+    exports dev.fxkit.core.components.card;
     exports dev.fxkit.core.components.carousel;
     exports dev.fxkit.core.components.clipboard;
     exports dev.fxkit.core.components.drawer;

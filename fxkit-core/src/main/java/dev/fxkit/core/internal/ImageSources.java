@@ -11,17 +11,24 @@ import dev.fxkit.core.FxImagePolicy;
 import javafx.scene.image.Image;
 
 /**
- * How FXKit components turn an image URL into an {@link Image}: policy check first, a bounded decode
- * size, and failures that degrade to "no image" instead of throwing or leaking the URL into logs.
+ * How FXKit components turn an image URL into an {@link Image}: policy check
+ * first, a bounded decode
+ * size, and failures that degrade to "no image" instead of throwing or leaking
+ * the URL into logs.
  *
  * <h2>Why bounded</h2>
- * {@code new Image(url, true)} decodes the file at its natural size, so a 20000 x 20000 picture is
- * about 1.6 GB of pixels. Every load here asks JavaFX to fit the image in a maximum box instead
- * (aspect ratio kept, smooth scaling), so memory per image has a hard ceiling. The boxes below are
- * about twice what each component can display, so pictures stay sharp on high-DPI screens. A smaller
+ * {@code new Image(url, true)} decodes the file at its natural size, so a 20000
+ * x 20000 picture is
+ * about 1.6 GB of pixels. Every load here asks JavaFX to fit the image in a
+ * maximum box instead
+ * (aspect ratio kept, smooth scaling), so memory per image has a hard ceiling.
+ * The boxes below are
+ * about twice what each component can display, so pictures stay sharp on
+ * high-DPI screens. A smaller
  * source is scaled up to the box, which is cheap at these sizes.
  *
- * <p>Not part of FXKit's public API.
+ * <p>
+ * Not part of FXKit's public API.
  */
 public final class ImageSources {
 
@@ -36,6 +43,13 @@ public final class ImageSources {
     public static final double BACKDROP_MAX_WIDTH = 1920;
     public static final double BACKDROP_MAX_HEIGHT = 1080;
 
+    /**
+     * Largest decoded {@code FxCard} picture: twice a 512px-wide card, for high-DPI
+     * screens.
+     */
+    public static final double CARD_IMAGE_MAX_WIDTH = 1024;
+    public static final double CARD_IMAGE_MAX_HEIGHT = 1024;
+
     private static final Logger LOG = Logger.getLogger("dev.fxkit.image");
     private static final Pattern SCHEME = Pattern.compile("^([A-Za-z][A-Za-z0-9+.\\-]+):");
 
@@ -46,13 +60,17 @@ public final class ImageSources {
     /**
      * Starts loading an image in the background.
      *
-     * @param url       image URL or classpath resource; {@code null} or blank means "no image"
+     * @param url       image URL or classpath resource; {@code null} or blank means
+     *                  "no image"
      * @param maxWidth  decode box width in pixels, greater than 0
      * @param maxHeight decode box height in pixels, greater than 0
-     * @return the image (still loading, and possibly failing later: watch {@code errorProperty()}), or
-     *         {@code null} if there is nothing to load, the URL is refused by {@link FxImagePolicy}, or
+     * @return the image (still loading, and possibly failing later: watch
+     *         {@code errorProperty()}), or
+     *         {@code null} if there is nothing to load, the URL is refused by
+     *         {@link FxImagePolicy}, or
      *         it is invalid or names a resource that does not exist
-     * @throws IllegalArgumentException if {@code maxWidth} or {@code maxHeight} is not positive
+     * @throws IllegalArgumentException if {@code maxWidth} or {@code maxHeight} is
+     *                                  not positive
      */
     public static Image load(String url, double maxWidth, double maxHeight) {
         if (!(maxWidth > 0) || !(maxHeight > 0)) {
@@ -71,8 +89,10 @@ public final class ImageSources {
         try {
             image = new Image(trimmed, maxWidth, maxHeight, true, true, true);
         } catch (IllegalArgumentException invalidUrlOrMissingResource) {
-            // JavaFX throws here (instead of reporting an error on the image) for a malformed URL or a
-            // classpath resource that is not there. The URL stays out of the log: it may carry a token.
+            // JavaFX throws here (instead of reporting an error on the image) for a
+            // malformed URL or a
+            // classpath resource that is not there. The URL stays out of the log: it may
+            // carry a token.
             LOG.warning("Image not loaded: " + describe(trimmed) + " is invalid or does not exist");
             return null;
         }
@@ -94,7 +114,10 @@ public final class ImageSources {
                 + (cause == null ? "" : " (" + cause.getClass().getSimpleName() + ")"));
     }
 
-    /** A description safe to log: the kind of source and the host, never the path, query or credentials. */
+    /**
+     * A description safe to log: the kind of source and the host, never the path,
+     * query or credentials.
+     */
     static String describe(String url) {
         Matcher matcher = SCHEME.matcher(url);
         if (!matcher.find()) {
@@ -112,13 +135,18 @@ public final class ImageSources {
         }
     }
 
-    /** The part of an image to show so that it covers a box completely, like CSS {@code background-size: cover}. */
+    /**
+     * The part of an image to show so that it covers a box completely, like CSS
+     * {@code background-size: cover}.
+     */
     public record Crop(double x, double y, double width, double height) {
     }
 
     /**
-     * @return the centered region of the image that covers a {@code boxWidth x boxHeight} area with the
-     *         same aspect ratio as the box (so it can be shown without distortion), or {@code null} if
+     * @return the centered region of the image that covers a
+     *         {@code boxWidth x boxHeight} area with the
+     *         same aspect ratio as the box (so it can be shown without distortion),
+     *         or {@code null} if
      *         any size is unknown or not positive
      */
     public static Crop coverCrop(double imageWidth, double imageHeight, double boxWidth, double boxHeight) {

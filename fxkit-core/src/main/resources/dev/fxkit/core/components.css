@@ -824,54 +824,76 @@
 }
 
 /* -----------------------------------------------------------------------------
- * FxCard (dev.fxkit.core.components.FxCard)
+ * FxCard (dev.fxkit.core.components.card.FxCard)
  *
- * ".fxk-card" is the surface itself: background, border and radius come from tokens (#32), and the
- * elevation classes below each set the whole shadow effect from the shadow scale (docs/design-tokens.md)
- * - a node has only one -fx-effect, so exactly one of these ever applies (kept that way by
- * EnumStyleClassSync, same as FxButton's variant/size classes). ".fxk-card-header/-body/-footer" style
- * the wrapper around whichever slot is filled (FxCard.java only puts a wrapper in the layout when its
- * slot is non-empty, so an unused slot never reaches this CSS at all). ".fxk-card-divider" restyles the
- * Separator FxCard inserts between two adjacent present slots: Separator's own skin builds a "line"
- * region drawn with a border, not a fill, so the divider color is set as a border-color, matching
- * Separator's default (Modena) stylesheet.
+ * REPLACES the previous FxCard block in components.css (from its header comment down to, but not
+ * including, the FxButtonGroup header). The old block styled a header/body/footer card with
+ * elevation classes; none of those classes (.fxk-card-header, -footer, -divider, -elevation-*) exist
+ * any more. colors.css needs nothing: a card has no Color.
+ *
+ * Structure: .fxk-card > [.fxk-card-image] + .fxk-card-body.
+ * FxCard.java lays the two parts out (picture on top, or in a 192px column when horizontal) and
+ * CardImage.java sizes and clips the picture, because JavaFX CSS cannot express "height from the
+ * aspect ratio", "object-fit: cover" or a radius on two corners only. Geometry is therefore NOT here,
+ * and neither is a maximum width: a value set from CSS would override the caller's setMaxWidth()
+ * (author stylesheets win over values set in code), so the horizontal 576px maximum is computed in Java.
+ *
+ * Flowbite mapping (card theme):
+ *   root.base          flex rounded-lg border border-gray-200 bg-white shadow-md
+ *                      dark:border-gray-700 dark:bg-gray-800
+ *                                                    -> 8px radius, 1px -fxk-border, -fxk-surface, -fxk-shadow-md
+ *   root.children      flex h-full flex-col justify-center gap-4 p-6
+ *                                                    -> .fxk-card-body: 24px padding, 16px gap, centered vertically
+ *   root.href          hover:bg-gray-100 dark:hover:bg-gray-700
+ *                                                    -> -fxk-surface-alt (gray-100 / gray-700: the same two steps)
+ *   img.base           rounded-t-lg                  -> clipped in CardImage (7px: 8px minus the 1px border)
+ *   img.horizontal.on  h-96 w-full object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg
+ *                                                    -> CardImage (192px column, cover crop, left corners)
+ *
+ * Every color is a semantic or elevation token, so the dark theme needs no rule of its own.
  * -------------------------------------------------------------------------- */
 
 .fxk-card {
   -fx-background-color: -fxk-surface;
   -fx-background-radius: 8px; /* rounded-lg */
-  -fx-border-radius: 8px;
-  -fx-border-width: 1px;
-  -fx-border-color: -fxk-border;
   -fx-background-insets: 0;
+  -fx-border-color: -fxk-border;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-effect: -fxk-shadow-md; /* shadow-md */
 }
 
-.fxk-card-header,
-.fxk-card-body,
-.fxk-card-footer {
-  -fx-padding: 16px; /* space-4 */
+.fxk-card-body {
+  -fx-padding: 24px; /* p-6 */
+  -fx-spacing: 16px; /* gap-4 */
+  -fx-alignment: CENTER_LEFT; /* flex-col justify-center; children stay as wide as the card */
+  -fx-fill-width: true;
 }
 
-.fxk-card-divider .line {
-  -fx-border-color: -fxk-border transparent transparent transparent;
-  -fx-border-width: 1px 0 0 0;
-  -fx-border-insets: 0;
+/* While a picture loads (and if it never gets a size) the slot shows a neutral block, like an <img>
+ * with a background; the picture covers it. */
+.fxk-card-image {
+  -fx-background-color: -fxk-surface-alt;
 }
 
-.fxk-card-elevation-none {
-  -fx-effect: null;
+/* ---- href: the whole card is a link ---- */
+
+.fxk-card-href {
+  -fx-cursor: hand;
 }
 
-.fxk-card-elevation-sm {
-  -fx-effect: -fxk-shadow-sm;
+.fxk-card-href:hover {
+  -fx-background-color: -fxk-surface-alt;
 }
 
-.fxk-card-elevation-md {
-  -fx-effect: -fxk-shadow-md;
-}
-
-.fxk-card-elevation-lg {
-  -fx-effect: -fxk-shadow-lg;
+/* Keyboard focus only (FxCard never requests focus on a mouse click). The ring is drawn OUTSIDE the
+ * card with a negative border-inset, so focusing never changes the card's size or its content's
+ * position - the same trick as FxBreadcrumb. The second layer repaints the normal 1px border. */
+.fxk-card-href:focused {
+  -fx-border-color: -fxk-focus-ring, -fxk-border;
+  -fx-border-width: 2px, 1px;
+  -fx-border-insets: -2px, 0;
+  -fx-border-radius: 10px, 8px;
 }
 
 /* -----------------------------------------------------------------------------
