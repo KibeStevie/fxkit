@@ -1,0 +1,52 @@
+name: Release fxkit-core
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # create the GitHub Release
+  packages: write # publish to GitHub Packages
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_ACTOR: ${{ github.actor }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check tag format
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag '$GITHUB_REF_NAME' must look like v1.2.3"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+          # Writes a settings.xml with <server id="github"> using the env vars above
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - name: Set release version from the tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          mvn -B versions:set -DnewVersion="$VERSION" -DgenerateBackupPoms=false
+
+      # Tests already ran locally in release.ps1; JavaFX tests are unreliable on headless runners
+      - name: Deploy fxkit-parent + fxkit-core
+        run: mvn -B clean deploy -pl fxkit-core -am -DskipTests
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --title "FXKit $VERSION"
