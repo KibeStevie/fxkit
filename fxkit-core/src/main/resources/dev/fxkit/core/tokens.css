@@ -1,28 +1,6 @@
 /* =============================================================================
  * FXKit design tokens
- *
- * JavaFX CSS has no var(). Tokens are "looked-up" names: a name starting with
- * "-" is defined once on .root and then referenced by name in any rule below it.
- *
- *   1. Color scales     -fxk-<scale>-<step>   raw palette, e.g. -fxk-blue-500
- *   2. Semantic tokens  -fxk-primary, ...     meaning, defined in terms of scales
- *   3. Elevation        -fxk-shadow-<size>    whole dropshadow(...) effects
- *   4. Dark theme       .root.dark            redefines 2 and 3, never 1
- *
- * RULES
- *   - Components use SEMANTIC and ELEVATION tokens only, never the raw scales,
- *     so the dark theme can restyle everything by redefining those tokens.
- *   - Utility classes come in two kinds (see docs/utility-classes.md):
- *       palette utilities   .bg-blue-500  raw scale, identical in both themes
- *       semantic utilities  .bg-surface   semantic token, follows the theme
- *   - Spacing, radius and font size are NOT tokens: JavaFX CSS cannot use a
- *     looked-up value in -fx-padding, -fx-background-radius or -fx-font-size
- *     (see docs/css-notes.md, section 8). Those scales live in tools/scales.txt
- *     and are written into utilities.css by tools/GenerateUtilities.java.
- *
- * Palette values are taken from Tailwind CSS v3 (MIT License,
- * Copyright (c) Tailwind Labs, Inc.). https://tailwindcss.com
- * ========================================================================== */
+ */
 
 .root {
   /* ---- 1. Color scales ------------------------------------------------ */
@@ -201,6 +179,174 @@
   -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
   -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);
   -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 16, 0, 0, 6);
+
+  /* ---- 5. Extra palette, shadows and gradient stops ---- */
+  /* ---- 950 shade for existing scales ---- */
+  -fxk-gray-950: #030712;
+  -fxk-blue-950: #172554;
+  -fxk-red-950: #450a0a;
+  -fxk-green-950: #052e16;
+  -fxk-yellow-950: #422006;
+  -fxk-cyan-950: #083344;
+  -fxk-indigo-950: #1e1b4b;
+  -fxk-lime-950: #1a2e05;
+  -fxk-pink-950: #500724;
+  -fxk-purple-950: #3b0764;
+  -fxk-teal-950: #042f2e;
+
+  /* slate */
+  -fxk-slate-50: #f8fafc;
+  -fxk-slate-100: #f1f5f9;
+  -fxk-slate-200: #e2e8f0;
+  -fxk-slate-300: #cbd5e1;
+  -fxk-slate-400: #94a3b8;
+  -fxk-slate-500: #64748b;
+  -fxk-slate-600: #475569;
+  -fxk-slate-700: #334155;
+  -fxk-slate-800: #1e293b;
+  -fxk-slate-900: #0f172a;
+  -fxk-slate-950: #020617;
+
+  /* zinc */
+  -fxk-zinc-50: #fafafa;
+  -fxk-zinc-100: #f4f4f5;
+  -fxk-zinc-200: #e4e4e7;
+  -fxk-zinc-300: #d4d4d8;
+  -fxk-zinc-400: #a1a1aa;
+  -fxk-zinc-500: #71717a;
+  -fxk-zinc-600: #52525b;
+  -fxk-zinc-700: #3f3f46;
+  -fxk-zinc-800: #27272a;
+  -fxk-zinc-900: #18181b;
+  -fxk-zinc-950: #09090b;
+
+  /* neutral */
+  -fxk-neutral-50: #fafafa;
+  -fxk-neutral-100: #f5f5f5;
+  -fxk-neutral-200: #e5e5e5;
+  -fxk-neutral-300: #d4d4d4;
+  -fxk-neutral-400: #a3a3a3;
+  -fxk-neutral-500: #737373;
+  -fxk-neutral-600: #525252;
+  -fxk-neutral-700: #404040;
+  -fxk-neutral-800: #262626;
+  -fxk-neutral-900: #171717;
+  -fxk-neutral-950: #0a0a0a;
+
+  /* stone */
+  -fxk-stone-50: #fafaf9;
+  -fxk-stone-100: #f5f5f4;
+  -fxk-stone-200: #e7e5e4;
+  -fxk-stone-300: #d6d3d1;
+  -fxk-stone-400: #a8a29e;
+  -fxk-stone-500: #78716c;
+  -fxk-stone-600: #57534e;
+  -fxk-stone-700: #44403c;
+  -fxk-stone-800: #292524;
+  -fxk-stone-900: #1c1917;
+  -fxk-stone-950: #0c0a09;
+
+  /* orange */
+  -fxk-orange-50: #fff7ed;
+  -fxk-orange-100: #ffedd5;
+  -fxk-orange-200: #fed7aa;
+  -fxk-orange-300: #fdba74;
+  -fxk-orange-400: #fb923c;
+  -fxk-orange-500: #f97316;
+  -fxk-orange-600: #ea580c;
+  -fxk-orange-700: #c2410c;
+  -fxk-orange-800: #9a3412;
+  -fxk-orange-900: #7c2d12;
+  -fxk-orange-950: #431407;
+
+  /* amber */
+  -fxk-amber-50: #fffbeb;
+  -fxk-amber-100: #fef3c7;
+  -fxk-amber-200: #fde68a;
+  -fxk-amber-300: #fcd34d;
+  -fxk-amber-400: #fbbf24;
+  -fxk-amber-500: #f59e0b;
+  -fxk-amber-600: #d97706;
+  -fxk-amber-700: #b45309;
+  -fxk-amber-800: #92400e;
+  -fxk-amber-900: #78350f;
+  -fxk-amber-950: #451a03;
+
+  /* emerald */
+  -fxk-emerald-50: #ecfdf5;
+  -fxk-emerald-100: #d1fae5;
+  -fxk-emerald-200: #a7f3d0;
+  -fxk-emerald-300: #6ee7b7;
+  -fxk-emerald-400: #34d399;
+  -fxk-emerald-500: #10b981;
+  -fxk-emerald-600: #059669;
+  -fxk-emerald-700: #047857;
+  -fxk-emerald-800: #065f46;
+  -fxk-emerald-900: #064e3b;
+  -fxk-emerald-950: #022c22;
+
+  /* sky */
+  -fxk-sky-50: #f0f9ff;
+  -fxk-sky-100: #e0f2fe;
+  -fxk-sky-200: #bae6fd;
+  -fxk-sky-300: #7dd3fc;
+  -fxk-sky-400: #38bdf8;
+  -fxk-sky-500: #0ea5e9;
+  -fxk-sky-600: #0284c7;
+  -fxk-sky-700: #0369a1;
+  -fxk-sky-800: #075985;
+  -fxk-sky-900: #0c4a6e;
+  -fxk-sky-950: #082f49;
+
+  /* violet */
+  -fxk-violet-50: #f5f3ff;
+  -fxk-violet-100: #ede9fe;
+  -fxk-violet-200: #ddd6fe;
+  -fxk-violet-300: #c4b5fd;
+  -fxk-violet-400: #a78bfa;
+  -fxk-violet-500: #8b5cf6;
+  -fxk-violet-600: #7c3aed;
+  -fxk-violet-700: #6d28d9;
+  -fxk-violet-800: #5b21b6;
+  -fxk-violet-900: #4c1d95;
+  -fxk-violet-950: #2e1065;
+
+  /* fuchsia */
+  -fxk-fuchsia-50: #fdf4ff;
+  -fxk-fuchsia-100: #fae8ff;
+  -fxk-fuchsia-200: #f5d0fe;
+  -fxk-fuchsia-300: #f0abfc;
+  -fxk-fuchsia-400: #e879f9;
+  -fxk-fuchsia-500: #d946ef;
+  -fxk-fuchsia-600: #c026d3;
+  -fxk-fuchsia-700: #a21caf;
+  -fxk-fuchsia-800: #86198f;
+  -fxk-fuchsia-900: #701a75;
+  -fxk-fuchsia-950: #4a044e;
+
+  /* rose */
+  -fxk-rose-50: #fff1f2;
+  -fxk-rose-100: #ffe4e6;
+  -fxk-rose-200: #fecdd3;
+  -fxk-rose-300: #fda4af;
+  -fxk-rose-400: #fb7185;
+  -fxk-rose-500: #f43f5e;
+  -fxk-rose-600: #e11d48;
+  -fxk-rose-700: #be123c;
+  -fxk-rose-800: #9f1239;
+  -fxk-rose-900: #881337;
+  -fxk-rose-950: #4c0519;
+
+  /* ---- Elevation (light) ---- */
+  -fxk-shadow-xl: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 24, 0, 0, 10);
+  -fxk-shadow-2xl: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 40, 0, 0, 16);
+  -fxk-shadow-inner: innershadow(gaussian, rgba(0, 0, 0, 0.12), 4, 0, 0, 2);
+
+  /* ---- Gradient stops. Defaults so .bg-gradient-* never fails a lookup ----
+     Override per node with .from-<color> / .via-<color> / .to-<color>           */
+  -fxk-grad-from: transparent;
+  -fxk-grad-via: transparent;
+  -fxk-grad-to: transparent;
 }
 
 /* =============================================================================
@@ -251,4 +397,8 @@
   -fxk-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 3, 0, 0, 1);
   -fxk-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8, 0, 0, 3);
   -fxk-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 16, 0, 0, 6);
+
+  -fxk-shadow-xl: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 24, 0, 0, 10);
+  -fxk-shadow-2xl: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 40, 0, 0, 16);
+  -fxk-shadow-inner: innershadow(gaussian, rgba(0, 0, 0, 0.45), 4, 0, 0, 2);
 }
