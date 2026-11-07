@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import dev.fxkit.core.internal.ClassNameParser.Declaration;
-import dev.fxkit.core.internal.ClassNameParser.Scope;
 import org.junit.jupiter.api.Test;
 
-/** Pure-logic tests: no JavaFX toolkit needed. Uses the vocabulary read from the shipped stylesheets. */
+import dev.fxkit.core.internal.ClassNameParser.Declaration;
+import dev.fxkit.core.internal.ClassNameParser.Scope;
+
+/**
+ * Pure-logic tests: no JavaFX toolkit needed. Uses the vocabulary read from the
+ * shipped stylesheets.
+ */
 class ClassNameParserTest {
 
     private final ClassNameVocabulary vocab = ClassNameVocabulary.shipped();
@@ -30,19 +34,22 @@ class ClassNameParserTest {
         return r.classes().getOrDefault(Scope.NONE, Set.of());
     }
 
-    // ---- issue 1: no guessed colors ---------------------------------------------------------
+    // ---- issue 1: no guessed colors
+    // ---------------------------------------------------------
 
     @Test
     void unknownTextTokenIsNotMistakenForAColor() {
-        // there is no .text-center in utilities.css; it must warn, not become "-fxk-center"
-        var r = parse("text-center border-solid bg-cover");
+        // none of these exist in utilities.css; they must warn, not become "-fxk-bogus"
+        // etc.
+        var r = parse("text-bogus border-wavy bg-sparkle");
         assertTrue(r.isEmpty());
         assertEquals(3, warnings.size());
     }
 
     @Test
     void semanticClassWithoutMatchingTokenFallsBackToTheClass() {
-        // "-fxk-muted" does not exist (the token is -fxk-text-muted), but .text-muted does
+        // "-fxk-muted" does not exist (the token is -fxk-text-muted), but .text-muted
+        // does
         var r = parse("text-muted");
         assertEquals(List.of(), base(r));
         assertEquals(Set.of("text-muted"), baseClasses(r));
@@ -93,7 +100,8 @@ class ClassNameParserTest {
         assertTrue(warnings.isEmpty());
     }
 
-    // ---- issue 2: gradients -------------------------------------------------------------------
+    // ---- issue 2: gradients
+    // -------------------------------------------------------------------
 
     @Test
     void namedGradientClassThatDoesNotExistWarnsInsteadOfBecomingAColor() {
@@ -106,7 +114,8 @@ class ClassNameParserTest {
     void gradientStopsAreOrderedFromViaToRegardlessOfWrittenOrder() {
         var r = parse("bg-gradient-to-r to-pink-500 via-purple-500 from-blue-500");
         String value = base(r).get(base(r).size() - 1).value();
-        assertEquals("linear-gradient(from 0% 0% to 100% 0%, -fxk-blue-500 0%, -fxk-purple-500 50%, -fxk-pink-500 100%)",
+        assertEquals(
+                "linear-gradient(from 0% 0% to 100% 0%, -fxk-blue-500 0%, -fxk-purple-500 50%, -fxk-pink-500 100%)",
                 value);
     }
 
@@ -132,7 +141,8 @@ class ClassNameParserTest {
         assertEquals(1, warnings.size());
     }
 
-    // ---- vocabulary ---------------------------------------------------------------------------
+    // ---- vocabulary
+    // ---------------------------------------------------------------------------
 
     @Test
     void selectorScannerIgnoresDeclarationsAndComments() {
