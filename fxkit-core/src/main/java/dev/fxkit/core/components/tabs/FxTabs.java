@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import org.kordamp.ikonli.Ikon;
@@ -26,6 +28,11 @@ import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.SVGPath;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -137,6 +144,13 @@ public class FxTabs extends VBox {
     private final ObjectProperty<IntConsumer> onActiveTabChange = new SimpleObjectProperty<>(this,
             "onActiveTabChange");
     private final ObservableList<FxTabItem> items = FXCollections.observableArrayList();
+    // FXKit additions for editor-style tabs
+    private final ObjectProperty<Consumer<FxTabItem>> onCloseRequest = new SimpleObjectProperty<>(this,
+            "onCloseRequest");
+    private final BooleanProperty reorderable = new SimpleBooleanProperty(this, "reorderable", false);
+    private final ObjectProperty<BiConsumer<Integer, Integer>> onTabMoved = new SimpleObjectProperty<>(this,
+            "onTabMoved");
+    private final ObjectProperty<Node> trailing = new SimpleObjectProperty<>(this, "trailing");
 
     // ---- nodes / state
     // --------------------------------------------------------------------------
@@ -145,6 +159,7 @@ public class FxTabs extends VBox {
     private final FlowPane flowList = new FlowPane();
     private final HBox gridList = new HBox();
     private final Region divider = new Region();
+    private final HBox header = new HBox(); // the tab list, then the optional trailing node
     private final StackPane listWrap = new StackPane();
     private final StackPane panel = new StackPane();
 
@@ -179,6 +194,9 @@ public class FxTabs extends VBox {
         divider.setMaxWidth(Double.MAX_VALUE);
         StackPane.setAlignment(divider, Pos.BOTTOM_LEFT);
 
+        header.getStyleClass().add("fxk-tabs-header");
+        header.setAlignment(Pos.BOTTOM_LEFT);
+        trailing.addListener((o, was, is) -> rebuildList());
         listWrap.getStyleClass().add("fxk-tabs-listwrap");
         panel.getStyleClass().add("fxk-tabs-panel");
         VBox.setVgrow(panel, Priority.ALWAYS);
@@ -286,7 +304,7 @@ public class FxTabs extends VBox {
         return v.name().toLowerCase(Locale.ROOT).replace('_', '-');
     }
 
-    /** Puts the buttons into the right list for the variant, in item order. */
+    /** Puts the tabs into the right list for the variant, in item order. */
     private void rebuildList() {
         Variant v = effectiveVariant();
         boolean full = v == Variant.FULL_WIDTH;
@@ -295,19 +313,27 @@ public class FxTabs extends VBox {
         flowList.getChildren().clear();
         gridList.getChildren().clear();
         for (Entry entry : orderedEntries()) {
-            if (!target.getChildren().contains(entry.button)) {
-                target.getChildren().add(entry.button);
+            if (!target.getChildren().contains(entry.holder)) {
+                target.getChildren().add(entry.holder);
             }
             // grid-flow-col with w-full: tabs share the free space equally
-            entry.button.setMaxWidth(full ? Double.MAX_VALUE : Region.USE_COMPUTED_SIZE);
-            HBox.setHgrow(entry.button, full ? Priority.ALWAYS : null);
+            entry.holder.setMaxWidth(full ? Double.MAX_VALUE : Region.USE_COMPUTED_SIZE);
+            HBox.setHgrow(entry.holder, full ? Priority.ALWAYS : null);
+        }
+
+        HBox.setHgrow(target, Priority.ALWAYS);
+        Node extra = trailing.get();
+        if (extra == null) {
+            header.getChildren().setAll(target);
+        } else {
+            header.getChildren().setAll(target, extra);
         }
 
         boolean hasDivider = v == Variant.DEFAULT || v == Variant.UNDERLINE;
         if (hasDivider) {
-            listWrap.getChildren().setAll(divider, target);
+            listWrap.getChildren().setAll(divider, header);
         } else {
-            listWrap.getChildren().setAll(target);
+            listWrap.getChildren().setAll(header);
         }
     }
 
@@ -317,7 +343,7 @@ public class FxTabs extends VBox {
         FxTabItem selected = selectedItem.get();
         for (Entry entry : entries.values()) {
             List<String> classes = entry.button.getStyleClass();
-            classes.removeIf(c -> c.startsWith("fxk-tab-"));
+            classes.removeIf(c -> c.startsWith("fxk-tab-") && !c.equals("fxk-tab-closable"));
             classes.add(variantClass);
             if (entry.item == selected) {
                 classes.add("fxk-tab-active");
@@ -400,6 +426,50 @@ public class FxTabs extends VBox {
         return -1;
     }
 
+    // ---- close and reorder (FXKit additions)
+    // ---------------------------------------------------------------------------------------
+
+    /** The close button or a middle click: asks {@code onCloseRequest}, or removes the item without one. */
+    private void requestClose(FxTabItem item) {
+        Consumer<FxTabItem> handler = onCloseRequest.get();
+        if (handler != null) {
+            handler.accept(item);
+        } else {
+            items.remove(item);
+        }
+    }
+
+    /** Drops {@code dragged} where its centre (x in the strip) lies: before the first tab whose middle is further right. */
+    private void moveTab(Entry dragged, double centerX) {
+        List<Entry> ordered = orderedEntries();
+        int from = ordered.indexOf(dragged);
+        if (from < 0) {
+            return;
+        }
+        int to = ordered.size() - 1;
+        for (int i = 0; i < ordered.size(); i++) {
+            Entry e = ordered.get(i);
+            if (e != dragged && centerX < e.holder.getLayoutX() + e.holder.getWidth()) {
+                to = i;
+                break;
+            }
+        }
+        // moving right: the tab ends up after the neighbour it passed
+        if (to > from && to < ordered.size() - 1 && centerX < ordered.get(to).holder.getLayoutX()) {
+            to--;
+        }
+        if (to == from) {
+            return;
+        }
+        List<FxTabItem> reordered = new ArrayList<>(items);
+        reordered.add(to, reordered.remove(from));
+        items.setAll(reordered); // the selection survives: every item is still in the list
+        BiConsumer<Integer, Integer> callback = onTabMoved.get();
+        if (callback != null) {
+            callback.accept(from, to);
+        }
+    }
+
     // ---- one tab
     // ---------------------------------------------------------------------------------------
 
@@ -410,6 +480,12 @@ public class FxTabs extends VBox {
     private final class Entry {
         final FxTabItem item;
         final Button button = new Button();
+        final StackPane holder = new StackPane(); // the tab button, with the close button on top of its right end
+        private Button closeButton;
+
+        // drag-to-reorder state
+        private double pressSceneX;
+        private boolean dragging;
 
         private final InvalidationListener appearance = o -> {
             updateButton();
@@ -450,6 +526,21 @@ public class FxTabs extends VBox {
             button.setOnKeyPressed(e -> onKeyPressed(this, e));
             button.focusedProperty().addListener(focusChanged);
 
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setMaxHeight(Double.MAX_VALUE);
+            holder.getStyleClass().add("fxk-tab-holder");
+            holder.setAlignment(Pos.CENTER_RIGHT);
+            holder.getChildren().add(button);
+            button.addEventHandler(MouseEvent.MOUSE_PRESSED, this::dragPressed);
+            button.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::dragMoved);
+            button.addEventHandler(MouseEvent.MOUSE_RELEASED, this::dragReleased);
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                if (e.getButton() == MouseButton.MIDDLE && item.isClosable() && !item.isDisabled()) {
+                    requestClose(item);
+                }
+            });
+            item.closableProperty().addListener(appearance);
+
             item.titleProperty().addListener(appearance);
             item.iconProperty().addListener(appearance);
             item.disabledProperty().addListener(appearance);
@@ -467,6 +558,72 @@ public class FxTabs extends VBox {
                     icon == null ? null : new FontIcon(icon));
 
             button.setDisable(item.isDisabled());
+
+            boolean closable = item.isClosable();
+            button.getStyleClass().remove("fxk-tab-closable");
+            if (closable) {
+                button.getStyleClass().add("fxk-tab-closable"); // room for the close button
+                if (closeButton == null) {
+                    closeButton = createCloseButton();
+                }
+                if (!holder.getChildren().contains(closeButton)) {
+                    holder.getChildren().add(closeButton);
+                }
+                closeButton.setDisable(item.isDisabled());
+            } else if (closeButton != null) {
+                holder.getChildren().remove(closeButton);
+            }
+        }
+
+        private Button createCloseButton() {
+            SVGPath glyph = new SVGPath();
+            glyph.setContent("M1 1L9 9M9 1L1 9");
+            glyph.getStyleClass().add("fxk-tab-close-glyph");
+            Button close = new Button();
+            close.setGraphic(glyph);
+            close.getStyleClass().add("fxk-tab-close");
+            close.setFocusTraversable(false);
+            close.setAccessibleText("Close tab");
+            close.setOnAction(e -> requestClose(item));
+            StackPane.setAlignment(close, Pos.CENTER_RIGHT);
+            return close;
+        }
+
+        // ---- drag to reorder (only while the tabs are reorderable)
+
+        private void dragPressed(MouseEvent e) {
+            dragging = false;
+            pressSceneX = e.getSceneX();
+        }
+
+        private void dragMoved(MouseEvent e) {
+            if (!reorderable.get() || e.getButton() != MouseButton.PRIMARY || item.isDisabled()) {
+                return;
+            }
+            double dx = e.getSceneX() - pressSceneX;
+            if (!dragging) {
+                if (Math.abs(dx) < 4) {
+                    return;
+                }
+                dragging = true;
+                holder.getStyleClass().add("fxk-tab-dragging");
+                holder.setViewOrder(-1); // paint above its neighbours without changing the layout order
+            }
+            holder.setTranslateX(dx);
+            e.consume();
+        }
+
+        private void dragReleased(MouseEvent e) {
+            if (!dragging) {
+                return;
+            }
+            dragging = false;
+            holder.getStyleClass().remove("fxk-tab-dragging");
+            holder.setViewOrder(0);
+            double center = holder.getLayoutX() + holder.getWidth() / 2 + holder.getTranslateX();
+            holder.setTranslateX(0);
+            moveTab(this, center);
+            e.consume();
         }
 
         /**
@@ -496,6 +653,7 @@ public class FxTabs extends VBox {
             item.disabledProperty().removeListener(appearance);
             item.contentProperty().removeListener(contentChanged);
             item.activeProperty().removeListener(activeChanged);
+            item.closableProperty().removeListener(appearance);
             button.focusedProperty().removeListener(focusChanged);
 
             button.setOnAction(null);
@@ -589,5 +747,66 @@ public class FxTabs extends VBox {
 
     public void setOnActiveTabChange(IntConsumer callback) {
         onActiveTabChange.set(callback);
+    }
+
+    // ---- FXKit additions: closable, reorderable, trailing
+    // ---------------------------------------------------------------------------------------
+
+    /**
+     * Called with the item when its close button (or a middle click) is used on a
+     * {@link FxTabItem#closableProperty() closable} tab. The handler decides: ask to save, then remove the
+     * item from {@link #getItems()}. When it is {@code null} the item is simply removed.
+     */
+    public ObjectProperty<Consumer<FxTabItem>> onCloseRequestProperty() {
+        return onCloseRequest;
+    }
+
+    public Consumer<FxTabItem> getOnCloseRequest() {
+        return onCloseRequest.get();
+    }
+
+    public void setOnCloseRequest(Consumer<FxTabItem> handler) {
+        onCloseRequest.set(handler);
+    }
+
+    /**
+     * Lets the user drag tabs sideways to reorder them (single row of tabs; not for
+     * {@link Variant#FULL_WIDTH}). Default {@code false}.
+     */
+    public BooleanProperty reorderableProperty() {
+        return reorderable;
+    }
+
+    public boolean isReorderable() {
+        return reorderable.get();
+    }
+
+    public void setReorderable(boolean value) {
+        reorderable.set(value);
+    }
+
+    /** Called with (from, to) after the user dragged a tab to a new position. */
+    public ObjectProperty<BiConsumer<Integer, Integer>> onTabMovedProperty() {
+        return onTabMoved;
+    }
+
+    public void setOnTabMoved(BiConsumer<Integer, Integer> callback) {
+        onTabMoved.set(callback);
+    }
+
+    /**
+     * A node shown at the right end of the tab strip, beside the tabs (a status text, a button). It sits
+     * on the same baseline and the tabs take the remaining width. {@code null} for none.
+     */
+    public ObjectProperty<Node> trailingProperty() {
+        return trailing;
+    }
+
+    public Node getTrailing() {
+        return trailing.get();
+    }
+
+    public void setTrailing(Node node) {
+        trailing.set(node);
     }
 }

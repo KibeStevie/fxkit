@@ -2412,17 +2412,17 @@
 
 /* default: border-b sits BELOW the tabs, so the tabs get 1px of room above it.
  * underline: -mb-px, the tabs sit ON the line (no padding), their 2px border covers it. */
-.fxk-tabs-default > .fxk-tabs-listwrap > .fxk-tabs-list {
+.fxk-tabs-default > .fxk-tabs-listwrap > .fxk-tabs-header > .fxk-tabs-list {
   -fx-padding: 0 0 1px 0;
 }
 
-.fxk-tabs-pills > .fxk-tabs-listwrap > .fxk-tabs-list {
+.fxk-tabs-pills > .fxk-tabs-listwrap > .fxk-tabs-header > .fxk-tabs-list {
   -fx-hgap: 8px; /* space-x-2 */
   -fx-vgap: 0;
 }
 
 /* divide-x: the HBox shows its own background through 1px gaps between the tabs. */
-.fxk-tabs-full-width > .fxk-tabs-listwrap > .fxk-tabs-list {
+.fxk-tabs-full-width > .fxk-tabs-listwrap > .fxk-tabs-header > .fxk-tabs-list {
   -fx-spacing: 1px;
   -fx-background-color: -fxk-border;
   -fx-effect: -fxk-shadow-sm; /* shadow */
@@ -5670,3 +5670,307 @@
 .fxk-megamenu-image-card:hover .fxk-megamenu-image-card-button .fxk-megamenu-arrow {
   -fx-stroke: -fxk-gray-900;
 }
+
+/* -----------------------------------------------------------------------------
+ * FxTabs additions: closable tabs, drag to reorder, trailing node
+ * Structure now: .fxk-tabs > .fxk-tabs-listwrap > .fxk-tabs-header > (.fxk-tabs-list + trailing node)
+ * and each tab is a .fxk-tab-holder (StackPane) holding the .fxk-tab button and, when closable, a
+ * .fxk-tab-close button on top of its right end.
+ * ----------------------------------------------------------------------------- */
+
+.fxk-tabs-header {
+  -fx-alignment: BOTTOM_LEFT;
+  -fx-spacing: 8px;
+}
+
+.fxk-tab-holder {
+  -fx-alignment: CENTER_RIGHT;
+}
+
+/* room at the right of the title for the close button (14px glyph box + 8px gap) */
+.fxk-tab.fxk-tab-closable {
+  -fx-padding: 14px 36px 14px 14px;
+}
+
+.fxk-tab-close {
+  -fx-background-color: transparent;
+  -fx-background-radius: 9999px;
+  -fx-padding: 5px;
+  -fx-min-width: 18px;
+  -fx-min-height: 18px;
+  -fx-pref-width: 18px;
+  -fx-pref-height: 18px;
+  -fx-max-width: 18px;
+  -fx-max-height: 18px;
+  -fx-cursor: hand;
+  -fx-translate-x: -10px;
+}
+.fxk-tab-close:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-tab-close:hover .fxk-tab-close-glyph {
+  -fx-stroke: -fxk-danger;
+}
+.fxk-tab-close-glyph {
+  -fx-fill: transparent;
+  -fx-stroke: -fxk-text-muted;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-line-cap: round;
+}
+
+.fxk-tab-dragging {
+  -fx-opacity: 0.9;
+  -fx-effect: -fxk-shadow-md;
+}
+
+/* -----------------------------------------------------------------------------
+ * Scroll panes, lists and data grids (native JavaFX controls, opt-in classes)
+ *
+ *   .fxk-scroll        ScrollPane: viewport and corner on the surface colour, no padding or border
+ *   .fxk-scrollbar-thin  thin, rounded scroll bars (any node that has scroll bars)
+ *   .fxk-list          ListView: flat rows, hover and selection from the tokens
+ *   .fxk-datagrid      TableView: surface background, header on surface-alt, hairline row dividers
+ *   .fxk-split         SplitPane: 1px divider on the border colour
+ * ----------------------------------------------------------------------------- */
+
+.fxk-scroll,
+.fxk-scroll > .viewport {
+  -fx-background-color: -fxk-surface;
+  -fx-background: -fxk-surface;
+  -fx-padding: 0;
+  -fx-border-color: transparent;
+}
+.fxk-scroll > .corner {
+  -fx-background-color: transparent;
+}
+
+.fxk-scrollbar-thin .scroll-bar:vertical,
+.fxk-scrollbar-thin .scroll-bar:horizontal {
+  -fx-background-color: transparent;
+  -fx-padding: 0;
+}
+.fxk-scrollbar-thin .scroll-bar:vertical { -fx-pref-width: 10px; }
+.fxk-scrollbar-thin .scroll-bar:horizontal { -fx-pref-height: 10px; }
+.fxk-scrollbar-thin .scroll-bar .track,
+.fxk-scrollbar-thin .scroll-bar .increment-button,
+.fxk-scrollbar-thin .scroll-bar .decrement-button {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-padding: 0;
+}
+.fxk-scrollbar-thin .scroll-bar .increment-arrow,
+.fxk-scrollbar-thin .scroll-bar .decrement-arrow {
+  -fx-padding: 0;
+  -fx-shape: " ";
+}
+.fxk-scrollbar-thin .scroll-bar .thumb {
+  -fx-background-color: -fxk-border-strong;
+  -fx-background-insets: 2;
+  -fx-background-radius: 9999px;
+}
+.fxk-scrollbar-thin .scroll-bar .thumb:hover {
+  -fx-background-color: -fxk-text-muted;
+}
+
+.fxk-list {
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+  -fx-border-color: -fxk-border;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+}
+.fxk-list .list-cell {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px;
+  -fx-padding: 8px 12px 8px 12px;
+}
+.fxk-list .list-cell:hover {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-list .list-cell:filled:selected,
+.fxk-list .list-cell:filled:selected:hover {
+  -fx-background-color: -fxk-selection;
+  -fx-text-fill: -fxk-text;
+}
+.fxk-list .placeholder .label {
+  -fx-text-fill: -fxk-text-muted;
+}
+
+.fxk-datagrid {
+  -fx-background-color: -fxk-surface;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+  -fx-border-color: -fxk-border;
+  -fx-table-cell-border-color: transparent;
+}
+.fxk-datagrid .column-header-background {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-datagrid .column-header,
+.fxk-datagrid .filler {
+  -fx-background-color: -fxk-surface-alt;
+  -fx-border-color: transparent -fxk-border -fxk-border transparent;
+  -fx-border-width: 0 1px 1px 0;
+  -fx-size: 32px;
+}
+.fxk-datagrid .column-header .label {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 11px;
+  -fx-font-weight: 600;
+  -fx-alignment: CENTER_LEFT;
+}
+.fxk-datagrid .table-row-cell {
+  -fx-background-color: -fxk-surface;
+  -fx-border-color: transparent transparent -fxk-border transparent;
+  -fx-border-width: 0 0 1px 0;
+  -fx-cell-size: 30px;
+}
+.fxk-datagrid .table-row-cell:odd {
+  -fx-background-color: -fxk-surface-alt;
+}
+.fxk-datagrid .table-row-cell:hover {
+  -fx-background-color: -fxk-selection;
+}
+.fxk-datagrid .table-cell {
+  -fx-text-fill: -fxk-text;
+  -fx-font-size: 12px;
+  -fx-padding: 0 10px 0 10px;
+  -fx-alignment: CENTER_LEFT;
+  -fx-border-color: transparent -fxk-border transparent transparent;
+  -fx-border-width: 0 1px 0 0;
+}
+.fxk-datagrid .table-cell:selected,
+.fxk-datagrid .table-row-cell:selected .table-cell {
+  -fx-background-color: -fxk-selection;
+  -fx-text-fill: -fxk-text;
+}
+.fxk-datagrid .table-cell:null-value {
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-style: italic;
+}
+.fxk-datagrid .placeholder .label {
+  -fx-text-fill: -fxk-text-muted;
+}
+
+.fxk-split > .split-pane-divider {
+  -fx-background-color: -fxk-border;
+  -fx-padding: 0 0.5 0 0.5;
+}
+.fxk-split {
+  -fx-background-color: transparent;
+  -fx-padding: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * Native controls in dark mode
+ * ThemeManager's ".dark" class only reaches FXKit components. JavaFX's own controls (menus, tooltips,
+ * scroll bars, tables, lists, tabs, dialogs ...) are painted from the Modena colour variables, so in
+ * dark mode those variables are pointed at the tokens. Light mode keeps Modena's defaults.
+ * ----------------------------------------------------------------------------- */
+
+.root.dark {
+  -fx-base: -fxk-surface-alt;
+  -fx-background: -fxk-background;
+  -fx-control-inner-background: -fxk-surface;
+  -fx-control-inner-background-alt: -fxk-surface;
+  -fx-text-base-color: -fxk-text;
+  -fx-text-background-color: -fxk-text;
+  -fx-text-inner-color: -fxk-text;
+  -fx-dark-text-color: -fxk-text;
+  -fx-mid-text-color: -fxk-text-muted;
+  -fx-light-text-color: -fxk-text;
+  -fx-accent: -fxk-primary;
+  -fx-focus-color: -fxk-focus-ring;
+  -fx-faint-focus-color: transparent;
+  -fx-box-border: -fxk-border;
+  -fx-text-box-border: -fxk-border-strong;
+  -fx-selection-bar: -fxk-selection;
+  -fx-selection-bar-text: -fxk-text;
+  -fx-selection-bar-non-focused: -fxk-border-strong;
+  -fx-shadow-highlight-color: transparent;
+}
+
+.root.dark .context-menu,
+.root.dark .tooltip {
+  -fx-background-color: -fxk-surface;
+  -fx-border-color: -fxk-border-strong;
+  -fx-border-width: 1;
+  -fx-text-fill: -fxk-text;
+}
+.root.dark .context-menu .menu-item:focused { -fx-background-color: -fxk-surface-alt; }
+.root.dark .context-menu .menu-item:focused .label { -fx-text-fill: -fxk-text; }
+.root.dark .context-menu .separator .line { -fx-border-color: -fxk-border; }
+
+.root.dark .scroll-bar .thumb { -fx-background-color: -fxk-border-strong; }
+.root.dark .scroll-bar .track,
+.root.dark .scroll-bar .increment-button,
+.root.dark .scroll-bar .decrement-button { -fx-background-color: transparent; -fx-border-color: transparent; }
+.root.dark .scroll-pane > .corner { -fx-background-color: transparent; }
+
+.root.dark .table-view,
+.root.dark .list-view { -fx-background-color: -fxk-surface; -fx-border-color: -fxk-border; }
+.root.dark .table-view .column-header-background { -fx-background-color: -fxk-surface-alt; }
+.root.dark .table-view .placeholder .label,
+.root.dark .list-view .placeholder .label { -fx-text-fill: -fxk-text-muted; }
+
+/* -----------------------------------------------------------------------------
+ * Code editor (FxCode)
+ *
+ * Put "fxk-code" on a RichTextFX CodeArea (or any text area that draws its text as Text nodes), and the
+ * FxCode style classes on its text spans. Everything here reads the -fxk-code-* tokens in tokens.css.
+ *
+ *   .fxk-code                       the editor: surface background, mono font, caret, selection, gutter
+ *   .text.fxk-code-keyword|type|function|string|number|ident|param|comment   token colours
+ *   .text.fxk-code-bracket-match|bracket-bad                                 matching bracket marks
+ *   the paragraph holding the caret gets the current-line background (RichTextFX :has-caret)
+ * ----------------------------------------------------------------------------- */
+
+.fxk-code {
+  -fx-background-color: -fxk-surface;
+  -fx-font-family: "Monospaced";
+  -fx-font-size: 12px;
+}
+/* plain text: readable from the first keystroke, before any colouring pass has run */
+.fxk-code .text {
+  -fx-fill: -fxk-text;
+  -fx-tab-size: 4;
+}
+.fxk-code .paragraph-text {
+  -fx-tab-size: 4;
+}
+.fxk-code .caret {
+  -fx-stroke: -fxk-text;
+}
+.fxk-code .selection {
+  -fx-fill: -fxk-code-selection;
+}
+.fxk-code .paragraph-box {
+  -fx-padding: 1px 0 1px 0;
+}
+.fxk-code .paragraph-box:has-caret {
+  -fx-background-color: -fxk-code-line;
+}
+/* line-number gutter (RichTextFX LineNumberFactory) */
+.fxk-code .lineno {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fxk-text-muted;
+  -fx-font-size: 11px;
+  -fx-padding: 0 12px 0 14px;
+}
+.fxk-code .paragraph-box:has-caret .lineno {
+  -fx-text-fill: -fxk-text;
+}
+
+.fxk-code .text.fxk-code-keyword  { -fx-fill: -fxk-code-keyword; }
+.fxk-code .text.fxk-code-type     { -fx-fill: -fxk-code-type; }
+.fxk-code .text.fxk-code-function { -fx-fill: -fxk-code-function; }
+.fxk-code .text.fxk-code-string   { -fx-fill: -fxk-code-string; }
+.fxk-code .text.fxk-code-number,
+.fxk-code .text.fxk-code-param    { -fx-fill: -fxk-code-number; }
+.fxk-code .text.fxk-code-ident    { -fx-fill: -fxk-code-ident; }
+.fxk-code .text.fxk-code-comment  { -fx-fill: -fxk-code-comment; -fx-font-style: italic; }
+
+.fxk-code .text.fxk-code-bracket-match { -rtfx-background-color: -fxk-code-bracket-match; }
+.fxk-code .text.fxk-code-bracket-bad   { -rtfx-background-color: -fxk-code-bracket-bad; }

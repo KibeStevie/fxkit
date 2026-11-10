@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Use Git Bash.
 # Build everything and start the showcase app.
 # Why "install" first? With Java modules, the showcase needs the *built* fxkit-core jar
 # (from ~/.m2), so we install core before running the showcase.

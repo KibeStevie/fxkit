@@ -35,6 +35,7 @@ import javafx.scene.Node;
  * <tr><td>{@code children}</td><td>{@link #contentProperty()}, any {@link Node}</td></tr>
  * <tr><td>{@code active}</td><td>{@link #activeProperty()}</td></tr>
  * <tr><td>{@code disabled}</td><td>{@link #disabledProperty()}</td></tr>
+ * <tr><td>(FXKit addition)</td><td>{@link #closableProperty()}: shows a close button on the tab</td></tr>
  * </table>
  */
 public class FxTabItem {
@@ -44,6 +45,7 @@ public class FxTabItem {
     private final ObjectProperty<Node> content = new SimpleObjectProperty<>(this, "content");
     private final BooleanProperty active = new SimpleBooleanProperty(this, "active", false);
     private final BooleanProperty disabled = new SimpleBooleanProperty(this, "disabled", false);
+    private final BooleanProperty closable = new SimpleBooleanProperty(this, "closable", false);
 
     public FxTabItem() {
         this(null, null, null);
@@ -147,5 +149,22 @@ public class FxTabItem {
 
     public void setDisabled(boolean value) {
         disabled.set(value);
+    }
+
+    /**
+     * Whether the tab shows a small close button (and closes on a middle click). Not part of Flowbite's
+     * {@code <TabItem>}; added for editor-style tabs. Closing calls
+     * {@link FxTabs#onCloseRequestProperty() FxTabs.onCloseRequest}, or removes the item when none is set.
+     */
+    public BooleanProperty closableProperty() {
+        return closable;
+    }
+
+    public boolean isClosable() {
+        return closable.get();
+    }
+
+    public void setClosable(boolean value) {
+        closable.set(value);
     }
 }

@@ -402,3 +402,53 @@
   -fxk-shadow-2xl: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 40, 0, 0, 16);
   -fxk-shadow-inner: innershadow(gaussian, rgba(0, 0, 0, 0.45), 4, 0, 0, 2);
 }
+
+/* ---- Code editor tokens (FxCode / .fxk-code) and status surfaces ------------------------------
+ * Syntax colours for a code editor, light and dark. A code editor library (RichTextFX, ...) puts the
+ * style classes from FxCode on its text; components.css maps them to these tokens, so the colours
+ * follow ThemeManager like everything else. */
+.root {
+  -fxk-code-keyword:  -fxk-blue-600;
+  -fxk-code-type:     -fxk-teal-700;
+  -fxk-code-function: -fxk-purple-600;
+  -fxk-code-string:   -fxk-green-700;
+  -fxk-code-number:   -fxk-yellow-700;
+  -fxk-code-ident:    -fxk-pink-600;
+  -fxk-code-comment:  -fxk-text-muted;
+  -fxk-code-selection:     rgba(59, 130, 246, 0.28);
+  -fxk-code-line:          rgba(59, 130, 246, 0.09);
+  -fxk-code-bracket-match: rgba(59, 130, 246, 0.30);
+  -fxk-code-bracket-bad:   rgba(220, 38, 38, 0.35);
+
+  /* inline status surfaces (error / warning boxes, tips) */
+  -fxk-danger-surface: -fxk-red-50;
+  -fxk-danger-border:  -fxk-red-200;
+  -fxk-danger-text:    -fxk-red-700;
+  -fxk-warning-surface: rgba(245, 158, 11, 0.22);
+  -fxk-warning-text:    -fxk-yellow-700;
+  -fxk-tooltip-bg:   -fxk-gray-900;
+  -fxk-tooltip-text: -fxk-white;
+  -fxk-selection:    rgba(59, 130, 246, 0.28);
+}
+
+.root.dark {
+  -fxk-code-keyword:  -fxk-blue-400;
+  -fxk-code-type:     -fxk-teal-400;
+  -fxk-code-function: -fxk-purple-400;
+  -fxk-code-string:   -fxk-green-400;
+  -fxk-code-number:   -fxk-yellow-300;
+  -fxk-code-ident:    -fxk-pink-400;
+  -fxk-code-selection:     rgba(96, 165, 250, 0.38);
+  -fxk-code-line:          rgba(96, 165, 250, 0.10);
+  -fxk-code-bracket-match: rgba(96, 165, 250, 0.40);
+  -fxk-code-bracket-bad:   rgba(248, 113, 113, 0.40);
+
+  -fxk-danger-surface: rgba(248, 113, 113, 0.12);
+  -fxk-danger-border:  rgba(248, 113, 113, 0.45);
+  -fxk-danger-text:    -fxk-red-300;
+  -fxk-warning-surface: rgba(251, 191, 36, 0.20);
+  -fxk-warning-text:    -fxk-yellow-300;
+  -fxk-tooltip-bg:   -fxk-gray-700;
+  -fxk-tooltip-text: -fxk-gray-100;
+  -fxk-selection:    rgba(96, 165, 250, 0.38);
+}

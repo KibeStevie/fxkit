@@ -33,6 +33,7 @@ module dev.fxkit.core {
     exports dev.fxkit.core.components.card;
     exports dev.fxkit.core.components.carousel;
     exports dev.fxkit.core.components.clipboard;
+    exports dev.fxkit.core.components.code;
     exports dev.fxkit.core.components.drawer;
     exports dev.fxkit.core.components.dropdown;
     exports dev.fxkit.core.components.datepicker;
