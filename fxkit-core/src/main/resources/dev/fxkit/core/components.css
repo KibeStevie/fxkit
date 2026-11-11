@@ -5723,6 +5723,12 @@
   -fx-effect: -fxk-shadow-md;
 }
 
+/* Add "fxk-tabs-flush" to an FxTabs that sits in a panel of its own (an editor, a results area): the
+ * content fills the space under the strip instead of having the 12px top/bottom padding. */
+.fxk-tabs-flush > .fxk-tabs-panel {
+  -fx-padding: 0;
+}
+
 /* -----------------------------------------------------------------------------
  * Scroll panes, lists and data grids (native JavaFX controls, opt-in classes)
  *
